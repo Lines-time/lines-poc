@@ -1,5 +1,6 @@
 import { Route, Routes } from "@solidjs/router";
 import { Component, lazy } from "solid-js";
+
 const App = lazy(() => import("@/App"));
 const Login = lazy(() => import("@/Login"));
 
