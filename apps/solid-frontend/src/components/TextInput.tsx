@@ -1,6 +1,6 @@
-import { Component, ComponentProps } from "solid-js";
-
 import FormControl from "./FormControl";
+
+import type { Component, ComponentProps } from "solid-js";
 
 type TProps = Omit<ComponentProps<typeof FormControl>, "children"> & {
     placeholder?: string;
