@@ -4,7 +4,7 @@
     "main": "index.js",
     "license": "MIT",
     "scripts": {
-        "start": "yarn directus start"
+        "dev": "yarn directus start"
     },
     "dependencies": {
         "directus": "^9.20.4"
