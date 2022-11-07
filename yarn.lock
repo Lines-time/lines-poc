@@ -1232,6 +1232,13 @@
     knex-schema-inspector "3.0.0"
     lodash "4.17.21"
 
+"@directus/sdk@^10.1.5":
+  version "10.1.5"
+  resolved "https://registry.yarnpkg.com/@directus/sdk/-/sdk-10.1.5.tgz#069473ed9db855b34038cc6d630d36dd94cc3819"
+  integrity sha512-/q+Cm8NQjkJV7xIk3UJjUAFmE1ZJ1KnF2uyV2+AnmYinj75Y/aHnU7td6n74pBKBMwRPJPBIidksiWUiH20EHw==
+  dependencies:
+    axios "^0.27.2"
+
 "@directus/shared@9.20.4":
   version "9.20.4"
   resolved "https://registry.yarnpkg.com/@directus/shared/-/shared-9.20.4.tgz#63934674f8e2490504e8744ba1e205cb6b4a1f36"

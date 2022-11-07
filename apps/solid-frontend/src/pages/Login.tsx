@@ -3,11 +3,20 @@ import { Component, createSignal } from "solid-js";
 import Button from "~/Button";
 import TextInput from "~/TextInput";
 
+import { useDirectus } from "../hooks/useDirectus";
+
 const Login: Component = () => {
+    const directus = useDirectus();
     const [email, setEmail] = createSignal("");
     const [password, setPassword] = createSignal("");
 
-    const handleSubmit = () => {};
+    const handleSubmit = async (event: Event) => {
+        event.preventDefault();
+        directus.auth.login({
+            email: email(),
+            password: password(),
+        });
+    };
 
     return (
         <div class="flex flex-col items-center w-full h-screen justify-center overflow-hidden gap-2">
