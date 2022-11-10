@@ -1,11 +1,11 @@
-import { Menu } from "lucide-solid";
-import { Component, createSignal } from "solid-js";
+import { ChevronDown, Menu } from "lucide-solid";
+import { Component, createSignal, For } from "solid-js";
+import Dropdown from "~/Dropdown";
+
+import { activeServer, servers, setActiveServerId } from "../store/servers";
 
 const App: Component = () => {
     const [drawerOpen, setDrawerOpen] = createSignal(false);
-    const toggleDrawer = () => {
-        setDrawerOpen(() => !drawerOpen());
-    };
     return (
         <>
             <div class="drawer drawer-mobile">
@@ -30,14 +30,20 @@ const App: Component = () => {
                 </div>
                 <div class="drawer-side">
                     <label for="main-drawer" class="drawer-overlay"></label>
-                    <ul class="menu p-4 w-80 bg-base-200 text-base-content">
-                        <li>
-                            <a>Sidebar Item 1</a>
-                        </li>
-                        <li>
-                            <a>Sidebar Item 2</a>
-                        </li>
-                    </ul>
+                    <div class="w-80 bg-base-200 text-base-content">
+                        <div class="w-full flex flex-row justify-between items-center p-2 pl-5 gap-2 bg-primary text-primary-content">
+                            <p>{activeServer()?.display_name}</p>
+                            <Dropdown alignment="end" label={<ChevronDown />} labelClass="btn btn-circle btn-primary">
+                                <For each={servers()}>
+                                    {(server) => (
+                                        <li onClick={() => setActiveServerId(server.id)}>
+                                            <a>{server.display_name}</a>
+                                        </li>
+                                    )}
+                                </For>
+                            </Dropdown>
+                        </div>
+                    </div>
                 </div>
             </div>
         </>

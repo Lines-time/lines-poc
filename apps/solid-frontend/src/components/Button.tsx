@@ -1,7 +1,5 @@
-import { Component, ComponentProps, Show } from "solid-js";
+import { Component, ComponentProps, createMemo, Show } from "solid-js";
 import { Dynamic } from "solid-js/web";
-
-import { createComputedClasses } from "../hooks/createComputedClasses";
 
 import type { LucideProps } from "lucide-solid";
 type TProps = ComponentProps<"button"> & {
@@ -14,7 +12,7 @@ type TProps = ComponentProps<"button"> & {
 const Button: Component<TProps> = (props) => {
     const { primary = false, submit = false, icon, children, loading, ...buttonProps } = props;
 
-    const classes = createComputedClasses(() => ({
+    const classes = createMemo(() => ({
         btn: true,
         "btn-primary": primary,
         "btn-ghost": !primary,
@@ -23,7 +21,7 @@ const Button: Component<TProps> = (props) => {
     }));
 
     return (
-        <button type={submit ? "submit" : "button"} class={classes()} {...buttonProps}>
+        <button type={submit ? "submit" : "button"} classList={classes()} {...buttonProps}>
             <Show when={icon}>
                 <Dynamic component={icon} size={20} />
             </Show>

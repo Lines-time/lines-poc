@@ -11,7 +11,6 @@ const activeServer = createMemo(() => {
 createEffect(() => {
     const id = activeServerId();
     if (id) localStorage.setItem("activeServerId", id);
-    else localStorage.removeItem("activeServerId");
 });
 
 const init = async () => {
@@ -21,4 +20,4 @@ const init = async () => {
     setActiveServerId(localStorage.getItem("activeServerId") ?? text.servers.find((s) => s.default)?.id ?? null);
 };
 
-export { servers, activeServerId, init };
+export { servers, activeServerId, setActiveServerId, activeServer, init };
