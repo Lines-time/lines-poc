@@ -23,6 +23,13 @@ export const directus = (server: TDirectusServer): TApi => {
             logout: async () => {
                 await _directus.auth.logout();
             },
+            isAuthenticated: async () => {
+                try {
+                    const me = await _directus.users.me.read();
+                    if (me) return true;
+                } catch (e) {}
+                return false;
+            },
         },
     };
 };

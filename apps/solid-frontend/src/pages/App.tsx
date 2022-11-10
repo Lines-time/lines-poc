@@ -1,8 +1,16 @@
 import { ChevronDown, Menu } from "lucide-solid";
 import { Component, createSignal, For } from "solid-js";
 import Dropdown from "~/Dropdown";
+import LoginModal from "~/modals/LoginModal";
 
-import { activeServer, servers, setActiveServerId } from "../store/servers";
+import {
+    activeServer,
+    defaultServerId,
+    servers,
+    setActiveServerId,
+    setShowLoginModal,
+    showLoginModal,
+} from "../store/servers";
 
 const App: Component = () => {
     const [drawerOpen, setDrawerOpen] = createSignal(false);
@@ -46,6 +54,17 @@ const App: Component = () => {
                     </div>
                 </div>
             </div>
+            <LoginModal
+                open={showLoginModal()}
+                onClose={() => {
+                    setShowLoginModal(false);
+                    setActiveServerId(defaultServerId());
+                }}
+                onSave={async (email, password) => {
+                    await activeServer()?.auth.login(email, password);
+                    setShowLoginModal(false);
+                }}
+            />
         </>
     );
 };

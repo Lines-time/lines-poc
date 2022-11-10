@@ -17,5 +17,6 @@ type TApi = {
     auth: {
         login: (email: string, password: string) => boolean | Promise<boolean>;
         logout: () => void;
+        isAuthenticated: () => boolean | Promise<boolean>;
     };
 };

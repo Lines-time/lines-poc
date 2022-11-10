@@ -5,6 +5,7 @@ export const offline = (server: TServer): TApi => {
                 return true;
             },
             logout: () => {},
+            isAuthenticated: () => true,
         },
     };
 };
