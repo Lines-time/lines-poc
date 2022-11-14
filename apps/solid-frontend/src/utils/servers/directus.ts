@@ -6,7 +6,7 @@ type TDirectusServer = TServer & {
 
 export const directus = (server: TDirectusServer): TApi => {
     const _directus = new Directus(server.url, {
-        // TODO: enable this again, when the directus/sdk has a fix for it
+        // TODO: enable this again, when the directus/sdk has a fix for it, this is the terrible temporary fix for "too much recursion" error in firefox
         // storage: {
         //     prefix: server.id + "-",
         // },
