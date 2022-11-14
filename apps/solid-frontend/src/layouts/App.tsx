@@ -19,6 +19,7 @@ const App: Component = () => {
 
     const login = async (email: string, password: string) => {
         await activeServer()?.auth.login(email, password);
+        authResource.refetch();
     };
     return (
         <>
