@@ -19,7 +19,15 @@ const App: Component = () => {
 
     const login = async (email: string, password: string) => {
         await activeServer()?.auth.login(email, password);
-        authResource.refetch();
+        await authResource.refetch();
+    };
+    const closeLoginModal = async () => {
+        await authResource.refetch();
+        if (!isAuthenticated()) {
+            servers.setState({
+                activeServerId: servers.state.defaultServerId,
+            });
+        }
     };
     return (
         <>
@@ -84,12 +92,11 @@ const App: Component = () => {
                 </div>
             </div>
             <LoginModal
-                open={!isAuthenticated.loading && !isAuthenticated.latest}
-                onClose={() => {
-                    servers.setState({
-                        activeServerId: servers.state.defaultServerId,
-                    });
-                }}
+                open={
+                    !isAuthenticated.loading &&
+                    !isAuthenticated.latest
+                }
+                onClose={closeLoginModal}
                 onSave={login}
             />
         </>

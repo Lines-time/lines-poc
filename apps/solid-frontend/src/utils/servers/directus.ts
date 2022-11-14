@@ -6,9 +6,10 @@ type TDirectusServer = TServer & {
 
 export const directus = (server: TDirectusServer): TApi => {
     const _directus = new Directus(server.url, {
-        storage: {
-            prefix: server.id + "-",
-        },
+        // TODO: enable this again, when the directus/sdk has a fix for it
+        // storage: {
+        //     prefix: server.id + "-",
+        // },
     });
     return {
         auth: {
