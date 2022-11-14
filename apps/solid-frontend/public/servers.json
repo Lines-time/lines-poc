@@ -10,7 +10,7 @@
             "id": "directus-dev",
             "display_name": "Directus dev backend",
             "type": "directus",
-            "url": "http://localhost:8055"
+            "url": "/api"
         }
     ]
 }
