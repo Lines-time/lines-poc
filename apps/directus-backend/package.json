@@ -4,7 +4,8 @@
     "main": "index.js",
     "license": "MIT",
     "scripts": {
-        "dev": "yarn directus start"
+        "dev": "yarn directus start",
+        "snapshot:schema": "node ./scripts/create-schema-snapshot.js"
     },
     "dependencies": {
         "directus": "^9.20.4"

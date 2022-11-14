@@ -1,0 +1,2623 @@
+version: 1
+directus: 9.20.4
+collections:
+  - collection: Client
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      collapse: open
+      collection: Client
+      color: null
+      display_template: null
+      group: null
+      hidden: false
+      icon: business
+      item_duplication_fields: null
+      note: null
+      singleton: false
+      sort: 1
+      sort_field: sort
+      translations: null
+      unarchive_value: null
+    schema:
+      name: Client
+      sql: >-
+        CREATE TABLE "Client" (`id` char(36) NOT NULL, `sort` integer NULL,
+        `user_created` char(36) NULL, `date_created` datetime NULL,
+        `user_updated` char(36) NULL, `date_updated` datetime NULL,
+        `companyname` varchar(255) null, `address` text null, PRIMARY KEY
+        (`id`), CONSTRAINT `client_user_created_foreign` FOREIGN KEY
+        (`user_created`) REFERENCES `directus_users` (`id`), CONSTRAINT
+        `client_user_updated_foreign` FOREIGN KEY (`user_updated`) REFERENCES
+        `directus_users` (`id`))
+  - collection: Person
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      collapse: open
+      collection: Person
+      color: null
+      display_template: null
+      group: Client
+      hidden: false
+      icon: person
+      item_duplication_fields: null
+      note: null
+      singleton: false
+      sort: 1
+      sort_field: sort
+      translations: null
+      unarchive_value: null
+    schema:
+      name: Person
+      sql: >-
+        CREATE TABLE "Person" (`id` char(36) NOT NULL, `sort` integer NULL,
+        `user_created` char(36) NULL, `date_created` datetime NULL,
+        `user_updated` char(36) NULL, `date_updated` datetime NULL, `firstname`
+        varchar(255) NULL, `lastname` varchar(255) NULL, `email` varchar(255)
+        NULL, `telephone` varchar(255) NULL, `client` char(36) NULL, PRIMARY KEY
+        (`id`), CONSTRAINT `person_user_created_foreign` FOREIGN KEY
+        (`user_created`) REFERENCES `directus_users` (`id`), CONSTRAINT
+        `person_user_updated_foreign` FOREIGN KEY (`user_updated`) REFERENCES
+        `directus_users` (`id`), CONSTRAINT `person_client_foreign` FOREIGN KEY
+        (`client`) REFERENCES `Client` (`id`) ON DELETE CASCADE)
+  - collection: Project
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      collapse: open
+      collection: Project
+      color: null
+      display_template: null
+      group: null
+      hidden: false
+      icon: null
+      item_duplication_fields: null
+      note: null
+      singleton: false
+      sort: 2
+      sort_field: sort
+      translations: null
+      unarchive_value: null
+    schema:
+      name: Project
+      sql: >-
+        CREATE TABLE "Project" (`id` char(36) NOT NULL, `sort` integer NULL,
+        `user_created` char(36) NULL, `date_created` datetime NULL,
+        `user_updated` char(36) NULL, `date_updated` datetime NULL, `title`
+        varchar(255) null, PRIMARY KEY (`id`), CONSTRAINT
+        `project_user_created_foreign` FOREIGN KEY (`user_created`) REFERENCES
+        `directus_users` (`id`), CONSTRAINT `project_user_updated_foreign`
+        FOREIGN KEY (`user_updated`) REFERENCES `directus_users` (`id`))
+  - collection: Project_WorkCategory
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      collapse: open
+      collection: Project_WorkCategory
+      color: null
+      display_template: null
+      group: null
+      hidden: true
+      icon: import_export
+      item_duplication_fields: null
+      note: null
+      singleton: false
+      sort: 4
+      sort_field: null
+      translations: null
+      unarchive_value: null
+    schema:
+      name: Project_WorkCategory
+      sql: >-
+        CREATE TABLE "Project_WorkCategory" (`id` integer PRIMARY KEY
+        AUTOINCREMENT NOT NULL, `Project_id` char(36) NULL, `WorkCategory_id`
+        char(36) NULL, CONSTRAINT `project_workcategory_workcategory_id_foreign`
+        FOREIGN KEY (`WorkCategory_id`) REFERENCES `WorkCategory` (`id`) ON
+        DELETE SET NULL, CONSTRAINT `project_workcategory_project_id_foreign`
+        FOREIGN KEY (`Project_id`) REFERENCES `Project` (`id`) ON DELETE SET
+        NULL)
+  - collection: Project_directus_users
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      collapse: open
+      collection: Project_directus_users
+      color: null
+      display_template: null
+      group: null
+      hidden: true
+      icon: import_export
+      item_duplication_fields: null
+      note: null
+      singleton: false
+      sort: 5
+      sort_field: null
+      translations: null
+      unarchive_value: null
+    schema:
+      name: Project_directus_users
+      sql: >-
+        CREATE TABLE "Project_directus_users" (`id` integer PRIMARY KEY
+        AUTOINCREMENT NOT NULL, `Project_id` char(36) NULL, `directus_users_id`
+        char(36) NULL, CONSTRAINT `project_directus_users_project_id_foreign`
+        FOREIGN KEY (`Project_id`) REFERENCES `Project` (`id`) ON DELETE SET
+        NULL, CONSTRAINT `project_directus_users_directus_users_id_foreign`
+        FOREIGN KEY (`directus_users_id`) REFERENCES `directus_users` (`id`) ON
+        DELETE SET NULL)
+  - collection: WorkCategory
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      collapse: open
+      collection: WorkCategory
+      color: null
+      display_template: null
+      group: null
+      hidden: false
+      icon: tag
+      item_duplication_fields: null
+      note: null
+      singleton: false
+      sort: 3
+      sort_field: null
+      translations: null
+      unarchive_value: null
+    schema:
+      name: WorkCategory
+      sql: >-
+        CREATE TABLE "WorkCategory" (`id` char(36) NOT NULL, `user_created`
+        char(36) NULL, `date_created` datetime NULL, `user_updated` char(36)
+        NULL, `date_updated` datetime NULL, `name` varchar(255) null, PRIMARY
+        KEY (`id`), CONSTRAINT `workcategory_user_created_foreign` FOREIGN KEY
+        (`user_created`) REFERENCES `directus_users` (`id`), CONSTRAINT
+        `workcategory_user_updated_foreign` FOREIGN KEY (`user_updated`)
+        REFERENCES `directus_users` (`id`))
+  - collection: WorkUnit
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      collapse: open
+      collection: WorkUnit
+      color: null
+      display_template: null
+      group: null
+      hidden: false
+      icon: calendar_month
+      item_duplication_fields: null
+      note: null
+      singleton: false
+      sort: 6
+      sort_field: null
+      translations: null
+      unarchive_value: null
+    schema:
+      name: WorkUnit
+      sql: >-
+        CREATE TABLE "WorkUnit" (`id` char(36) NOT NULL, `user_created` char(36)
+        NULL, `date_created` datetime NULL, `user_updated` char(36) NULL,
+        `date_updated` datetime NULL, `start` datetime NULL, `end` datetime
+        NULL, `worker` char(36) NULL, `project` char(36) NULL, `category`
+        char(36) NULL, PRIMARY KEY (`id`), CONSTRAINT
+        `workunit_user_created_foreign` FOREIGN KEY (`user_created`) REFERENCES
+        `directus_users` (`id`), CONSTRAINT `workunit_user_updated_foreign`
+        FOREIGN KEY (`user_updated`) REFERENCES `directus_users` (`id`),
+        CONSTRAINT `workunit_worker_foreign` FOREIGN KEY (`worker`) REFERENCES
+        `directus_users` (`id`) ON DELETE SET NULL, CONSTRAINT
+        `workunit_project_foreign` FOREIGN KEY (`project`) REFERENCES `Project`
+        (`id`) ON DELETE SET NULL, CONSTRAINT `workunit_category_foreign`
+        FOREIGN KEY (`category`) REFERENCES `WorkCategory` (`id`) ON DELETE SET
+        NULL)
+fields:
+  - collection: Client
+    field: address
+    meta:
+      collection: Client
+      conditions: null
+      display: null
+      display_options: null
+      field: address
+      group: null
+      hidden: false
+      interface: input-multiline
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: null
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      data_type: text
+      default_value: null
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: null
+      name: address
+      numeric_precision: null
+      numeric_scale: null
+      table: Client
+    type: text
+  - collection: Client
+    field: companyname
+    meta:
+      collection: Client
+      conditions: null
+      display: null
+      display_options: null
+      field: companyname
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options:
+        iconLeft: business
+      readonly: false
+      required: false
+      sort: null
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      data_type: varchar
+      default_value: null
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: 255
+      name: companyname
+      numeric_precision: null
+      numeric_scale: null
+      table: Client
+    type: string
+  - collection: Client
+    field: contacts
+    meta:
+      collection: Client
+      conditions: null
+      display: related-values
+      display_options:
+        template: "{{firstname}}\_{{lastname}}"
+      field: contacts
+      group: null
+      hidden: false
+      interface: list-o2m
+      note: null
+      options:
+        template: "{{firstname}}\_{{lastname}}"
+      readonly: false
+      required: false
+      sort: null
+      special:
+        - o2m
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema: null
+    type: alias
+  - collection: Client
+    field: date_created
+    meta:
+      collection: Client
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+      field: date_created
+      group: null
+      hidden: true
+      interface: datetime
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: null
+      special:
+        - cast-timestamp
+        - date-created
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      data_type: datetime
+      default_value: null
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: null
+      name: date_created
+      numeric_precision: null
+      numeric_scale: null
+      table: Client
+    type: timestamp
+  - collection: Client
+    field: date_updated
+    meta:
+      collection: Client
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+      field: date_updated
+      group: null
+      hidden: true
+      interface: datetime
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: null
+      special:
+        - cast-timestamp
+        - date-updated
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      data_type: datetime
+      default_value: null
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: null
+      name: date_updated
+      numeric_precision: null
+      numeric_scale: null
+      table: Client
+    type: timestamp
+  - collection: Client
+    field: id
+    meta:
+      collection: Client
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: null
+      special:
+        - uuid
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      data_type: char
+      default_value: null
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: false
+      is_primary_key: true
+      is_unique: true
+      max_length: 36
+      name: id
+      numeric_precision: null
+      numeric_scale: null
+      table: Client
+    type: uuid
+  - collection: Client
+    field: sort
+    meta:
+      collection: Client
+      conditions: null
+      display: null
+      display_options: null
+      field: sort
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: null
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      data_type: integer
+      default_value: null
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: null
+      name: sort
+      numeric_precision: null
+      numeric_scale: null
+      table: Client
+    type: integer
+  - collection: Client
+    field: user_created
+    meta:
+      collection: Client
+      conditions: null
+      display: user
+      display_options: null
+      field: user_created
+      group: null
+      hidden: true
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
+      readonly: true
+      required: false
+      sort: null
+      special:
+        - user-created
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      data_type: char
+      default_value: null
+      foreign_key_column: id
+      foreign_key_table: directus_users
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: 36
+      name: user_created
+      numeric_precision: null
+      numeric_scale: null
+      table: Client
+    type: string
+  - collection: Client
+    field: user_updated
+    meta:
+      collection: Client
+      conditions: null
+      display: user
+      display_options: null
+      field: user_updated
+      group: null
+      hidden: true
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
+      readonly: true
+      required: false
+      sort: null
+      special:
+        - user-updated
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      data_type: char
+      default_value: null
+      foreign_key_column: id
+      foreign_key_table: directus_users
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: 36
+      name: user_updated
+      numeric_precision: null
+      numeric_scale: null
+      table: Client
+    type: string
+  - collection: Person
+    field: client
+    meta:
+      collection: Person
+      conditions: null
+      display: null
+      display_options: null
+      field: client
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{companyname}}'
+      readonly: false
+      required: false
+      sort: null
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      data_type: char
+      default_value: null
+      foreign_key_column: id
+      foreign_key_table: Client
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: 36
+      name: client
+      numeric_precision: null
+      numeric_scale: null
+      table: Person
+    type: string
+  - collection: Person
+    field: date_created
+    meta:
+      collection: Person
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+      field: date_created
+      group: null
+      hidden: true
+      interface: datetime
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: null
+      special:
+        - cast-timestamp
+        - date-created
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      data_type: datetime
+      default_value: null
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: null
+      name: date_created
+      numeric_precision: null
+      numeric_scale: null
+      table: Person
+    type: timestamp
+  - collection: Person
+    field: date_updated
+    meta:
+      collection: Person
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+      field: date_updated
+      group: null
+      hidden: true
+      interface: datetime
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: null
+      special:
+        - cast-timestamp
+        - date-updated
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      data_type: datetime
+      default_value: null
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: null
+      name: date_updated
+      numeric_precision: null
+      numeric_scale: null
+      table: Person
+    type: timestamp
+  - collection: Person
+    field: email
+    meta:
+      collection: Person
+      conditions: null
+      display: null
+      display_options: null
+      field: email
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options:
+        iconLeft: alternate_email
+      readonly: false
+      required: false
+      sort: null
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      data_type: varchar
+      default_value: null
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: 255
+      name: email
+      numeric_precision: null
+      numeric_scale: null
+      table: Person
+    type: string
+  - collection: Person
+    field: firstname
+    meta:
+      collection: Person
+      conditions: null
+      display: null
+      display_options: null
+      field: firstname
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: null
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      data_type: varchar
+      default_value: null
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: 255
+      name: firstname
+      numeric_precision: null
+      numeric_scale: null
+      table: Person
+    type: string
+  - collection: Person
+    field: id
+    meta:
+      collection: Person
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: null
+      special:
+        - uuid
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      data_type: char
+      default_value: null
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: false
+      is_primary_key: true
+      is_unique: true
+      max_length: 36
+      name: id
+      numeric_precision: null
+      numeric_scale: null
+      table: Person
+    type: uuid
+  - collection: Person
+    field: lastname
+    meta:
+      collection: Person
+      conditions: null
+      display: null
+      display_options: null
+      field: lastname
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: null
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      data_type: varchar
+      default_value: null
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: 255
+      name: lastname
+      numeric_precision: null
+      numeric_scale: null
+      table: Person
+    type: string
+  - collection: Person
+    field: sort
+    meta:
+      collection: Person
+      conditions: null
+      display: null
+      display_options: null
+      field: sort
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: null
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      data_type: integer
+      default_value: null
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: null
+      name: sort
+      numeric_precision: null
+      numeric_scale: null
+      table: Person
+    type: integer
+  - collection: Person
+    field: telephone
+    meta:
+      collection: Person
+      conditions: null
+      display: null
+      display_options: null
+      field: telephone
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options:
+        iconLeft: phone
+      readonly: false
+      required: false
+      sort: null
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      data_type: varchar
+      default_value: null
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: 255
+      name: telephone
+      numeric_precision: null
+      numeric_scale: null
+      table: Person
+    type: string
+  - collection: Person
+    field: user_created
+    meta:
+      collection: Person
+      conditions: null
+      display: user
+      display_options: null
+      field: user_created
+      group: null
+      hidden: true
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
+      readonly: true
+      required: false
+      sort: null
+      special:
+        - user-created
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      data_type: char
+      default_value: null
+      foreign_key_column: id
+      foreign_key_table: directus_users
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: 36
+      name: user_created
+      numeric_precision: null
+      numeric_scale: null
+      table: Person
+    type: string
+  - collection: Person
+    field: user_updated
+    meta:
+      collection: Person
+      conditions: null
+      display: user
+      display_options: null
+      field: user_updated
+      group: null
+      hidden: true
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
+      readonly: true
+      required: false
+      sort: null
+      special:
+        - user-updated
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      data_type: char
+      default_value: null
+      foreign_key_column: id
+      foreign_key_table: directus_users
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: 36
+      name: user_updated
+      numeric_precision: null
+      numeric_scale: null
+      table: Person
+    type: string
+  - collection: Project
+    field: categories
+    meta:
+      collection: Project
+      conditions: null
+      display: null
+      display_options: null
+      field: categories
+      group: null
+      hidden: false
+      interface: list-m2m
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: null
+      special:
+        - m2m
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema: null
+    type: alias
+  - collection: Project
+    field: date_created
+    meta:
+      collection: Project
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+      field: date_created
+      group: null
+      hidden: true
+      interface: datetime
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: null
+      special:
+        - cast-timestamp
+        - date-created
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      data_type: datetime
+      default_value: null
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: null
+      name: date_created
+      numeric_precision: null
+      numeric_scale: null
+      table: Project
+    type: timestamp
+  - collection: Project
+    field: date_updated
+    meta:
+      collection: Project
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+      field: date_updated
+      group: null
+      hidden: true
+      interface: datetime
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: null
+      special:
+        - cast-timestamp
+        - date-updated
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      data_type: datetime
+      default_value: null
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: null
+      name: date_updated
+      numeric_precision: null
+      numeric_scale: null
+      table: Project
+    type: timestamp
+  - collection: Project
+    field: id
+    meta:
+      collection: Project
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: null
+      special:
+        - uuid
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      data_type: char
+      default_value: null
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: false
+      is_primary_key: true
+      is_unique: true
+      max_length: 36
+      name: id
+      numeric_precision: null
+      numeric_scale: null
+      table: Project
+    type: uuid
+  - collection: Project
+    field: sort
+    meta:
+      collection: Project
+      conditions: null
+      display: null
+      display_options: null
+      field: sort
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: null
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      data_type: integer
+      default_value: null
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: null
+      name: sort
+      numeric_precision: null
+      numeric_scale: null
+      table: Project
+    type: integer
+  - collection: Project
+    field: title
+    meta:
+      collection: Project
+      conditions: null
+      display: null
+      display_options: null
+      field: title
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options:
+        iconLeft: title
+      readonly: false
+      required: true
+      sort: null
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      data_type: varchar
+      default_value: null
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: 255
+      name: title
+      numeric_precision: null
+      numeric_scale: null
+      table: Project
+    type: string
+  - collection: Project
+    field: user_created
+    meta:
+      collection: Project
+      conditions: null
+      display: user
+      display_options: null
+      field: user_created
+      group: null
+      hidden: true
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
+      readonly: true
+      required: false
+      sort: null
+      special:
+        - user-created
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      data_type: char
+      default_value: null
+      foreign_key_column: id
+      foreign_key_table: directus_users
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: 36
+      name: user_created
+      numeric_precision: null
+      numeric_scale: null
+      table: Project
+    type: string
+  - collection: Project
+    field: user_updated
+    meta:
+      collection: Project
+      conditions: null
+      display: user
+      display_options: null
+      field: user_updated
+      group: null
+      hidden: true
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
+      readonly: true
+      required: false
+      sort: null
+      special:
+        - user-updated
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      data_type: char
+      default_value: null
+      foreign_key_column: id
+      foreign_key_table: directus_users
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: 36
+      name: user_updated
+      numeric_precision: null
+      numeric_scale: null
+      table: Project
+    type: string
+  - collection: Project
+    field: workers
+    meta:
+      collection: Project
+      conditions: null
+      display: null
+      display_options: null
+      field: workers
+      group: null
+      hidden: false
+      interface: list-m2m
+      note: null
+      options:
+        enableCreate: false
+      readonly: false
+      required: false
+      sort: null
+      special:
+        - m2m
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema: null
+    type: alias
+  - collection: Project_WorkCategory
+    field: Project_id
+    meta:
+      collection: Project_WorkCategory
+      conditions: null
+      display: null
+      display_options: null
+      field: Project_id
+      group: null
+      hidden: true
+      interface: null
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: null
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      data_type: char
+      default_value: null
+      foreign_key_column: id
+      foreign_key_table: Project
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: 36
+      name: Project_id
+      numeric_precision: null
+      numeric_scale: null
+      table: Project_WorkCategory
+    type: string
+  - collection: Project_WorkCategory
+    field: WorkCategory_id
+    meta:
+      collection: Project_WorkCategory
+      conditions: null
+      display: null
+      display_options: null
+      field: WorkCategory_id
+      group: null
+      hidden: true
+      interface: null
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: null
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      data_type: char
+      default_value: null
+      foreign_key_column: id
+      foreign_key_table: WorkCategory
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: 36
+      name: WorkCategory_id
+      numeric_precision: null
+      numeric_scale: null
+      table: Project_WorkCategory
+    type: string
+  - collection: Project_WorkCategory
+    field: id
+    meta:
+      collection: Project_WorkCategory
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: null
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: null
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      data_type: integer
+      default_value: null
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: true
+      is_generated: false
+      is_nullable: false
+      is_primary_key: true
+      is_unique: false
+      max_length: null
+      name: id
+      numeric_precision: null
+      numeric_scale: null
+      table: Project_WorkCategory
+    type: integer
+  - collection: Project_directus_users
+    field: Project_id
+    meta:
+      collection: Project_directus_users
+      conditions: null
+      display: null
+      display_options: null
+      field: Project_id
+      group: null
+      hidden: true
+      interface: null
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: null
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      data_type: char
+      default_value: null
+      foreign_key_column: id
+      foreign_key_table: Project
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: 36
+      name: Project_id
+      numeric_precision: null
+      numeric_scale: null
+      table: Project_directus_users
+    type: string
+  - collection: Project_directus_users
+    field: directus_users_id
+    meta:
+      collection: Project_directus_users
+      conditions: null
+      display: null
+      display_options: null
+      field: directus_users_id
+      group: null
+      hidden: true
+      interface: null
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: null
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      data_type: char
+      default_value: null
+      foreign_key_column: id
+      foreign_key_table: directus_users
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: 36
+      name: directus_users_id
+      numeric_precision: null
+      numeric_scale: null
+      table: Project_directus_users
+    type: string
+  - collection: Project_directus_users
+    field: id
+    meta:
+      collection: Project_directus_users
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: null
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: null
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      data_type: integer
+      default_value: null
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: true
+      is_generated: false
+      is_nullable: false
+      is_primary_key: true
+      is_unique: false
+      max_length: null
+      name: id
+      numeric_precision: null
+      numeric_scale: null
+      table: Project_directus_users
+    type: integer
+  - collection: WorkCategory
+    field: date_created
+    meta:
+      collection: WorkCategory
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+      field: date_created
+      group: null
+      hidden: true
+      interface: datetime
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: null
+      special:
+        - cast-timestamp
+        - date-created
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      data_type: datetime
+      default_value: null
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: null
+      name: date_created
+      numeric_precision: null
+      numeric_scale: null
+      table: WorkCategory
+    type: timestamp
+  - collection: WorkCategory
+    field: date_updated
+    meta:
+      collection: WorkCategory
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+      field: date_updated
+      group: null
+      hidden: true
+      interface: datetime
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: null
+      special:
+        - cast-timestamp
+        - date-updated
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      data_type: datetime
+      default_value: null
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: null
+      name: date_updated
+      numeric_precision: null
+      numeric_scale: null
+      table: WorkCategory
+    type: timestamp
+  - collection: WorkCategory
+    field: id
+    meta:
+      collection: WorkCategory
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: null
+      special:
+        - uuid
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      data_type: char
+      default_value: null
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: false
+      is_primary_key: true
+      is_unique: true
+      max_length: 36
+      name: id
+      numeric_precision: null
+      numeric_scale: null
+      table: WorkCategory
+    type: uuid
+  - collection: WorkCategory
+    field: name
+    meta:
+      collection: WorkCategory
+      conditions: null
+      display: null
+      display_options: null
+      field: name
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options: null
+      readonly: false
+      required: true
+      sort: null
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      data_type: varchar
+      default_value: null
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: 255
+      name: name
+      numeric_precision: null
+      numeric_scale: null
+      table: WorkCategory
+    type: string
+  - collection: WorkCategory
+    field: user_created
+    meta:
+      collection: WorkCategory
+      conditions: null
+      display: user
+      display_options: null
+      field: user_created
+      group: null
+      hidden: true
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
+      readonly: true
+      required: false
+      sort: null
+      special:
+        - user-created
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      data_type: char
+      default_value: null
+      foreign_key_column: id
+      foreign_key_table: directus_users
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: 36
+      name: user_created
+      numeric_precision: null
+      numeric_scale: null
+      table: WorkCategory
+    type: string
+  - collection: WorkCategory
+    field: user_updated
+    meta:
+      collection: WorkCategory
+      conditions: null
+      display: user
+      display_options: null
+      field: user_updated
+      group: null
+      hidden: true
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
+      readonly: true
+      required: false
+      sort: null
+      special:
+        - user-updated
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      data_type: char
+      default_value: null
+      foreign_key_column: id
+      foreign_key_table: directus_users
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: 36
+      name: user_updated
+      numeric_precision: null
+      numeric_scale: null
+      table: WorkCategory
+    type: string
+  - collection: WorkUnit
+    field: category
+    meta:
+      collection: WorkUnit
+      conditions: null
+      display: null
+      display_options: null
+      field: category
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{name}}'
+      readonly: false
+      required: true
+      sort: null
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      data_type: char
+      default_value: null
+      foreign_key_column: id
+      foreign_key_table: WorkCategory
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: 36
+      name: category
+      numeric_precision: null
+      numeric_scale: null
+      table: WorkUnit
+    type: string
+  - collection: WorkUnit
+    field: date_created
+    meta:
+      collection: WorkUnit
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+      field: date_created
+      group: null
+      hidden: true
+      interface: datetime
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: null
+      special:
+        - cast-timestamp
+        - date-created
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      data_type: datetime
+      default_value: null
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: null
+      name: date_created
+      numeric_precision: null
+      numeric_scale: null
+      table: WorkUnit
+    type: timestamp
+  - collection: WorkUnit
+    field: date_updated
+    meta:
+      collection: WorkUnit
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+      field: date_updated
+      group: null
+      hidden: true
+      interface: datetime
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: null
+      special:
+        - cast-timestamp
+        - date-updated
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      data_type: datetime
+      default_value: null
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: null
+      name: date_updated
+      numeric_precision: null
+      numeric_scale: null
+      table: WorkUnit
+    type: timestamp
+  - collection: WorkUnit
+    field: end
+    meta:
+      collection: WorkUnit
+      conditions: null
+      display: null
+      display_options: null
+      field: end
+      group: null
+      hidden: false
+      interface: datetime
+      note: null
+      options: null
+      readonly: false
+      required: true
+      sort: null
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      data_type: datetime
+      default_value: null
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: null
+      name: end
+      numeric_precision: null
+      numeric_scale: null
+      table: WorkUnit
+    type: dateTime
+  - collection: WorkUnit
+    field: id
+    meta:
+      collection: WorkUnit
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: null
+      special:
+        - uuid
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      data_type: char
+      default_value: null
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: false
+      is_primary_key: true
+      is_unique: true
+      max_length: 36
+      name: id
+      numeric_precision: null
+      numeric_scale: null
+      table: WorkUnit
+    type: uuid
+  - collection: WorkUnit
+    field: project
+    meta:
+      collection: WorkUnit
+      conditions: null
+      display: null
+      display_options: null
+      field: project
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        enableCreate: false
+        template: '{{title}}'
+      readonly: false
+      required: true
+      sort: null
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      data_type: char
+      default_value: null
+      foreign_key_column: id
+      foreign_key_table: Project
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: 36
+      name: project
+      numeric_precision: null
+      numeric_scale: null
+      table: WorkUnit
+    type: string
+  - collection: WorkUnit
+    field: start
+    meta:
+      collection: WorkUnit
+      conditions: null
+      display: null
+      display_options: null
+      field: start
+      group: null
+      hidden: false
+      interface: datetime
+      note: null
+      options: null
+      readonly: false
+      required: true
+      sort: null
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      data_type: datetime
+      default_value: null
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: null
+      name: start
+      numeric_precision: null
+      numeric_scale: null
+      table: WorkUnit
+    type: dateTime
+  - collection: WorkUnit
+    field: user_created
+    meta:
+      collection: WorkUnit
+      conditions: null
+      display: user
+      display_options: null
+      field: user_created
+      group: null
+      hidden: true
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
+      readonly: true
+      required: false
+      sort: null
+      special:
+        - user-created
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      data_type: char
+      default_value: null
+      foreign_key_column: id
+      foreign_key_table: directus_users
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: 36
+      name: user_created
+      numeric_precision: null
+      numeric_scale: null
+      table: WorkUnit
+    type: string
+  - collection: WorkUnit
+    field: user_updated
+    meta:
+      collection: WorkUnit
+      conditions: null
+      display: user
+      display_options: null
+      field: user_updated
+      group: null
+      hidden: true
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
+      readonly: true
+      required: false
+      sort: null
+      special:
+        - user-updated
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      data_type: char
+      default_value: null
+      foreign_key_column: id
+      foreign_key_table: directus_users
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: 36
+      name: user_updated
+      numeric_precision: null
+      numeric_scale: null
+      table: WorkUnit
+    type: string
+  - collection: WorkUnit
+    field: worker
+    meta:
+      collection: WorkUnit
+      conditions: null
+      display: null
+      display_options: null
+      field: worker
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        enableCreate: false
+        template: "{{first_name}}\_{{last_name}}"
+      readonly: false
+      required: true
+      sort: null
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      data_type: char
+      default_value: null
+      foreign_key_column: id
+      foreign_key_table: directus_users
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: 36
+      name: worker
+      numeric_precision: null
+      numeric_scale: null
+      table: WorkUnit
+    type: string
+  - collection: directus_users
+    field: divider-jyvzpy
+    meta:
+      collection: directus_users
+      conditions: null
+      display: null
+      display_options: null
+      field: divider-jyvzpy
+      group: null
+      hidden: false
+      interface: presentation-divider
+      note: null
+      options:
+        title: Custom
+      readonly: false
+      required: false
+      sort: 1
+      special:
+        - alias
+        - no-data
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema: null
+    type: alias
+  - collection: directus_users
+    field: projects
+    meta:
+      collection: directus_users
+      conditions: null
+      display: null
+      display_options: null
+      field: projects
+      group: null
+      hidden: false
+      interface: list-m2m
+      note: null
+      options:
+        template: '{{Project_id.title}}'
+      readonly: false
+      required: false
+      sort: 2
+      special:
+        - m2m
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema: null
+    type: alias
+relations:
+  - collection: Client
+    field: user_created
+    meta:
+      junction_field: null
+      many_collection: Client
+      many_field: user_created
+      one_allowed_collections: null
+      one_collection: directus_users
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    related_collection: directus_users
+    schema:
+      column: user_created
+      constraint_name: null
+      foreign_key_column: id
+      foreign_key_table: directus_users
+      on_delete: NO ACTION
+      on_update: NO ACTION
+      table: Client
+  - collection: Client
+    field: user_updated
+    meta:
+      junction_field: null
+      many_collection: Client
+      many_field: user_updated
+      one_allowed_collections: null
+      one_collection: directus_users
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    related_collection: directus_users
+    schema:
+      column: user_updated
+      constraint_name: null
+      foreign_key_column: id
+      foreign_key_table: directus_users
+      on_delete: NO ACTION
+      on_update: NO ACTION
+      table: Client
+  - collection: Person
+    field: client
+    meta:
+      junction_field: null
+      many_collection: Person
+      many_field: client
+      one_allowed_collections: null
+      one_collection: Client
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: contacts
+      sort_field: null
+    related_collection: Client
+    schema:
+      column: client
+      constraint_name: null
+      foreign_key_column: id
+      foreign_key_table: Client
+      on_delete: CASCADE
+      on_update: NO ACTION
+      table: Person
+  - collection: Person
+    field: user_created
+    meta:
+      junction_field: null
+      many_collection: Person
+      many_field: user_created
+      one_allowed_collections: null
+      one_collection: directus_users
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    related_collection: directus_users
+    schema:
+      column: user_created
+      constraint_name: null
+      foreign_key_column: id
+      foreign_key_table: directus_users
+      on_delete: NO ACTION
+      on_update: NO ACTION
+      table: Person
+  - collection: Person
+    field: user_updated
+    meta:
+      junction_field: null
+      many_collection: Person
+      many_field: user_updated
+      one_allowed_collections: null
+      one_collection: directus_users
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    related_collection: directus_users
+    schema:
+      column: user_updated
+      constraint_name: null
+      foreign_key_column: id
+      foreign_key_table: directus_users
+      on_delete: NO ACTION
+      on_update: NO ACTION
+      table: Person
+  - collection: Project
+    field: user_created
+    meta:
+      junction_field: null
+      many_collection: Project
+      many_field: user_created
+      one_allowed_collections: null
+      one_collection: directus_users
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    related_collection: directus_users
+    schema:
+      column: user_created
+      constraint_name: null
+      foreign_key_column: id
+      foreign_key_table: directus_users
+      on_delete: NO ACTION
+      on_update: NO ACTION
+      table: Project
+  - collection: Project
+    field: user_updated
+    meta:
+      junction_field: null
+      many_collection: Project
+      many_field: user_updated
+      one_allowed_collections: null
+      one_collection: directus_users
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    related_collection: directus_users
+    schema:
+      column: user_updated
+      constraint_name: null
+      foreign_key_column: id
+      foreign_key_table: directus_users
+      on_delete: NO ACTION
+      on_update: NO ACTION
+      table: Project
+  - collection: Project_WorkCategory
+    field: Project_id
+    meta:
+      junction_field: WorkCategory_id
+      many_collection: Project_WorkCategory
+      many_field: Project_id
+      one_allowed_collections: null
+      one_collection: Project
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: categories
+      sort_field: null
+    related_collection: Project
+    schema:
+      column: Project_id
+      constraint_name: null
+      foreign_key_column: id
+      foreign_key_table: Project
+      on_delete: SET NULL
+      on_update: NO ACTION
+      table: Project_WorkCategory
+  - collection: Project_WorkCategory
+    field: WorkCategory_id
+    meta:
+      junction_field: Project_id
+      many_collection: Project_WorkCategory
+      many_field: WorkCategory_id
+      one_allowed_collections: null
+      one_collection: WorkCategory
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    related_collection: WorkCategory
+    schema:
+      column: WorkCategory_id
+      constraint_name: null
+      foreign_key_column: id
+      foreign_key_table: WorkCategory
+      on_delete: SET NULL
+      on_update: NO ACTION
+      table: Project_WorkCategory
+  - collection: Project_directus_users
+    field: Project_id
+    meta:
+      junction_field: directus_users_id
+      many_collection: Project_directus_users
+      many_field: Project_id
+      one_allowed_collections: null
+      one_collection: Project
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: workers
+      sort_field: null
+    related_collection: Project
+    schema:
+      column: Project_id
+      constraint_name: null
+      foreign_key_column: id
+      foreign_key_table: Project
+      on_delete: SET NULL
+      on_update: NO ACTION
+      table: Project_directus_users
+  - collection: Project_directus_users
+    field: directus_users_id
+    meta:
+      junction_field: Project_id
+      many_collection: Project_directus_users
+      many_field: directus_users_id
+      one_allowed_collections: null
+      one_collection: directus_users
+      one_collection_field: null
+      one_deselect_action: delete
+      one_field: projects
+      sort_field: null
+    related_collection: directus_users
+    schema:
+      column: directus_users_id
+      constraint_name: null
+      foreign_key_column: id
+      foreign_key_table: directus_users
+      on_delete: SET NULL
+      on_update: NO ACTION
+      table: Project_directus_users
+  - collection: WorkCategory
+    field: user_created
+    meta:
+      junction_field: null
+      many_collection: WorkCategory
+      many_field: user_created
+      one_allowed_collections: null
+      one_collection: directus_users
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    related_collection: directus_users
+    schema:
+      column: user_created
+      constraint_name: null
+      foreign_key_column: id
+      foreign_key_table: directus_users
+      on_delete: NO ACTION
+      on_update: NO ACTION
+      table: WorkCategory
+  - collection: WorkCategory
+    field: user_updated
+    meta:
+      junction_field: null
+      many_collection: WorkCategory
+      many_field: user_updated
+      one_allowed_collections: null
+      one_collection: directus_users
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    related_collection: directus_users
+    schema:
+      column: user_updated
+      constraint_name: null
+      foreign_key_column: id
+      foreign_key_table: directus_users
+      on_delete: NO ACTION
+      on_update: NO ACTION
+      table: WorkCategory
+  - collection: WorkUnit
+    field: category
+    meta:
+      junction_field: null
+      many_collection: WorkUnit
+      many_field: category
+      one_allowed_collections: null
+      one_collection: WorkCategory
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    related_collection: WorkCategory
+    schema:
+      column: category
+      constraint_name: null
+      foreign_key_column: id
+      foreign_key_table: WorkCategory
+      on_delete: SET NULL
+      on_update: NO ACTION
+      table: WorkUnit
+  - collection: WorkUnit
+    field: project
+    meta:
+      junction_field: null
+      many_collection: WorkUnit
+      many_field: project
+      one_allowed_collections: null
+      one_collection: Project
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    related_collection: Project
+    schema:
+      column: project
+      constraint_name: null
+      foreign_key_column: id
+      foreign_key_table: Project
+      on_delete: SET NULL
+      on_update: NO ACTION
+      table: WorkUnit
+  - collection: WorkUnit
+    field: user_created
+    meta:
+      junction_field: null
+      many_collection: WorkUnit
+      many_field: user_created
+      one_allowed_collections: null
+      one_collection: directus_users
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    related_collection: directus_users
+    schema:
+      column: user_created
+      constraint_name: null
+      foreign_key_column: id
+      foreign_key_table: directus_users
+      on_delete: NO ACTION
+      on_update: NO ACTION
+      table: WorkUnit
+  - collection: WorkUnit
+    field: user_updated
+    meta:
+      junction_field: null
+      many_collection: WorkUnit
+      many_field: user_updated
+      one_allowed_collections: null
+      one_collection: directus_users
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    related_collection: directus_users
+    schema:
+      column: user_updated
+      constraint_name: null
+      foreign_key_column: id
+      foreign_key_table: directus_users
+      on_delete: NO ACTION
+      on_update: NO ACTION
+      table: WorkUnit
+  - collection: WorkUnit
+    field: worker
+    meta:
+      junction_field: null
+      many_collection: WorkUnit
+      many_field: worker
+      one_allowed_collections: null
+      one_collection: directus_users
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    related_collection: directus_users
+    schema:
+      column: worker
+      constraint_name: null
+      foreign_key_column: id
+      foreign_key_table: directus_users
+      on_delete: SET NULL
+      on_update: NO ACTION
+      table: WorkUnit

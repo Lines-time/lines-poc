@@ -1,0 +1,62 @@
+table User {
+  id uuid
+  directus_stuff any
+  projectsIds uuid[]
+  
+  indexes {
+    (id) [pk]
+  }
+}
+
+table Client {
+  id uuid
+  companyname string
+  address string
+  correspondentId uuid [ref:> Person.id]
+  indexes {
+    (id) [pk]
+  }
+}
+
+table Person {
+  id uuid
+  firstname string
+  lastname string
+  email email
+  telephone string
+}
+
+table Project {
+  id uuid
+  title string
+  clientId uuid [ref:> Client.id]
+  categoriesIds uuid[]
+  workersIds uuid[]
+  indexes {
+    (id) [pk]
+  }
+}
+
+table WorkCategory {
+  id uuid
+  name string
+  projectsIds uuid[]
+  indexes {
+    (id) [pk]
+  }
+}
+
+table WorkUnit {
+  id uuid
+  start timestamp
+  end timestamp
+  workerId uuid [ref:> User.id]
+  categoryId uuid [ref:> WorkCategory.id]
+  projectId uuid [ref:> Project.id]
+  indexes {
+    (id) [pk]
+  }
+}
+
+ref: Project.categoriesIds <> WorkCategory.projectsIds
+ref: User.projectsIds <> Project.workersIds
