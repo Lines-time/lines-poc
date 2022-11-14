@@ -1,5 +1,5 @@
 import { A, Outlet } from "@solidjs/router";
-import { ChevronDown, Menu } from "lucide-solid";
+import { ChevronDown } from "lucide-solid";
 import { Component, createMemo, createResource, createSignal, For } from "solid-js";
 import Dropdown from "~/Dropdown";
 import LoginModal from "~/modals/LoginModal";
@@ -40,15 +40,6 @@ const App: Component = () => {
                     class="drawer-toggle"
                 />
                 <div class="drawer-content">
-                    <div class="navbar bg-base-200">
-                        <div class="flex-none">
-                            <label for="main-drawer" class="drawer-button btn btn-ghost lg:hidden btn-square">
-                                <Menu />
-                            </label>
-                        </div>
-                        <div class="flex-1"></div>
-                        <div class="flex-none"></div>
-                    </div>
                     <Outlet />
                 </div>
                 <div class="drawer-side">
