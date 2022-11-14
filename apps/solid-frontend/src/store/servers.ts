@@ -1,37 +1,48 @@
-import { createEffect, createMemo, createSignal } from "solid-js";
+import { createEffect } from "solid-js";
+import { createStore } from "solid-js/store";
 
 import createServer from "../utils/server";
 
-const [servers, setServers] = createSignal<TServer[]>([]);
-const [activeServerId, setActiveServerId] = createSignal<string | null>(null);
-const [showLoginModal, setShowLoginModal] = createSignal(false);
-const activeServer = createMemo(() => {
-    return servers().length ? createServer(servers().find((s) => s.id === activeServerId()) ?? servers()[0]) : null;
-});
-const defaultServerId = createMemo(() => servers().find((s) => s.default)?.id ?? null);
-createEffect(() => {
-    const id = activeServerId();
-    if (id) localStorage.setItem("activeServerId", id);
+const [state, setState] = createStore<{
+    servers: TServer[];
+    activeServerId: string | null;
+    readonly isAuthenticated: () => Promise<boolean>;
+    readonly activeServer: TServer | null;
+    readonly defaultServerId: string | null;
+}>({
+    servers: [],
+    activeServerId: null,
+    get isAuthenticated() {
+        return async () =>
+            this.activeServer ? (await createServer(this.activeServer).auth.isAuthenticated()) ?? false : false;
+    },
+    get activeServer() {
+        return this.servers.length
+            ? this.servers.find((s: TServer) => s.id === this.activeServerId) ?? this.servers[0]
+            : null;
+    },
+    get defaultServerId() {
+        return this.servers.find((s: TServer) => s.default)?.id ?? null;
+    },
 });
 
-createEffect(async () => {
-    if ((await activeServer()?.auth.isAuthenticated()) === false) setShowLoginModal(true);
+createEffect(() => {
+    const id = state.activeServerId;
+    if (id) localStorage.setItem("activeServerId", id);
+    return id;
 });
 
 const init = async () => {
     const result = await fetch("/servers.json");
     const text = (await result.json()) as { servers: TServer[] };
-    setServers(text.servers);
-    setActiveServerId(localStorage.getItem("activeServerId") ?? text.servers.find((s) => s.default)?.id ?? null);
+    setState({
+        servers: text.servers,
+        activeServerId: localStorage.getItem("activeServerId") ?? text.servers.find((s) => s.default)?.id ?? null,
+    });
 };
 
-export {
-    servers,
-    activeServerId,
-    setActiveServerId,
-    activeServer,
+export default {
+    state,
+    setState,
     init,
-    showLoginModal,
-    setShowLoginModal,
-    defaultServerId,
 };

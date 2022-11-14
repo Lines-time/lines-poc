@@ -5360,10 +5360,10 @@ lru-cache@^6.0.0:
   dependencies:
     yallist "^4.0.0"
 
-lucide-solid@^0.98.0:
-  version "0.98.0"
-  resolved "https://registry.yarnpkg.com/lucide-solid/-/lucide-solid-0.98.0.tgz#b70b5d916d3c8e1766d380c84d86c97a65a50ef8"
-  integrity sha512-gtBy+gRcC1moJ0tz/m8ht7kvjVhMw/SqeWjWXo7350L2uw8mhjLGFtTBGmxxnl4koDmJyeKBjmL1JG6H0n64FA==
+lucide-solid@^0.100.0:
+  version "0.100.0"
+  resolved "https://registry.yarnpkg.com/lucide-solid/-/lucide-solid-0.100.0.tgz#8375b35bb497184e77d9b590ab05a69b174210dc"
+  integrity sha512-fLHx61olDmWsCPve5YmNpia0okGSOclhFWoOBHYKH7nGwAA+uGB+J8MpMUB30Gtyq5Ib9tBlEMPY3uyMw+R0EQ==
 
 magic-string@^0.25.7:
   version "0.25.9"
@@ -7406,10 +7406,10 @@ socks@^2.6.2:
     ip "^2.0.0"
     smart-buffer "^4.2.0"
 
-solid-js@^1.6.1:
-  version "1.6.1"
-  resolved "https://registry.yarnpkg.com/solid-js/-/solid-js-1.6.1.tgz#1b6cd94151a859d9c186a1a3a61e99234a567c77"
-  integrity sha512-i8OmR419Hr0918Or6sm1ET/cgmxTtAB7Bdz/UwhZ7G2THixrvVSO3jd+C7YqMKKfVwmf8PJ2gUSbKE8NKv28GA==
+solid-js@^1.6.2:
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/solid-js/-/solid-js-1.6.2.tgz#0030960cf697b3cad0cc9046f4e9388dcd2bc7d2"
+  integrity sha512-AZBsj+Yn1xliniTTeuQKG9V7VQVkQ8lZmSKvBjpcVSoZeF7nvt/N5f7Kcsx6QSufioa2YgvBjkIiA0cM0qhotw==
   dependencies:
     csstype "^3.1.0"
 

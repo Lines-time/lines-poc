@@ -1,16 +1,21 @@
 import { Route, Routes } from "@solidjs/router";
 import { Component, lazy } from "solid-js";
 
-import { init } from "./store/servers";
+import servers from "./store/servers";
 
-const App = lazy(() => import("@/App"));
+const App = lazy(() => import("./layouts/App"));
+const Track = lazy(() => import("@/Track"));
+const Overview = lazy(() => import("@/Overview"));
 
 const Main: Component = () => {
-    init();
+    servers.init();
     return (
         <>
             <Routes>
-                <Route path="/" component={App}></Route>
+                <Route path="/" component={App}>
+                    <Route path="/overview" component={Overview}></Route>
+                    <Route path="/track" component={Track}></Route>
+                </Route>
             </Routes>
         </>
     );
