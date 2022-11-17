@@ -1,9 +1,10 @@
 import { Menu } from "lucide-solid";
 
-import type { Component } from "solid-js"
+import type { Component, JSX } from "solid-js";
 
 type TProps = {
-    
+    center?: JSX.Element;
+    right?: JSX.Element;
 };
 
 const Navbar: Component<TProps> = (props) => {
@@ -14,9 +15,9 @@ const Navbar: Component<TProps> = (props) => {
                     <Menu />
                 </label>
             </div>
-            <div class="flex-1"></div>
-            <div class="flex-none"></div>
+            <div class="flex-1 flex flex-row justify-center w-full">{props.center}</div>
+            <div class="flex-none flex flex-row justify-end">{props.right}</div>
         </div>
     );
-}
+};
 export default Navbar;
