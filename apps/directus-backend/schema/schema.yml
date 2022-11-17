@@ -97,36 +97,6 @@ collections:
         `project_user_updated_foreign` FOREIGN KEY (`user_updated`) REFERENCES
         `directus_users` (`id`), CONSTRAINT `project_client_foreign` FOREIGN KEY
         (`client`) REFERENCES `Client` (`id`) ON DELETE SET NULL)
-  - collection: Project_WorkCategory
-    meta:
-      accountability: all
-      archive_app_filter: true
-      archive_field: null
-      archive_value: null
-      collapse: open
-      collection: Project_WorkCategory
-      color: null
-      display_template: null
-      group: null
-      hidden: true
-      icon: import_export
-      item_duplication_fields: null
-      note: null
-      singleton: false
-      sort: 4
-      sort_field: null
-      translations: null
-      unarchive_value: null
-    schema:
-      name: Project_WorkCategory
-      sql: >-
-        CREATE TABLE "Project_WorkCategory" (`id` integer PRIMARY KEY
-        AUTOINCREMENT NOT NULL, `Project_id` char(36) NULL, `WorkCategory_id`
-        char(36) NULL, CONSTRAINT `project_workcategory_workcategory_id_foreign`
-        FOREIGN KEY (`WorkCategory_id`) REFERENCES `WorkCategory` (`id`) ON
-        DELETE SET NULL, CONSTRAINT `project_workcategory_project_id_foreign`
-        FOREIGN KEY (`Project_id`) REFERENCES `Project` (`id`) ON DELETE SET
-        NULL)
   - collection: Project_directus_users
     meta:
       accountability: all
@@ -187,6 +157,36 @@ collections:
         (`user_created`) REFERENCES `directus_users` (`id`), CONSTRAINT
         `workcategory_user_updated_foreign` FOREIGN KEY (`user_updated`)
         REFERENCES `directus_users` (`id`))
+  - collection: WorkCategory_Project
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      collapse: open
+      collection: WorkCategory_Project
+      color: null
+      display_template: null
+      group: null
+      hidden: true
+      icon: import_export
+      item_duplication_fields: null
+      note: null
+      singleton: false
+      sort: 6
+      sort_field: null
+      translations: null
+      unarchive_value: null
+    schema:
+      name: WorkCategory_Project
+      sql: >-
+        CREATE TABLE "WorkCategory_Project" (`id` integer PRIMARY KEY
+        AUTOINCREMENT NOT NULL, `WorkCategory_id` char(36) NULL, `Project_id`
+        char(36) NULL, CONSTRAINT `workcategory_project_project_id_foreign`
+        FOREIGN KEY (`Project_id`) REFERENCES `Project` (`id`) ON DELETE SET
+        NULL, CONSTRAINT `workcategory_project_workcategory_id_foreign` FOREIGN
+        KEY (`WorkCategory_id`) REFERENCES `WorkCategory` (`id`) ON DELETE SET
+        NULL)
   - collection: WorkUnit
     meta:
       accountability: all
@@ -203,7 +203,7 @@ collections:
       item_duplication_fields: null
       note: null
       singleton: false
-      sort: 6
+      sort: 4
       sort_field: null
       translations: null
       unarchive_value: null
@@ -455,7 +455,8 @@ fields:
       collection: Client
       conditions: null
       display: related-values
-      display_options: null
+      display_options:
+        template: '{{title}}'
       field: projects
       group: null
       hidden: false
@@ -1030,8 +1031,9 @@ fields:
     meta:
       collection: Project
       conditions: null
-      display: null
-      display_options: null
+      display: related-values
+      display_options:
+        template: '{{WorkCategory_id.name}}'
       field: categories
       group: null
       hidden: false
@@ -1040,7 +1042,7 @@ fields:
       options: null
       readonly: false
       required: false
-      sort: null
+      sort: 9
       special:
         - m2m
       translations: null
@@ -1065,7 +1067,7 @@ fields:
         template: '{{companyname}}'
       readonly: false
       required: true
-      sort: null
+      sort: 10
       special:
         - m2o
       translations: null
@@ -1105,7 +1107,7 @@ fields:
       options: null
       readonly: true
       required: false
-      sort: null
+      sort: 4
       special:
         - cast-timestamp
         - date-created
@@ -1146,7 +1148,7 @@ fields:
       options: null
       readonly: true
       required: false
-      sort: null
+      sort: 6
       special:
         - cast-timestamp
         - date-updated
@@ -1186,7 +1188,7 @@ fields:
       options: null
       readonly: true
       required: false
-      sort: null
+      sort: 1
       special:
         - uuid
       translations: null
@@ -1225,7 +1227,7 @@ fields:
       options: null
       readonly: false
       required: false
-      sort: null
+      sort: 2
       special: null
       translations: null
       validation: null
@@ -1264,7 +1266,7 @@ fields:
         iconLeft: title
       readonly: false
       required: true
-      sort: null
+      sort: 7
       special: null
       translations: null
       validation: null
@@ -1303,7 +1305,7 @@ fields:
         template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
       readonly: true
       required: false
-      sort: null
+      sort: 3
       special:
         - user-created
       translations: null
@@ -1343,7 +1345,7 @@ fields:
         template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
       readonly: true
       required: false
-      sort: null
+      sort: 5
       special:
         - user-updated
       translations: null
@@ -1372,8 +1374,9 @@ fields:
     meta:
       collection: Project
       conditions: null
-      display: null
-      display_options: null
+      display: related-values
+      display_options:
+        template: "{{directus_users_id.first_name}}\_{{directus_users_id.last_name}}"
       field: workers
       group: null
       hidden: false
@@ -1383,7 +1386,7 @@ fields:
         enableCreate: false
       readonly: false
       required: false
-      sort: null
+      sort: 8
       special:
         - m2m
       translations: null
@@ -1392,120 +1395,6 @@ fields:
       width: half
     schema: null
     type: alias
-  - collection: Project_WorkCategory
-    field: Project_id
-    meta:
-      collection: Project_WorkCategory
-      conditions: null
-      display: null
-      display_options: null
-      field: Project_id
-      group: null
-      hidden: true
-      interface: null
-      note: null
-      options: null
-      readonly: false
-      required: false
-      sort: null
-      special: null
-      translations: null
-      validation: null
-      validation_message: null
-      width: full
-    schema:
-      data_type: char
-      default_value: null
-      foreign_key_column: id
-      foreign_key_table: Project
-      generation_expression: null
-      has_auto_increment: false
-      is_generated: false
-      is_nullable: true
-      is_primary_key: false
-      is_unique: false
-      max_length: 36
-      name: Project_id
-      numeric_precision: null
-      numeric_scale: null
-      table: Project_WorkCategory
-    type: string
-  - collection: Project_WorkCategory
-    field: WorkCategory_id
-    meta:
-      collection: Project_WorkCategory
-      conditions: null
-      display: null
-      display_options: null
-      field: WorkCategory_id
-      group: null
-      hidden: true
-      interface: null
-      note: null
-      options: null
-      readonly: false
-      required: false
-      sort: null
-      special: null
-      translations: null
-      validation: null
-      validation_message: null
-      width: full
-    schema:
-      data_type: char
-      default_value: null
-      foreign_key_column: id
-      foreign_key_table: WorkCategory
-      generation_expression: null
-      has_auto_increment: false
-      is_generated: false
-      is_nullable: true
-      is_primary_key: false
-      is_unique: false
-      max_length: 36
-      name: WorkCategory_id
-      numeric_precision: null
-      numeric_scale: null
-      table: Project_WorkCategory
-    type: string
-  - collection: Project_WorkCategory
-    field: id
-    meta:
-      collection: Project_WorkCategory
-      conditions: null
-      display: null
-      display_options: null
-      field: id
-      group: null
-      hidden: true
-      interface: null
-      note: null
-      options: null
-      readonly: false
-      required: false
-      sort: null
-      special: null
-      translations: null
-      validation: null
-      validation_message: null
-      width: full
-    schema:
-      data_type: integer
-      default_value: null
-      foreign_key_column: null
-      foreign_key_table: null
-      generation_expression: null
-      has_auto_increment: true
-      is_generated: false
-      is_nullable: false
-      is_primary_key: true
-      is_unique: false
-      max_length: null
-      name: id
-      numeric_precision: null
-      numeric_scale: null
-      table: Project_WorkCategory
-    type: integer
   - collection: Project_directus_users
     field: Project_id
     meta:
@@ -1780,6 +1669,31 @@ fields:
       table: WorkCategory
     type: string
   - collection: WorkCategory
+    field: projects
+    meta:
+      collection: WorkCategory
+      conditions: null
+      display: related-values
+      display_options:
+        template: '{{Project_id.title}}'
+      field: projects
+      group: null
+      hidden: false
+      interface: list-m2m
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: null
+      special:
+        - m2m
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema: null
+    type: alias
+  - collection: WorkCategory
     field: user_created
     meta:
       collection: WorkCategory
@@ -1859,13 +1773,128 @@ fields:
       numeric_scale: null
       table: WorkCategory
     type: string
+  - collection: WorkCategory_Project
+    field: Project_id
+    meta:
+      collection: WorkCategory_Project
+      conditions: null
+      display: null
+      display_options: null
+      field: Project_id
+      group: null
+      hidden: true
+      interface: null
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: null
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      data_type: char
+      default_value: null
+      foreign_key_column: id
+      foreign_key_table: Project
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: 36
+      name: Project_id
+      numeric_precision: null
+      numeric_scale: null
+      table: WorkCategory_Project
+    type: string
+  - collection: WorkCategory_Project
+    field: WorkCategory_id
+    meta:
+      collection: WorkCategory_Project
+      conditions: null
+      display: null
+      display_options: null
+      field: WorkCategory_id
+      group: null
+      hidden: true
+      interface: null
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: null
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      data_type: char
+      default_value: null
+      foreign_key_column: id
+      foreign_key_table: WorkCategory
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: 36
+      name: WorkCategory_id
+      numeric_precision: null
+      numeric_scale: null
+      table: WorkCategory_Project
+    type: string
+  - collection: WorkCategory_Project
+    field: id
+    meta:
+      collection: WorkCategory_Project
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: null
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: null
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      data_type: integer
+      default_value: null
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: true
+      is_generated: false
+      is_nullable: false
+      is_primary_key: true
+      is_unique: false
+      max_length: null
+      name: id
+      numeric_precision: null
+      numeric_scale: null
+      table: WorkCategory_Project
+    type: integer
   - collection: WorkUnit
     field: category
     meta:
       collection: WorkUnit
       conditions: null
-      display: null
-      display_options: null
+      display: related-values
+      display_options:
+        template: '{{name}}'
       field: category
       group: null
       hidden: false
@@ -2063,8 +2092,9 @@ fields:
     meta:
       collection: WorkUnit
       conditions: null
-      display: null
-      display_options: null
+      display: related-values
+      display_options:
+        template: '{{title}}'
       field: project
       group: null
       hidden: false
@@ -2222,8 +2252,9 @@ fields:
     meta:
       collection: WorkUnit
       conditions: null
-      display: null
-      display_options: null
+      display: related-values
+      display_options:
+        template: "{{first_name}}\_{{last_name}}"
       field: worker
       group: null
       hidden: false
@@ -2478,48 +2509,6 @@ relations:
       on_delete: NO ACTION
       on_update: NO ACTION
       table: Project
-  - collection: Project_WorkCategory
-    field: Project_id
-    meta:
-      junction_field: WorkCategory_id
-      many_collection: Project_WorkCategory
-      many_field: Project_id
-      one_allowed_collections: null
-      one_collection: Project
-      one_collection_field: null
-      one_deselect_action: nullify
-      one_field: categories
-      sort_field: null
-    related_collection: Project
-    schema:
-      column: Project_id
-      constraint_name: null
-      foreign_key_column: id
-      foreign_key_table: Project
-      on_delete: SET NULL
-      on_update: NO ACTION
-      table: Project_WorkCategory
-  - collection: Project_WorkCategory
-    field: WorkCategory_id
-    meta:
-      junction_field: Project_id
-      many_collection: Project_WorkCategory
-      many_field: WorkCategory_id
-      one_allowed_collections: null
-      one_collection: WorkCategory
-      one_collection_field: null
-      one_deselect_action: nullify
-      one_field: null
-      sort_field: null
-    related_collection: WorkCategory
-    schema:
-      column: WorkCategory_id
-      constraint_name: null
-      foreign_key_column: id
-      foreign_key_table: WorkCategory
-      on_delete: SET NULL
-      on_update: NO ACTION
-      table: Project_WorkCategory
   - collection: Project_directus_users
     field: Project_id
     meta:
@@ -2604,6 +2593,48 @@ relations:
       on_delete: NO ACTION
       on_update: NO ACTION
       table: WorkCategory
+  - collection: WorkCategory_Project
+    field: Project_id
+    meta:
+      junction_field: WorkCategory_id
+      many_collection: WorkCategory_Project
+      many_field: Project_id
+      one_allowed_collections: null
+      one_collection: Project
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: categories
+      sort_field: null
+    related_collection: Project
+    schema:
+      column: Project_id
+      constraint_name: null
+      foreign_key_column: id
+      foreign_key_table: Project
+      on_delete: SET NULL
+      on_update: NO ACTION
+      table: WorkCategory_Project
+  - collection: WorkCategory_Project
+    field: WorkCategory_id
+    meta:
+      junction_field: Project_id
+      many_collection: WorkCategory_Project
+      many_field: WorkCategory_id
+      one_allowed_collections: null
+      one_collection: WorkCategory
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: projects
+      sort_field: null
+    related_collection: WorkCategory
+    schema:
+      column: WorkCategory_id
+      constraint_name: null
+      foreign_key_column: id
+      foreign_key_table: WorkCategory
+      on_delete: SET NULL
+      on_update: NO ACTION
+      table: WorkCategory_Project
   - collection: WorkUnit
     field: category
     meta:
