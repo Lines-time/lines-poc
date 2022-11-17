@@ -13,7 +13,7 @@ const Main: Component = () => {
         <>
             <Routes>
                 <Route path="/" component={App}>
-                    <Route path="/overview" component={Overview}></Route>
+                    <Route path="/" component={Overview}></Route>
                     <Route path="/track" component={Track}></Route>
                 </Route>
             </Routes>
