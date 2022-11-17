@@ -1056,8 +1056,9 @@ fields:
     meta:
       collection: Project
       conditions: null
-      display: null
-      display_options: null
+      display: related-values
+      display_options:
+        template: '{{companyname}}'
       field: client
       group: null
       hidden: false
