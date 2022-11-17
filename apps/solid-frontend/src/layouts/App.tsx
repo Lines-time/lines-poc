@@ -64,29 +64,34 @@ const App: Component = () => {
                         </div>
                         <ul class="menu w-full p-2 rounded-box">
                             <li>
-                                <A href="/" end>Overview</A>
+                                <A href="/" end>
+                                    Overview
+                                </A>
                             </li>
                             <li>
-                                <A href="/track" end>Track time</A>
+                                <A href="/track" end>
+                                    Track time
+                                </A>
                             </li>
                             <li>
-                                <A href="/vacation" end>Vacation</A>
+                                <A href="/vacation" end>
+                                    Vacation
+                                </A>
                             </li>
                             <li class="menu-title">
                                 <span>Reports</span>
                             </li>
                             <li>
-                                <A href="/reports" end>Overview</A>
+                                <A href="/reports" end>
+                                    Overview
+                                </A>
                             </li>
                         </ul>
                     </div>
                 </div>
             </div>
             <LoginModal
-                open={
-                    !isAuthenticated.loading &&
-                    !isAuthenticated.latest
-                }
+                open={!isAuthenticated.loading && !isAuthenticated.latest}
                 onClose={closeLoginModal}
                 onSave={login}
             />
