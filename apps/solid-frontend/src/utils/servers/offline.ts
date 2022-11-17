@@ -1,5 +1,6 @@
 import type { TApi, TServer } from "../types";
 
+// TODO: offline database with PouchDB
 export const offline = (server: TServer): TApi => {
     return {
         auth: {
