@@ -91,10 +91,12 @@ collections:
         CREATE TABLE "Project" (`id` char(36) NOT NULL, `sort` integer NULL,
         `user_created` char(36) NULL, `date_created` datetime NULL,
         `user_updated` char(36) NULL, `date_updated` datetime NULL, `title`
-        varchar(255) null, PRIMARY KEY (`id`), CONSTRAINT
-        `project_user_created_foreign` FOREIGN KEY (`user_created`) REFERENCES
-        `directus_users` (`id`), CONSTRAINT `project_user_updated_foreign`
-        FOREIGN KEY (`user_updated`) REFERENCES `directus_users` (`id`))
+        varchar(255) NULL, `client` char(36) NULL, PRIMARY KEY (`id`),
+        CONSTRAINT `project_user_created_foreign` FOREIGN KEY (`user_created`)
+        REFERENCES `directus_users` (`id`), CONSTRAINT
+        `project_user_updated_foreign` FOREIGN KEY (`user_updated`) REFERENCES
+        `directus_users` (`id`), CONSTRAINT `project_client_foreign` FOREIGN KEY
+        (`client`) REFERENCES `Client` (`id`) ON DELETE SET NULL)
   - collection: Project_WorkCategory
     meta:
       accountability: all
@@ -447,6 +449,31 @@ fields:
       numeric_scale: null
       table: Client
     type: uuid
+  - collection: Client
+    field: projects
+    meta:
+      collection: Client
+      conditions: null
+      display: related-values
+      display_options: null
+      field: projects
+      group: null
+      hidden: false
+      interface: list-o2m
+      note: null
+      options:
+        template: '{{title}}'
+      readonly: false
+      required: false
+      sort: null
+      special:
+        - o2m
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema: null
+    type: alias
   - collection: Client
     field: sort
     meta:
@@ -1022,6 +1049,46 @@ fields:
       width: half
     schema: null
     type: alias
+  - collection: Project
+    field: client
+    meta:
+      collection: Project
+      conditions: null
+      display: null
+      display_options: null
+      field: client
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{companyname}}'
+      readonly: false
+      required: true
+      sort: null
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      data_type: char
+      default_value: null
+      foreign_key_column: id
+      foreign_key_table: Client
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: 36
+      name: client
+      numeric_precision: null
+      numeric_scale: null
+      table: Project
+    type: string
   - collection: Project
     field: date_created
     meta:
@@ -2348,6 +2415,27 @@ relations:
       on_delete: NO ACTION
       on_update: NO ACTION
       table: Person
+  - collection: Project
+    field: client
+    meta:
+      junction_field: null
+      many_collection: Project
+      many_field: client
+      one_allowed_collections: null
+      one_collection: Client
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: projects
+      sort_field: null
+    related_collection: Client
+    schema:
+      column: client
+      constraint_name: null
+      foreign_key_column: id
+      foreign_key_table: Client
+      on_delete: SET NULL
+      on_update: NO ACTION
+      table: Project
   - collection: Project
     field: user_created
     meta:
