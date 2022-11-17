@@ -70,7 +70,7 @@ const App: Component = () => {
                                 </A>
                             </li>
                             <li>
-                                <A href="/track" end>
+                                <A href="/track">
                                     Track time
                                 </A>
                             </li>

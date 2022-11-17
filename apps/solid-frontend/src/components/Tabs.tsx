@@ -1,33 +1,23 @@
-import { Component, createSignal } from "solid-js";
+import { A } from "@solidjs/router";
+
+import type { Component } from "solid-js";
 
 export type TTab = {
     label: string;
+    href: string;
 };
 
 type TProps = {
     tabs: TTab[];
-    onChange?: (index: number) => void;
 };
 
 const Tabs: Component<TProps> = (props) => {
-    const [activeTab, setActiveTab] = createSignal(0);
-
-    const changeTab = (index: number) => {
-        setActiveTab(index);
-        props.onChange?.(index);
-    };
     return (
         <div class="tabs tabs-boxed bg-base-300 p-2 rounded-lg">
-            {props.tabs.map((tab, index) => (
-                <a
-                    class="tab transition-colors rounded-md"
-                    classList={{
-                        "tab-active": index === activeTab(),
-                    }}
-                    onClick={() => changeTab(index)}
-                >
+            {props.tabs.map((tab) => (
+                <A class="tab transition-colors rounded-md" activeClass="tab-active" href={tab.href}>
                     {tab.label}
-                </a>
+                </A>
             ))}
         </div>
     );

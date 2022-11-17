@@ -1,3 +1,4 @@
+import { Outlet } from "@solidjs/router";
 import Navbar from "~/Navbar";
 import Tabs, { TTab } from "~/Tabs";
 
@@ -6,19 +7,22 @@ const Track: Component = () => {
     const tabs: TTab[] = [
         {
             label: "Day",
+            href: "/track/day",
         },
         {
             label: "Week",
+            href: "/track/week",
         },
         {
             label: "Month",
+            href: "/track/month",
         },
     ];
     const onChangeTab = (index: number) => {};
     return (
         <div>
-            <Navbar title="Track time" center={<Tabs tabs={tabs} onChange={onChangeTab} />} />
-            
+            <Navbar title="Track time" center={<Tabs tabs={tabs} />} />
+            <Outlet />
         </div>
     );
 };
