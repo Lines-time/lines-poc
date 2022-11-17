@@ -18,9 +18,8 @@ const Track: Component = () => {
             href: "/track/month",
         },
     ];
-    const onChangeTab = (index: number) => {};
     return (
-        <div>
+        <div class="h-full grid grid-rows-[min-content_1fr]">
             <Navbar title="Track time" center={<Tabs tabs={tabs} />} />
             <Outlet />
         </div>

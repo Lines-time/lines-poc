@@ -1,18 +1,15 @@
 import { Component, ComponentProps, createResource, createSignal, For } from "solid-js";
+import Button from "~/Button";
 import FormControl from "~/FormControl";
 import Modal from "~/Modal";
 
 import servers from "../../store/servers";
 
-type TProps = Omit<ComponentProps<typeof Modal>, "title"> & {};
+type TProps = Omit<ComponentProps<typeof Modal>, "title" | "children"> & {};
 
 const WorkUnitModal: Component<TProps> = (props) => {
-    const { ...modalProps } = props;
-
     const [description, setDescription] = createSignal("");
-    const [projects, projectsResource] = createResource(
-        async () => await servers.currentServer()?.project?.getAll()
-    );
+    const [projects, projectsResource] = createResource(async () => await servers.currentServer()?.project?.getAll());
     const [categories, categoriesResource] = createResource(
         () => projects(),
         async () => await servers.currentServer()?.category?.getForProject(projects()?.[0]?.id ?? "")
@@ -23,7 +20,7 @@ const WorkUnitModal: Component<TProps> = (props) => {
     };
 
     return (
-        <Modal {...modalProps} title="Track your time">
+        <Modal {...props} title="Track your time">
             <form onSubmit={formSubmit}>
                 <FormControl label="Project">
                     <select class="select select-bordered">
@@ -46,6 +43,9 @@ const WorkUnitModal: Component<TProps> = (props) => {
                         onInput={(e) => setDescription(e.currentTarget.value)}
                     />
                 </FormControl>
+                <div class="modal-action">
+                    <Button submit>Save</Button>
+                </div>
             </form>
         </Modal>
     );

@@ -3,7 +3,7 @@ import Button from "~/Button";
 import Modal from "~/Modal";
 import TextInput from "~/TextInput";
 
-type TProps = Omit<ComponentProps<typeof Modal>, "children" | "id" | "title"> & {
+type TProps = Omit<ComponentProps<typeof Modal>, "children" | "title"> & {
     onSave: (email: string, password: string) => void;
 };
 
@@ -15,7 +15,7 @@ const LoginModal: Component<TProps> = (props) => {
         props.onSave(email(), password());
     };
     return (
-        <Modal id="login" title="Login" {...props}>
+        <Modal title="Login" {...props}>
             <form onSubmit={save}>
                 <TextInput label="Email" required value={email()} setValue={setEmail} />
                 <TextInput label="Password" type="password" required value={password()} setValue={setPassword} />

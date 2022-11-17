@@ -44,7 +44,7 @@ const App: Component = () => {
                 </div>
                 <div class="drawer-side">
                     <label for="main-drawer" class="drawer-overlay"></label>
-                    <div class="w-80 bg-base-200 text-base-content">
+                    <div class="w-80 bg-base-200 border-r-2 border-base-300 border-solid text-base-content">
                         <div class="w-full flex flex-row justify-between items-center p-2 pl-5 gap-2 bg-primary text-primary-content">
                             <p>{servers.state.activeServer?.display_name}</p>
                             <Dropdown alignment="end" label={<ChevronDown />} labelClass="btn btn-circle btn-primary">
