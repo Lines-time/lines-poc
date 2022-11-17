@@ -14,11 +14,11 @@ const App: Component = () => {
         null
     );
     const [isAuthenticated, authResource] = createResource(async () => {
-        return (await activeServer()?.auth.isAuthenticated()) ?? false;
+        return (await servers.currentServer()?.auth?.isAuthenticated()) ?? false;
     });
 
     const login = async (email: string, password: string) => {
-        await activeServer()?.auth.login(email, password);
+        await servers.currentServer()?.auth?.login(email, password);
         await authResource.refetch();
     };
     const closeLoginModal = async () => {

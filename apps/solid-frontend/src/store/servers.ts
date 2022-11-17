@@ -1,7 +1,9 @@
-import { createEffect } from "solid-js";
+import { createEffect, createMemo } from "solid-js";
 import { createStore } from "solid-js/store";
 
 import createServer from "../utils/server";
+
+import type { TServer } from "../utils/types";
 
 const [state, setState] = createStore<{
     servers: TServer[];
@@ -14,7 +16,7 @@ const [state, setState] = createStore<{
     activeServerId: null,
     get isAuthenticated() {
         return async () =>
-            this.activeServer ? (await createServer(this.activeServer).auth.isAuthenticated()) ?? false : false;
+            this.activeServer ? (await createServer(this.activeServer).auth?.isAuthenticated()) ?? false : false;
     },
     get activeServer() {
         return this.servers.length
@@ -25,6 +27,8 @@ const [state, setState] = createStore<{
         return this.servers.find((s: TServer) => s.default)?.id ?? null;
     },
 });
+
+const currentServer = createMemo(() => (state.activeServer ? createServer(state.activeServer) : null), null);
 
 createEffect(() => {
     const id = state.activeServerId;
@@ -43,6 +47,7 @@ const init = async () => {
 
 export default {
     state,
+    currentServer,
     setState,
     init,
 };
