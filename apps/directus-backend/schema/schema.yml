@@ -24,14 +24,15 @@ collections:
     schema:
       name: Client
       sql: >-
-        CREATE TABLE "Client" (`id` char(36) NOT NULL, `sort` integer NULL,
-        `user_created` char(36) NULL, `date_created` datetime NULL,
-        `user_updated` char(36) NULL, `date_updated` datetime NULL,
-        `companyname` varchar(255) null, `address` text null, PRIMARY KEY
-        (`id`), CONSTRAINT `client_user_created_foreign` FOREIGN KEY
-        (`user_created`) REFERENCES `directus_users` (`id`), CONSTRAINT
-        `client_user_updated_foreign` FOREIGN KEY (`user_updated`) REFERENCES
-        `directus_users` (`id`))
+        CREATE TABLE "Client" (`address` text NULL DEFAULT null, `companyname`
+        varchar(255) NULL DEFAULT null, `date_created` datetime NULL DEFAULT
+        null, `date_updated` datetime NULL DEFAULT null, `id` char(36) NOT NULL
+        DEFAULT null, `sort` integer NULL DEFAULT null, `user_created` char(36)
+        NULL DEFAULT null, `user_updated` char(36) NULL DEFAULT null, PRIMARY
+        KEY (`id`), CONSTRAINT `client_user_created_foreign` FOREIGN KEY
+        (`user_created`) REFERENCES `directus_users` (`id`) ON DELETE NO ACTION,
+        CONSTRAINT `client_user_updated_foreign` FOREIGN KEY (`user_updated`)
+        REFERENCES `directus_users` (`id`) ON DELETE NO ACTION)
   - collection: Person
     meta:
       accountability: all
@@ -55,16 +56,19 @@ collections:
     schema:
       name: Person
       sql: >-
-        CREATE TABLE "Person" (`id` char(36) NOT NULL, `sort` integer NULL,
-        `user_created` char(36) NULL, `date_created` datetime NULL,
-        `user_updated` char(36) NULL, `date_updated` datetime NULL, `firstname`
-        varchar(255) NULL, `lastname` varchar(255) NULL, `email` varchar(255)
-        NULL, `telephone` varchar(255) NULL, `client` char(36) NULL, PRIMARY KEY
-        (`id`), CONSTRAINT `person_user_created_foreign` FOREIGN KEY
-        (`user_created`) REFERENCES `directus_users` (`id`), CONSTRAINT
+        CREATE TABLE "Person" (`client` char(36) NULL DEFAULT null,
+        `date_created` datetime NULL DEFAULT null, `date_updated` datetime NULL
+        DEFAULT null, `email` varchar(255) NULL DEFAULT null, `firstname`
+        varchar(255) NULL DEFAULT null, `id` char(36) NOT NULL DEFAULT null,
+        `lastname` varchar(255) NULL DEFAULT null, `sort` integer NULL DEFAULT
+        null, `telephone` varchar(255) NULL DEFAULT null, `user_created`
+        char(36) NULL DEFAULT null, `user_updated` char(36) NULL DEFAULT null,
+        PRIMARY KEY (`id`), CONSTRAINT `person_client_foreign` FOREIGN KEY
+        (`client`) REFERENCES `Client` (`id`) ON DELETE CASCADE, CONSTRAINT
+        `person_user_created_foreign` FOREIGN KEY (`user_created`) REFERENCES
+        `directus_users` (`id`) ON DELETE NO ACTION, CONSTRAINT
         `person_user_updated_foreign` FOREIGN KEY (`user_updated`) REFERENCES
-        `directus_users` (`id`), CONSTRAINT `person_client_foreign` FOREIGN KEY
-        (`client`) REFERENCES `Client` (`id`) ON DELETE CASCADE)
+        `directus_users` (`id`) ON DELETE NO ACTION)
   - collection: Project
     meta:
       accountability: all
@@ -88,15 +92,17 @@ collections:
     schema:
       name: Project
       sql: >-
-        CREATE TABLE "Project" (`id` char(36) NOT NULL, `sort` integer NULL,
-        `user_created` char(36) NULL, `date_created` datetime NULL,
-        `user_updated` char(36) NULL, `date_updated` datetime NULL, `title`
-        varchar(255) NULL, `client` char(36) NULL, PRIMARY KEY (`id`),
-        CONSTRAINT `project_user_created_foreign` FOREIGN KEY (`user_created`)
-        REFERENCES `directus_users` (`id`), CONSTRAINT
+        CREATE TABLE "Project" (`client` char(36) NULL DEFAULT null,
+        `date_created` datetime NULL DEFAULT null, `date_updated` datetime NULL
+        DEFAULT null, `id` char(36) NOT NULL DEFAULT null, `sort` integer NULL
+        DEFAULT null, `title` varchar(255) NULL DEFAULT null, `user_created`
+        char(36) NULL DEFAULT null, `user_updated` char(36) NULL DEFAULT null,
+        PRIMARY KEY (`id`), CONSTRAINT `project_client_foreign` FOREIGN KEY
+        (`client`) REFERENCES `Client` (`id`) ON DELETE SET NULL, CONSTRAINT
+        `project_user_created_foreign` FOREIGN KEY (`user_created`) REFERENCES
+        `directus_users` (`id`) ON DELETE NO ACTION, CONSTRAINT
         `project_user_updated_foreign` FOREIGN KEY (`user_updated`) REFERENCES
-        `directus_users` (`id`), CONSTRAINT `project_client_foreign` FOREIGN KEY
-        (`client`) REFERENCES `Client` (`id`) ON DELETE SET NULL)
+        `directus_users` (`id`) ON DELETE NO ACTION)
   - collection: Project_directus_users
     meta:
       accountability: all
@@ -120,13 +126,14 @@ collections:
     schema:
       name: Project_directus_users
       sql: >-
-        CREATE TABLE "Project_directus_users" (`id` integer PRIMARY KEY
-        AUTOINCREMENT NOT NULL, `Project_id` char(36) NULL, `directus_users_id`
-        char(36) NULL, CONSTRAINT `project_directus_users_project_id_foreign`
-        FOREIGN KEY (`Project_id`) REFERENCES `Project` (`id`) ON DELETE SET
-        NULL, CONSTRAINT `project_directus_users_directus_users_id_foreign`
-        FOREIGN KEY (`directus_users_id`) REFERENCES `directus_users` (`id`) ON
-        DELETE SET NULL)
+        CREATE TABLE "Project_directus_users" (`Project_id` char(36) NULL
+        DEFAULT null, `directus_users_id` char(36) NULL DEFAULT null, `id`
+        integer PRIMARY KEY AUTOINCREMENT NOT NULL, CONSTRAINT
+        `project_directus_users_project_id_foreign` FOREIGN KEY (`Project_id`)
+        REFERENCES `Project` (`id`) ON DELETE SET NULL, CONSTRAINT
+        `project_directus_users_directus_users_id_foreign` FOREIGN KEY
+        (`directus_users_id`) REFERENCES `directus_users` (`id`) ON DELETE SET
+        NULL)
   - collection: WorkCategory
     meta:
       accountability: all
@@ -150,13 +157,15 @@ collections:
     schema:
       name: WorkCategory
       sql: >-
-        CREATE TABLE "WorkCategory" (`id` char(36) NOT NULL, `user_created`
-        char(36) NULL, `date_created` datetime NULL, `user_updated` char(36)
-        NULL, `date_updated` datetime NULL, `name` varchar(255) null, PRIMARY
-        KEY (`id`), CONSTRAINT `workcategory_user_created_foreign` FOREIGN KEY
-        (`user_created`) REFERENCES `directus_users` (`id`), CONSTRAINT
-        `workcategory_user_updated_foreign` FOREIGN KEY (`user_updated`)
-        REFERENCES `directus_users` (`id`))
+        CREATE TABLE "WorkCategory" (`date_created` datetime NULL DEFAULT null,
+        `date_updated` datetime NULL DEFAULT null, `id` char(36) NOT NULL
+        DEFAULT null, `name` varchar(255) NULL DEFAULT null, `user_created`
+        char(36) NULL DEFAULT null, `user_updated` char(36) NULL DEFAULT null,
+        PRIMARY KEY (`id`), CONSTRAINT `workcategory_user_created_foreign`
+        FOREIGN KEY (`user_created`) REFERENCES `directus_users` (`id`) ON
+        DELETE NO ACTION, CONSTRAINT `workcategory_user_updated_foreign` FOREIGN
+        KEY (`user_updated`) REFERENCES `directus_users` (`id`) ON DELETE NO
+        ACTION)
   - collection: WorkCategory_Project
     meta:
       accountability: all
@@ -180,13 +189,13 @@ collections:
     schema:
       name: WorkCategory_Project
       sql: >-
-        CREATE TABLE "WorkCategory_Project" (`id` integer PRIMARY KEY
-        AUTOINCREMENT NOT NULL, `WorkCategory_id` char(36) NULL, `Project_id`
-        char(36) NULL, CONSTRAINT `workcategory_project_project_id_foreign`
-        FOREIGN KEY (`Project_id`) REFERENCES `Project` (`id`) ON DELETE SET
-        NULL, CONSTRAINT `workcategory_project_workcategory_id_foreign` FOREIGN
-        KEY (`WorkCategory_id`) REFERENCES `WorkCategory` (`id`) ON DELETE SET
-        NULL)
+        CREATE TABLE "WorkCategory_Project" (`Project_id` char(36) NULL DEFAULT
+        null, `WorkCategory_id` char(36) NULL DEFAULT null, `id` integer PRIMARY
+        KEY AUTOINCREMENT NOT NULL, CONSTRAINT
+        `workcategory_project_project_id_foreign` FOREIGN KEY (`Project_id`)
+        REFERENCES `Project` (`id`) ON DELETE SET NULL, CONSTRAINT
+        `workcategory_project_workcategory_id_foreign` FOREIGN KEY
+        (`WorkCategory_id`) REFERENCES `WorkCategory` (`id`) ON DELETE SET NULL)
   - collection: WorkUnit
     meta:
       accountability: all
@@ -210,20 +219,22 @@ collections:
     schema:
       name: WorkUnit
       sql: >-
-        CREATE TABLE "WorkUnit" (`id` char(36) NOT NULL, `user_created` char(36)
-        NULL, `date_created` datetime NULL, `user_updated` char(36) NULL,
-        `date_updated` datetime NULL, `start` datetime NULL, `end` datetime
-        NULL, `worker` char(36) NULL, `project` char(36) NULL, `category`
-        char(36) NULL, `description` text null, PRIMARY KEY (`id`), CONSTRAINT
-        `workunit_user_created_foreign` FOREIGN KEY (`user_created`) REFERENCES
-        `directus_users` (`id`), CONSTRAINT `workunit_user_updated_foreign`
-        FOREIGN KEY (`user_updated`) REFERENCES `directus_users` (`id`),
-        CONSTRAINT `workunit_worker_foreign` FOREIGN KEY (`worker`) REFERENCES
-        `directus_users` (`id`) ON DELETE SET NULL, CONSTRAINT
+        CREATE TABLE "WorkUnit" (`category` char(36) NULL DEFAULT null,
+        `date_created` datetime NULL DEFAULT null, `date_updated` datetime NULL
+        DEFAULT null, `description` text NULL DEFAULT null, `end` datetime NULL
+        DEFAULT null, `id` char(36) NOT NULL DEFAULT null, `project` char(36)
+        NULL DEFAULT null, `start` datetime NULL DEFAULT null, `user_created`
+        char(36) NULL DEFAULT null, `user_updated` char(36) NULL DEFAULT null,
+        `worker` char(36) NULL DEFAULT null, PRIMARY KEY (`id`), CONSTRAINT
+        `workunit_category_foreign` FOREIGN KEY (`category`) REFERENCES
+        `WorkCategory` (`id`) ON DELETE SET NULL, CONSTRAINT
         `workunit_project_foreign` FOREIGN KEY (`project`) REFERENCES `Project`
-        (`id`) ON DELETE SET NULL, CONSTRAINT `workunit_category_foreign`
-        FOREIGN KEY (`category`) REFERENCES `WorkCategory` (`id`) ON DELETE SET
-        NULL)
+        (`id`) ON DELETE SET NULL, CONSTRAINT `workunit_user_created_foreign`
+        FOREIGN KEY (`user_created`) REFERENCES `directus_users` (`id`) ON
+        DELETE NO ACTION, CONSTRAINT `workunit_user_updated_foreign` FOREIGN KEY
+        (`user_updated`) REFERENCES `directus_users` (`id`) ON DELETE NO ACTION,
+        CONSTRAINT `workunit_worker_foreign` FOREIGN KEY (`worker`) REFERENCES
+        `directus_users` (`id`) ON DELETE SET NULL)
 fields:
   - collection: Client
     field: address
@@ -240,7 +251,7 @@ fields:
       options: null
       readonly: false
       required: false
-      sort: null
+      sort: 8
       special: null
       translations: null
       validation: null
@@ -279,7 +290,7 @@ fields:
         iconLeft: business
       readonly: false
       required: false
-      sort: null
+      sort: 7
       special: null
       translations: null
       validation: null
@@ -319,7 +330,7 @@ fields:
         template: "{{firstname}}\_{{lastname}}"
       readonly: false
       required: false
-      sort: null
+      sort: 9
       special:
         - o2m
       translations: null
@@ -344,7 +355,7 @@ fields:
       options: null
       readonly: true
       required: false
-      sort: null
+      sort: 3
       special:
         - cast-timestamp
         - date-created
@@ -385,7 +396,7 @@ fields:
       options: null
       readonly: true
       required: false
-      sort: null
+      sort: 4
       special:
         - cast-timestamp
         - date-updated
@@ -425,7 +436,7 @@ fields:
       options: null
       readonly: true
       required: false
-      sort: null
+      sort: 1
       special:
         - uuid
       translations: null
@@ -466,7 +477,7 @@ fields:
         template: '{{title}}'
       readonly: false
       required: false
-      sort: null
+      sort: 10
       special:
         - o2m
       translations: null
@@ -490,7 +501,7 @@ fields:
       options: null
       readonly: false
       required: false
-      sort: null
+      sort: 2
       special: null
       translations: null
       validation: null
@@ -529,7 +540,7 @@ fields:
         template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
       readonly: true
       required: false
-      sort: null
+      sort: 5
       special:
         - user-created
       translations: null
@@ -569,7 +580,7 @@ fields:
         template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
       readonly: true
       required: false
-      sort: null
+      sort: 6
       special:
         - user-updated
       translations: null
@@ -609,7 +620,7 @@ fields:
         template: '{{companyname}}'
       readonly: false
       required: false
-      sort: null
+      sort: 11
       special:
         - m2o
       translations: null
@@ -649,7 +660,7 @@ fields:
       options: null
       readonly: true
       required: false
-      sort: null
+      sort: 3
       special:
         - cast-timestamp
         - date-created
@@ -690,7 +701,7 @@ fields:
       options: null
       readonly: true
       required: false
-      sort: null
+      sort: 4
       special:
         - cast-timestamp
         - date-updated
@@ -731,7 +742,7 @@ fields:
         iconLeft: alternate_email
       readonly: false
       required: false
-      sort: null
+      sort: 9
       special: null
       translations: null
       validation: null
@@ -769,7 +780,7 @@ fields:
       options: null
       readonly: false
       required: false
-      sort: null
+      sort: 7
       special: null
       translations: null
       validation: null
@@ -807,7 +818,7 @@ fields:
       options: null
       readonly: true
       required: false
-      sort: null
+      sort: 1
       special:
         - uuid
       translations: null
@@ -846,7 +857,7 @@ fields:
       options: null
       readonly: false
       required: false
-      sort: null
+      sort: 8
       special: null
       translations: null
       validation: null
@@ -884,7 +895,7 @@ fields:
       options: null
       readonly: false
       required: false
-      sort: null
+      sort: 2
       special: null
       translations: null
       validation: null
@@ -923,7 +934,7 @@ fields:
         iconLeft: phone
       readonly: false
       required: false
-      sort: null
+      sort: 10
       special: null
       translations: null
       validation: null
@@ -962,7 +973,7 @@ fields:
         template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
       readonly: true
       required: false
-      sort: null
+      sort: 6
       special:
         - user-created
       translations: null
@@ -1002,7 +1013,7 @@ fields:
         template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
       readonly: true
       required: false
-      sort: null
+      sort: 5
       special:
         - user-updated
       translations: null
@@ -1528,7 +1539,7 @@ fields:
       options: null
       readonly: true
       required: false
-      sort: null
+      sort: 2
       special:
         - cast-timestamp
         - date-created
@@ -1569,7 +1580,7 @@ fields:
       options: null
       readonly: true
       required: false
-      sort: null
+      sort: 3
       special:
         - cast-timestamp
         - date-updated
@@ -1609,7 +1620,7 @@ fields:
       options: null
       readonly: true
       required: false
-      sort: null
+      sort: 1
       special:
         - uuid
       translations: null
@@ -1648,7 +1659,7 @@ fields:
       options: null
       readonly: false
       required: true
-      sort: null
+      sort: 6
       special: null
       translations: null
       validation: null
@@ -1688,7 +1699,7 @@ fields:
         template: '{{Project_id.title}}'
       readonly: false
       required: false
-      sort: null
+      sort: 7
       special:
         - m2m
       translations: null
@@ -1713,7 +1724,7 @@ fields:
         template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
       readonly: true
       required: false
-      sort: null
+      sort: 4
       special:
         - user-created
       translations: null
@@ -1753,7 +1764,7 @@ fields:
         template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
       readonly: true
       required: false
-      sort: null
+      sort: 5
       special:
         - user-updated
       translations: null
@@ -1908,7 +1919,7 @@ fields:
         template: '{{name}}'
       readonly: false
       required: true
-      sort: null
+      sort: 10
       special:
         - m2o
       translations: null
@@ -1948,7 +1959,7 @@ fields:
       options: null
       readonly: true
       required: false
-      sort: null
+      sort: 2
       special:
         - cast-timestamp
         - date-created
@@ -1989,7 +2000,7 @@ fields:
       options: null
       readonly: true
       required: false
-      sort: null
+      sort: 3
       special:
         - cast-timestamp
         - date-updated
@@ -2029,7 +2040,7 @@ fields:
       options: null
       readonly: false
       required: false
-      sort: null
+      sort: 6
       special: null
       translations: null
       validation: null
@@ -2067,7 +2078,7 @@ fields:
       options: null
       readonly: false
       required: true
-      sort: null
+      sort: 8
       special: null
       translations: null
       validation: null
@@ -2105,7 +2116,7 @@ fields:
       options: null
       readonly: true
       required: false
-      sort: null
+      sort: 1
       special:
         - uuid
       translations: null
@@ -2147,7 +2158,7 @@ fields:
         template: '{{title}}'
       readonly: false
       required: true
-      sort: null
+      sort: 9
       special:
         - m2o
       translations: null
@@ -2186,7 +2197,7 @@ fields:
       options: null
       readonly: false
       required: true
-      sort: null
+      sort: 7
       special: null
       translations: null
       validation: null
@@ -2225,7 +2236,7 @@ fields:
         template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
       readonly: true
       required: false
-      sort: null
+      sort: 4
       special:
         - user-created
       translations: null
@@ -2265,7 +2276,7 @@ fields:
         template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
       readonly: true
       required: false
-      sort: null
+      sort: 5
       special:
         - user-updated
       translations: null
@@ -2307,7 +2318,7 @@ fields:
         template: "{{first_name}}\_{{last_name}}"
       readonly: false
       required: true
-      sort: null
+      sort: 11
       special:
         - m2o
       translations: null
