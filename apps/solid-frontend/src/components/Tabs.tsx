@@ -17,21 +17,19 @@ const Tabs: Component<TProps> = (props) => {
         props.onChange?.(index);
     };
     return (
-        <ul class="menu menu-horizontal gap-1 p-2 bg-base-300 rounded-xl">
+        <div class="tabs tabs-boxed bg-base-300 p-2 rounded-lg">
             {props.tabs.map((tab, index) => (
-                <li
-                    class="px-2 py-1 cursor-pointer rounded-md transition-colors"
+                <a
+                    class="tab"
                     classList={{
-                        "bg-primary": index === activeTab(),
-                        "text-primary-content": index === activeTab(),
-                        "hover:bg-base-300": index !== activeTab(),
+                        "tab-active": index === activeTab(),
                     }}
                     onClick={() => changeTab(index)}
                 >
                     {tab.label}
-                </li>
+                </a>
             ))}
-        </ul>
+        </div>
     );
 };
 export default Tabs;
