@@ -36,13 +36,17 @@ const Day: Component = () => {
                 <div class="calendarday">{/* TODO: calendar day here */}</div>
                 <div class="flex flex-col gap-2">
                     <For each={workUnits()}>{(unit) => unit && <WorkUnit unit={unit} />}</For>
-                    <Button class="btn btn-ghost" onClick={() => setShowWorkUnitModal(true)}>
+                    <Button onClick={() => setShowWorkUnitModal(true)}>
                         <Plus />
                     </Button>
                 </div>
             </div>
             <div class="bg-base-200 border-l-2 border-base-300 border-solid w-full"></div>
-            <WorkUnitModal open={showWorkUnitModal()} onClose={() => setShowWorkUnitModal(false)}></WorkUnitModal>
+            <WorkUnitModal
+                open={showWorkUnitModal()}
+                onClose={() => setShowWorkUnitModal(false)}
+                onSave={() => workUnitsResource.refetch()}
+            ></WorkUnitModal>
         </div>
     );
 };

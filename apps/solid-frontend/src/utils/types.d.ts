@@ -23,6 +23,10 @@ type ApiGetters<T> = {
     getById: (id: string) => PromiseOptional<T>;
 };
 
+type ApiSetters<T> = {
+    createOne: (data: Partial<T>) => PromiseOptional<T>;
+}
+
 type TApi = {
     auth: {
         login: (email: string, password: string) => boolean | Promise<boolean>;
@@ -33,7 +37,7 @@ type TApi = {
     category: ApiGetters<TCategory> & {
         getForProject: (id: string) => PromiseOptional<Optional<TCategory>[]>;
     };
-    workUnit: {
+    workUnit: ApiSetters<TWorkUnit> & {
         getForDayAndUser: (day: Date, userId?: string) => PromiseOptional<Optional<TWorkUnit>[]>;
     };
 };
