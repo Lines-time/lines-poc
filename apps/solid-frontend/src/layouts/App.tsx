@@ -51,6 +51,7 @@ const App: Component = () => {
                                 <For each={servers.state.servers}>
                                     {(server) => (
                                         <li
+                                            class="text-base-content"
                                             onClick={() => {
                                                 servers.setState({ activeServerId: server.id });
                                                 authResource.refetch();

@@ -23,6 +23,7 @@ const Tabs: Component<TProps> = (props) => {
                     class="px-2 py-1 cursor-pointer rounded-md transition-colors"
                     classList={{
                         "bg-primary": index === activeTab(),
+                        "text-primary-content": index === activeTab(),
                         "hover:bg-base-300": index !== activeTab(),
                     }}
                     onClick={() => changeTab(index)}
