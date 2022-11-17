@@ -4,8 +4,8 @@ import type { Component } from "solid-js";
 const Vacation: Component = () => {
     return (
         <div>
-            <Navbar />
-            Vacation
+            <Navbar title="Vacation" />
+            
         </div>
     );
 };

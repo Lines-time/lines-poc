@@ -3,8 +3,10 @@ import { Menu } from "lucide-solid";
 import type { Component, JSX } from "solid-js";
 
 type TProps = {
+    left?: JSX.Element;
     center?: JSX.Element;
     right?: JSX.Element;
+    title?: string;
 };
 
 const Navbar: Component<TProps> = (props) => {
@@ -14,6 +16,8 @@ const Navbar: Component<TProps> = (props) => {
                 <label for="main-drawer" class="drawer-button btn btn-ghost lg:hidden btn-square">
                     <Menu />
                 </label>
+                <h3 class="pl-4 font-bold text-xl">{props.title}</h3>
+                {props.left}
             </div>
             <div class="flex-1 flex flex-row justify-center w-full">{props.center}</div>
             <div class="flex-none flex flex-row justify-end">{props.right}</div>

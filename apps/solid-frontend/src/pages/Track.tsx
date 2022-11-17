@@ -14,13 +14,11 @@ const Track: Component = () => {
             label: "Month",
         },
     ];
-    const onChangeTab = (index: number) => {
-        
-    };
+    const onChangeTab = (index: number) => {};
     return (
         <div>
-            <Navbar center={<Tabs tabs={tabs} onChange={onChangeTab} />} />
-            <h1>Track time</h1>
+            <Navbar title="Track time" center={<Tabs tabs={tabs} onChange={onChangeTab} />} />
+            
         </div>
     );
 };
