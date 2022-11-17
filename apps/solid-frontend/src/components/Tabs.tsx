@@ -20,7 +20,7 @@ const Tabs: Component<TProps> = (props) => {
         <div class="tabs tabs-boxed bg-base-300 p-2 rounded-lg">
             {props.tabs.map((tab, index) => (
                 <a
-                    class="tab"
+                    class="tab transition-colors rounded-md"
                     classList={{
                         "tab-active": index === activeTab(),
                     }}
