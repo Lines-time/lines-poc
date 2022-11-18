@@ -35,7 +35,9 @@ const WorkUnitModal: Component<TProps> = (props) => {
         event.preventDefault();
         const _projectId = projectId();
         const _categoryId = categoryId();
+        console.log("submit", _projectId, _categoryId);
         if (_projectId && _categoryId) {
+            console.log("bla");
             await servers.currentServer()?.workUnit?.createOne({
                 project: _projectId,
                 category: _categoryId,
@@ -56,9 +58,10 @@ const WorkUnitModal: Component<TProps> = (props) => {
                         <FormControl label="Project">
                             <select
                                 class="select select-bordered"
-                                value={projectId() ?? ""}
-                                onInput={(e) => setProjectId(e.currentTarget.value)}
+                                value={projectId() ?? "null"}
+                                onChange={(e) => setProjectId(e.currentTarget.value)}
                             >
+                                <option value="null" disabled>Select one</option>
                                 <For each={projects()}>
                                     {(project) => <option value={project?.id}>{project?.title}</option>}
                                 </For>
@@ -67,9 +70,10 @@ const WorkUnitModal: Component<TProps> = (props) => {
                         <FormControl label="Service">
                             <select
                                 class="select select-bordered"
-                                value={categoryId() ?? ""}
-                                onInput={(e) => setCategoryId(e.currentTarget.value)}
+                                value={categoryId() ?? "null"}
+                                onChange={(e) => setCategoryId(e.currentTarget.value)}
                             >
+                                <option value="null" disabled>Select one</option>
                                 <For each={categories()}>
                                     {(category) => <option value={category?.id}>{category?.name}</option>}
                                 </For>
