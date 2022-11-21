@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { Component, ComponentProps, createResource, createSignal, For } from "solid-js";
+import { batch, Component, ComponentProps, createEffect, createResource, createSignal, For, untrack } from "solid-js";
 import Button from "~/Button";
 import Datetime from "~/Datetime";
 import FormControl from "~/FormControl";
@@ -23,21 +23,36 @@ const WorkUnitModal: Component<TProps> = (props) => {
     const [projects, projectsResource] = createResource(async () => await servers.currentServer()?.project?.getAll());
     const [categories, categoriesResource] = createResource(
         () => [projects(), projectId()],
-        async () =>
-            await servers
-                .currentServer()
-                ?.category?.getForProject(
-                    projects()?.find((p) => p!.id === projectId())?.id ?? projects()?.[0]?.id ?? ""
-                )
+        async () => {
+            if (projectId()) {
+                return await servers
+                    .currentServer()
+                    ?.category?.getForProject(
+                        projects()?.find((p) => p!.id === projectId())?.id ?? projects()?.[0]?.id ?? ""
+                    );
+            }
+        }
     );
+
+    createEffect(() => {
+        props.open;
+        const data = props.presetData?.();
+        untrack(() => {
+            batch(() => {
+                setProjectId(data?.project ?? null);
+                setCategoryId(data?.category ?? null);
+                setDescription(data?.description ?? "");
+                setStart(dayjs(data?.start ?? undefined).toDate());
+                setEnd(dayjs(data?.end ?? undefined).toDate());
+            });
+        });
+    });
 
     const formSubmit = async (event: Event) => {
         event.preventDefault();
         const _projectId = projectId();
         const _categoryId = categoryId();
-        console.log("submit", _projectId, _categoryId);
         if (_projectId && _categoryId) {
-            console.log("bla");
             await servers.currentServer()?.workUnit?.createOne({
                 project: _projectId,
                 category: _categoryId,
@@ -61,7 +76,9 @@ const WorkUnitModal: Component<TProps> = (props) => {
                                 value={projectId() ?? "null"}
                                 onChange={(e) => setProjectId(e.currentTarget.value)}
                             >
-                                <option value="null" disabled>Select one</option>
+                                <option value="null" disabled>
+                                    Select one
+                                </option>
                                 <For each={projects()}>
                                     {(project) => <option value={project?.id}>{project?.title}</option>}
                                 </For>
@@ -73,7 +90,9 @@ const WorkUnitModal: Component<TProps> = (props) => {
                                 value={categoryId() ?? "null"}
                                 onChange={(e) => setCategoryId(e.currentTarget.value)}
                             >
-                                <option value="null" disabled>Select one</option>
+                                <option value="null" disabled>
+                                    Select one
+                                </option>
                                 <For each={categories()}>
                                     {(category) => <option value={category?.id}>{category?.name}</option>}
                                 </For>

@@ -1,7 +1,7 @@
 import { useSearchParams } from "@solidjs/router";
 import dayjs from "dayjs";
 import { Plus } from "lucide-solid";
-import { Component, createResource, createSignal, For, onMount } from "solid-js";
+import { Component, createMemo, createResource, createSignal, For, onMount } from "solid-js";
 import Button from "~/Button";
 import WorkUnitModal from "~/modals/WorkUnitModal";
 import WorkUnit from "~/WorkUnit";
@@ -29,6 +29,19 @@ const Day: Component = () => {
         }
     );
 
+    const workUnitModalPresetData = createMemo(() => {
+        const units = workUnits();
+        if (units) {
+            const lastUnit = units[units.length - 1];
+            if (lastUnit) {
+                return {
+                    start: lastUnit.end,
+                };
+            }
+        }
+        return {};
+    });
+
     return (
         <div class="grid grid-cols-3">
             <div class="p-6 grid col-span-2 grid-cols-2 grid-rows-[min-content_1fr] w-full">
@@ -44,6 +57,7 @@ const Day: Component = () => {
             <div class="bg-base-200 border-l-2 border-base-300 border-solid w-full"></div>
             <WorkUnitModal
                 open={showWorkUnitModal()}
+                presetData={() => workUnitModalPresetData()}
                 onClose={() => setShowWorkUnitModal(false)}
                 onSave={() => workUnitsResource.refetch()}
             ></WorkUnitModal>
