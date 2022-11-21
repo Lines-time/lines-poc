@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { Component, createResource } from "solid-js";
+import { Component, createMemo, createResource } from "solid-js";
 
 import servers from "../store/servers";
 
@@ -19,20 +19,23 @@ const WorkUnit: Component<TProps> = (props) => {
         () => servers.currentServer(),
         async () => await servers.currentServer()?.category.getById(unit.category)
     );
+    const start = createMemo(() => dayjs(unit?.start));
+    const end = createMemo(() => dayjs(unit?.end));
+    const duration = createMemo(() => dayjs().hour(0).minute(0).second(0).millisecond(end().diff(start())));
     return (
         <div class="grid grid-cols-[max-content_1fr_1fr] p-2 gap-2 bg-base-200 rounded-lg">
-            <div class="flex flex-col gap-2">
-                <span>{dayjs(unit?.start).format("HH:mm")}</span>
-                <span>{dayjs(unit?.end).format("HH:mm")}</span>
+            <div class="flex flex-col">
+                <span>{start().format("HH:mm")}</span>
+                <span class="text-xs text-center">{duration().format("HH:mm")}</span>
+                <span>{end().format("HH:mm")}</span>
             </div>
-            <div
-                class="flex flex-col gap-2 pl-2 border-solid border-base-300"
-                classList={{ "border-l-2": !unit?.description, "border-x-2": !!unit?.description }}
-            >
-                <span>{project()?.title}</span>
-                <span>{category()?.name}</span>
+            <div class="flex flex-col pl-2 border-solid border-base-300 border-l-2">
+                <span>
+                    <b>{project()?.title}</b>
+                    {` - ${category()?.name}`}
+                </span>
+                <p>{unit?.description}</p>
             </div>
-            <p>{unit?.description}</p>
         </div>
     );
 };

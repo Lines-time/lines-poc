@@ -19,7 +19,7 @@ const Datetime: Component<TProps> = (props) => {
     const value = createMemo(() => dayjs(props.value));
 
     const setValue = (v: dayjs.Dayjs) => {
-        props.onChange(v.toDate());
+        props.onChange(v.second(0).toDate());
     };
 
     const currentLang = () => window.navigator.languages[0];
