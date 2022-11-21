@@ -1,5 +1,6 @@
+import { server as offline } from "offline-server";
+
 import { directus } from "./servers/directus";
-import { offline } from "./servers/offline";
 
 import type { TApi, TServer } from "lines-types";
 

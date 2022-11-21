@@ -1,7 +1,6 @@
 import type { TApi, TServer } from "lines-types";
 
-// TODO: offline database with PouchDB
-export const offline = (server: TServer): TApi => {
+export const server = (server: TServer): TApi => {
     return {
         auth: {
             login: () => {
@@ -34,7 +33,6 @@ export const offline = (server: TServer): TApi => {
                 return null;
             },
             createOne: async (data) => {
-                
                 return null;
             },
         },

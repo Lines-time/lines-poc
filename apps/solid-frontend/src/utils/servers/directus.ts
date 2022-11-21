@@ -1,18 +1,20 @@
 import { Directus } from "@directus/sdk";
 import dayjs from "dayjs";
 
-import type { TApi, TCategory, TClient, TPerson, TProject, TServer, TWorkUnit } from "lines-types";
+import type { TServer, TApi } from "lines-types";
+
+import type { ICategory, IClient, IPerson, IProject, IWorkUnit } from "lines-types/tables";
 
 type TDirectusServer = TServer & {
     url: string;
 };
 
 type TDirectus = {
-    Project: TProject;
-    Client: TClient;
-    Person: TPerson;
-    WorkCategory: TCategory;
-    WorkUnit: TWorkUnit;
+    Project: IProject;
+    Client: IClient;
+    Person: IPerson;
+    WorkCategory: ICategory;
+    WorkUnit: IWorkUnit;
 };
 
 export const directus = (server: TDirectusServer): TApi => {
@@ -83,7 +85,7 @@ export const directus = (server: TDirectusServer): TApi => {
                     ...data,
                 });
                 return result;
-            }
+            },
         },
         auth: {
             login: async (email, password) => {

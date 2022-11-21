@@ -1,0 +1,14 @@
+{
+    "name": "offline-server",
+    "version": "1.0.0",
+    "main": "index.ts",
+    "license": "MIT",
+    "dependencies": {
+        "dexie": "^3.2.2",
+        "zod": "^3.19.1"
+    },
+    "devDependencies": {
+        "lines-types": "workspace:*"
+    },
+    "packageManager": "yarn@3.3.0"
+}

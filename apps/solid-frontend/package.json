@@ -26,6 +26,7 @@
         "@solidjs/router": "^0.5.0",
         "dayjs": "^1.11.6",
         "lucide-solid": "^0.100.0",
+        "offline-server": "workspace:*",
         "solid-js": "^1.6.2",
         "theme-change": "^2.2.0",
         "zod": "^3.19.1"

@@ -1,3 +1,5 @@
+import { ICategory, IProject, IWorkUnit } from "./tables";
+
 export interface IRemote {
     type: "directus";
     url: string;
@@ -23,7 +25,7 @@ type ApiGetters<T> = {
 
 type ApiSetters<T> = {
     createOne: (data: Partial<T>) => PromiseOptional<T>;
-}
+};
 
 export type TApi = {
     auth: {
@@ -31,12 +33,12 @@ export type TApi = {
         logout: () => void;
         isAuthenticated: () => boolean | Promise<boolean>;
     };
-    project: ApiGetters<TProject> & {};
-    category: ApiGetters<TCategory> & {
-        getForProject: (id: string) => PromiseOptional<Optional<TCategory>[]>;
+    project: ApiGetters<IProject> & {};
+    category: ApiGetters<ICategory> & {
+        getForProject: (id: string) => PromiseOptional<Optional<ICategory>[]>;
     };
-    workUnit: ApiSetters<TWorkUnit> & {
-        getForDayAndUser: (day: Date, userId?: string) => PromiseOptional<Optional<TWorkUnit>[]>;
+    workUnit: ApiSetters<IWorkUnit> & {
+        getForDayAndUser: (day: Date, userId?: string) => PromiseOptional<Optional<IWorkUnit>[]>;
     };
 };
 
@@ -50,7 +52,7 @@ type TDirectusCollectionProperties = {
 };
 
 type TDirectusJoinCollectionProperties = {
-    id: string;
+    id: number;
 };
 
 export type TProject = TDirectusCollectionProperties & {
