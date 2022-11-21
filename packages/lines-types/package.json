@@ -1,0 +1,5 @@
+{
+    "name": "lines-types",
+    "packageManager": "yarn@3.3.0",
+    "main": "index.ts"
+}

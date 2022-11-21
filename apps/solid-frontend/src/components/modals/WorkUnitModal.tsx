@@ -7,7 +7,7 @@ import Modal from "~/Modal";
 
 import servers from "../../store/servers";
 
-import type { TWorkUnit } from "../../utils/types";
+import type { TWorkUnit } from "lines-types";
 
 type TProps = Omit<ComponentProps<typeof Modal>, "title" | "children"> & {
     onSave?: () => void;

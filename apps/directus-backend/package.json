@@ -9,5 +9,6 @@
     },
     "dependencies": {
         "directus": "^9.20.4"
-    }
+    },
+    "packageManager": "yarn@3.3.0"
 }

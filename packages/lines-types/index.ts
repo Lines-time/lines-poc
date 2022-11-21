@@ -1,15 +1,13 @@
-import type { ID } from "@directus/sdk";
-
-interface IRemote {
+export interface IRemote {
     type: "directus";
     url: string;
 }
 
-interface IOffline {
+export interface IOffline {
     type: "offline";
 }
 
-type TServer = (IOffline | IRemote) & {
+export type TServer = (IOffline | IRemote) & {
     id: string;
     display_name: string;
     default?: boolean;
@@ -27,7 +25,7 @@ type ApiSetters<T> = {
     createOne: (data: Partial<T>) => PromiseOptional<T>;
 }
 
-type TApi = {
+export type TApi = {
     auth: {
         login: (email: string, password: string) => boolean | Promise<boolean>;
         logout: () => void;
@@ -55,31 +53,31 @@ type TDirectusJoinCollectionProperties = {
     id: string;
 };
 
-type TProject = TDirectusCollectionProperties & {
+export type TProject = TDirectusCollectionProperties & {
     title: string;
     client: string;
     workers: unknown[];
     categories: unknown[];
 };
 
-type TClient = TDirectusCollectionProperties & {
+export type TClient = TDirectusCollectionProperties & {
     comanyname: string;
     address: string;
     contacts: unknown[];
     projects: unknown[];
 };
 
-type TCategory = TDirectusCollectionProperties & {
+export type TCategory = TDirectusCollectionProperties & {
     name: string;
     projects: string[];
 };
 
-type TCategory_Project = TDirectusJoinCollectionProperties & {
+export type TCategory_Project = TDirectusJoinCollectionProperties & {
     WorkCategory_id: string;
     Project_id: string;
 };
 
-type TWorkUnit = TDirectusCollectionProperties & {
+export type TWorkUnit = TDirectusCollectionProperties & {
     start: string;
     end: string;
     worker: string;
@@ -88,7 +86,7 @@ type TWorkUnit = TDirectusCollectionProperties & {
     description: string | null;
 };
 
-type TPerson = TDirectusCollectionProperties & {
+export type TPerson = TDirectusCollectionProperties & {
     firstname: string;
     lastname: string;
     email: string;

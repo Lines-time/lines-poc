@@ -3,7 +3,7 @@ import { Component, createMemo, createResource } from "solid-js";
 
 import servers from "../store/servers";
 
-import type { TWorkUnit } from "../utils/types";
+import type { TWorkUnit } from "lines-types";
 
 type TProps = {
     unit: TWorkUnit;

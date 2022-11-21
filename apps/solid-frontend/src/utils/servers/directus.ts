@@ -1,7 +1,7 @@
 import { Directus } from "@directus/sdk";
 import dayjs from "dayjs";
 
-import type { TApi, TCategory, TClient, TPerson, TProject, TServer, TWorkUnit } from "../types";
+import type { TApi, TCategory, TClient, TPerson, TProject, TServer, TWorkUnit } from "lines-types";
 
 type TDirectusServer = TServer & {
     url: string;

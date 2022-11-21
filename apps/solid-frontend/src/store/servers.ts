@@ -3,7 +3,7 @@ import { createStore } from "solid-js/store";
 
 import createServer from "../utils/server";
 
-import type { TServer } from "../utils/types";
+import type { TServer } from "lines-types";
 
 const [state, setState] = createStore<{
     servers: TServer[];

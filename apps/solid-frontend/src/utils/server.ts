@@ -1,7 +1,7 @@
 import { directus } from "./servers/directus";
 import { offline } from "./servers/offline";
 
-import type { TApi, TServer } from "./types";
+import type { TApi, TServer } from "lines-types";
 
 const createServer = (server: TServer) => {
     let api: TApi | null = null;
