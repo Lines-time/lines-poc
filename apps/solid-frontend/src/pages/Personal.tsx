@@ -1,12 +1,21 @@
+import { Component, createResource, Suspense } from "solid-js";
 import Navbar from "~/Navbar";
 
-import type { Component } from "solid-js"
+import servers from "../store/servers";
+
 const Personal: Component = () => {
+    const [currentUser, currentUserResource] = createResource(
+        async () => await servers.currentServer()?.auth.getCurrentUser()
+    );
     return (
         <div class="h-full grid grid-rows-[64px_1fr]">
             <Navbar title="Personal Info" />
-            Personal
+            <Suspense fallback={<div>Loading...</div>}>
+                <div>
+                    <h1>{`${currentUser.latest?.first_name} ${currentUser.latest?.last_name}`}</h1>
+                </div>
+            </Suspense>
         </div>
     );
-}
+};
 export default Personal;
