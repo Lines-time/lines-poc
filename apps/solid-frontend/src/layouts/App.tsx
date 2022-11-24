@@ -101,7 +101,7 @@ const App: Component = () => {
                                     {`${currentUser.latest!.first_name} ${currentUser.latest!.last_name}`}
                                 </Show>
                             </span>
-                            <Button icon={Settings}></Button>
+                            <Button class="btn-circle" icon={Settings}></Button>
                         </div>
                     </div>
                 </div>
