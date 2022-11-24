@@ -4,6 +4,7 @@ import { Component, createMemo, createResource, createSignal, For, Show, Suspens
 import Avatar from "~/Avatar";
 import Button from "~/Button";
 import Dropdown from "~/Dropdown";
+import Loading from "~/Loading";
 import LoginModal from "~/modals/LoginModal";
 
 import servers from "../store/servers";
@@ -96,12 +97,12 @@ const App: Component = () => {
                         <div class="flex-1"></div>
                         <div class="bg-base-300 p-2 pl-4 gap-2 flex flex-row items-center">
                             <Show when={currentUser.latest?.avatar && servers.state.activeServer?.type !== "offline"}>
-                                <Suspense fallback={<span>Loading...</span>}>
+                                <Suspense fallback={<Loading size="md" />}>
                                     <Avatar id={currentUser.latest?.avatar} />
                                 </Suspense>
                             </Show>
                             <A class="flex-1" href="/personal" activeClass="text-primary">
-                                <Suspense fallback={<span>Loading...</span>}>
+                                <Suspense fallback={<Loading size="md" />}>
                                     <Show when={currentUser.latest?.first_name && currentUser.latest?.last_name}>
                                         {`${currentUser.latest!.first_name} ${currentUser.latest!.last_name}`}
                                     </Show>
