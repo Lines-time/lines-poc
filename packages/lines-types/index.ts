@@ -40,6 +40,10 @@ export type TApi = {
     workUnit: ApiSetters<TWorkUnit> & {
         getForDayAndUser: (day: Date, userId?: string) => PromiseOptional<Optional<TWorkUnit>[]>;
     };
+    workTimeTargetBlock: Pick<ApiGetters<TWorkTimeTargetBlock>, "getById"> & {
+        getForUser: (id: string) => PromiseOptional<Optional<TWorkTimeTargetBlock>[]>;
+    };
+    dailyWorkTimeTarget: Pick<ApiGetters<TDailyWorkTimeTarget>, "getById"> & {};
 };
 
 type TDirectusCollectionProperties = {
@@ -96,5 +100,21 @@ export type TUser = TDirectusCollectionProperties & {
     last_name: string;
     email: string;
     avatar: string;
-    workTimeTargetBlocks: unknown[];
+    workTimeTargetBlocks: (string | undefined)[];
+};
+
+export type TWorkTimeTargetBlock = TDirectusCollectionProperties & {
+    start: string;
+    end: string | null;
+    note: string | null;
+    workerId: string;
+    DailyWorkTimeTargets: string[];
+};
+
+export type TDailyWorkTimeTarget = TDirectusCollectionProperties & {
+    dayOfWeek: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
+    start: string | null;
+    end: string | null;
+    duration: string;
+    blockId: string;
 };

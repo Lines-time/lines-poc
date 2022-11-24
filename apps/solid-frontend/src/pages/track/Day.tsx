@@ -5,7 +5,7 @@ import { Component, createMemo, createResource, createSignal, For, onMount, Susp
 import Button from "~/Button";
 import Loading from "~/Loading";
 import WorkUnitModal from "~/modals/WorkUnitModal";
-import WorkUnit from "~/WorkUnit";
+import WorkUnit from "~/specialized/WorkUnit";
 
 import servers from "../../store/servers";
 

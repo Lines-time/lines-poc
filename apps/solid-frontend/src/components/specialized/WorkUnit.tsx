@@ -1,8 +1,8 @@
 import dayjs from "dayjs";
 import { Component, createMemo, createResource, Suspense } from "solid-js";
 
-import servers from "../store/servers";
-import Loading from "./Loading";
+import servers from "../../store/servers";
+import Loading from "../Loading";
 
 import type { TWorkUnit } from "lines-types";
 type TProps = {

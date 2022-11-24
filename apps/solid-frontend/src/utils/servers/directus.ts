@@ -1,7 +1,18 @@
 import { Directus } from "@directus/sdk";
 import dayjs from "dayjs";
 
-import type { TApi, TCategory, TClient, TPerson, TProject, TServer, TUser, TWorkUnit } from "lines-types";
+import type {
+    TApi,
+    TCategory,
+    TClient,
+    TDailyWorkTimeTarget,
+    TPerson,
+    TProject,
+    TServer,
+    TUser,
+    TWorkTimeTargetBlock,
+    TWorkUnit,
+} from "lines-types";
 
 type TDirectusServer = TServer & {
     url: string;
@@ -13,8 +24,8 @@ type TDirectus = {
     Person: TPerson;
     WorkCategory: TCategory;
     WorkUnit: TWorkUnit;
-    WorkTimeTargetBlock: unknown;
-    DailyWorkTimeTarget: unknown;
+    WorkTimeTargetBlock: TWorkTimeTargetBlock;
+    DailyWorkTimeTarget: TDailyWorkTimeTarget;
     directus_users: TUser;
 };
 
@@ -113,6 +124,30 @@ export const directus = (server: TDirectusServer): TApi => {
             },
             getAuthToken: async () => {
                 return await _directus.auth.token;
+            },
+        },
+        workTimeTargetBlock: {
+            getById: async (id) => {
+                const result = await _directus.items("WorkTimeTargetBlock").readOne(id);
+                return result;
+            },
+            getForUser: async (id) => {
+                const result = await _directus.items("WorkTimeTargetBlock").readByQuery({
+                    filter: {
+                        workerId: {
+                            id: {
+                                _eq: id,
+                            },
+                        },
+                    },
+                });
+                return result.data;
+            },
+        },
+        dailyWorkTimeTarget: {
+            getById: async (id) => {
+                const result = await _directus.items("DailyWorkTimeTarget").readOne(id);
+                return result;
             },
         },
     };
