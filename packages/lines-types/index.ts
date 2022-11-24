@@ -23,13 +23,15 @@ type ApiGetters<T> = {
 
 type ApiSetters<T> = {
     createOne: (data: Partial<T>) => PromiseOptional<T>;
-}
+};
 
 export type TApi = {
     auth: {
         login: (email: string, password: string) => boolean | Promise<boolean>;
         logout: () => void;
         isAuthenticated: () => boolean | Promise<boolean>;
+        getCurrentUser: () => PromiseOptional<Partial<TUser>>;
+        getAuthToken: () => PromiseOptional<string>;
     };
     project: ApiGetters<TProject> & {};
     category: ApiGetters<TCategory> & {
@@ -42,15 +44,10 @@ export type TApi = {
 
 type TDirectusCollectionProperties = {
     id: string;
-    sort: string | null;
-    user_created: string;
-    user_updated: string | null;
-    date_created: string;
-    date_updated: string | null;
 };
 
 type TDirectusJoinCollectionProperties = {
-    id: string;
+    id: number;
 };
 
 export type TProject = TDirectusCollectionProperties & {
@@ -92,4 +89,12 @@ export type TPerson = TDirectusCollectionProperties & {
     email: string;
     telephone: string;
     client: string;
+};
+
+export type TUser = TDirectusCollectionProperties & {
+    first_name: string;
+    last_name: string;
+    email: string;
+    avatar: string;
+    workTimeTargetBlocks: unknown[];
 };

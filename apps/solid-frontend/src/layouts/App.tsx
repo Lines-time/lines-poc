@@ -1,6 +1,8 @@
 import { A, Outlet } from "@solidjs/router";
-import { ChevronDown } from "lucide-solid";
-import { Component, createMemo, createResource, createSignal, For } from "solid-js";
+import { ChevronDown, Settings } from "lucide-solid";
+import { Component, createMemo, createResource, createSignal, For, Show } from "solid-js";
+import Avatar from "~/Avatar";
+import Button from "~/Button";
 import Dropdown from "~/Dropdown";
 import LoginModal from "~/modals/LoginModal";
 
@@ -16,6 +18,9 @@ const App: Component = () => {
     const [isAuthenticated, authResource] = createResource(async () => {
         return (await servers.currentServer()?.auth?.isAuthenticated()) ?? false;
     });
+    const [currentUser, currentUserResource] = createResource(
+        async () => await servers.currentServer()?.auth.getCurrentUser()
+    );
 
     const login = async (email: string, password: string) => {
         await servers.currentServer()?.auth?.login(email, password);
@@ -44,7 +49,7 @@ const App: Component = () => {
                 </div>
                 <div class="drawer-side">
                     <label for="main-drawer" class="drawer-overlay"></label>
-                    <div class="w-80 bg-base-200 border-r-2 border-base-300 border-solid text-base-content">
+                    <div class="w-80 bg-base-200 border-r-2 border-base-300 border-solid text-base-content flex flex-col">
                         <div class="w-full flex flex-row justify-between items-center p-2 pl-5 gap-2 bg-primary text-primary-content">
                             <p>{servers.state.activeServer?.display_name}</p>
                             <Dropdown alignment="end" label={<ChevronDown />} labelClass="btn btn-circle btn-primary">
@@ -70,9 +75,7 @@ const App: Component = () => {
                                 </A>
                             </li>
                             <li>
-                                <A href="/track">
-                                    Track time
-                                </A>
+                                <A href="/track">Track time</A>
                             </li>
                             <li>
                                 <A href="/vacation" end>
@@ -88,6 +91,18 @@ const App: Component = () => {
                                 </A>
                             </li>
                         </ul>
+                        <div class="flex-1"></div>
+                        <div class="bg-base-300 p-2 pl-4 gap-2 flex flex-row items-center">
+                            <Show when={currentUser.latest?.avatar && servers.state.activeServer?.type !== "offline"}>
+                                <Avatar id={currentUser.latest?.avatar}  />
+                            </Show>
+                            <span class="flex-1">
+                                <Show when={currentUser.latest?.first_name && currentUser.latest?.last_name}>
+                                    {`${currentUser.latest!.first_name} ${currentUser.latest!.last_name}`}
+                                </Show>
+                            </span>
+                            <Button icon={Settings}></Button>
+                        </div>
                     </div>
                 </div>
             </div>

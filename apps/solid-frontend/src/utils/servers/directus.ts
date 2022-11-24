@@ -1,7 +1,7 @@
 import { Directus } from "@directus/sdk";
 import dayjs from "dayjs";
 
-import type { TApi, TCategory, TClient, TPerson, TProject, TServer, TWorkUnit } from "lines-types";
+import type { TApi, TCategory, TClient, TPerson, TProject, TServer, TUser, TWorkUnit } from "lines-types";
 
 type TDirectusServer = TServer & {
     url: string;
@@ -13,6 +13,9 @@ type TDirectus = {
     Person: TPerson;
     WorkCategory: TCategory;
     WorkUnit: TWorkUnit;
+    WorkTimeTargetBlock: unknown;
+    DailyWorkTimeTarget: unknown;
+    directus_users: TUser;
 };
 
 export const directus = (server: TDirectusServer): TApi => {
@@ -83,7 +86,7 @@ export const directus = (server: TDirectusServer): TApi => {
                     ...data,
                 });
                 return result;
-            }
+            },
         },
         auth: {
             login: async (email, password) => {
@@ -103,6 +106,13 @@ export const directus = (server: TDirectusServer): TApi => {
                     if (me) return true;
                 } catch (e) {}
                 return false;
+            },
+            getCurrentUser: async () => {
+                const me = await _directus.users.me.read();
+                return me;
+            },
+            getAuthToken: async () => {
+                return await _directus.auth.token;
             },
         },
     };
