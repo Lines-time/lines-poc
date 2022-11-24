@@ -1443,14 +1443,14 @@ fields:
       conditions: null
       display: related-values
       display_options:
-        template: "{{dayOfWeek}}:\_{{start}} -\_{{end}}"
+        template: "{{dayOfWeek}}:\_{{duration}}h"
       field: DailyWorkTimeTargets
       group: null
       hidden: false
       interface: list-o2m
       note: null
       options:
-        template: "{{dayOfWeek}}:\_{{start}} -\_{{end}}"
+        template: '{{dayOfWeek}}: {{duration}}h'
       readonly: false
       required: false
       sort: null
