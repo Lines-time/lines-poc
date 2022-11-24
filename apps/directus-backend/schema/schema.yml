@@ -18,21 +18,42 @@ collections:
       note: null
       singleton: false
       sort: 1
-      sort_field: sort
+      sort_field: null
       translations: null
       unarchive_value: null
     schema:
       name: Client
       sql: >-
-        CREATE TABLE "Client" (`address` text NULL DEFAULT null, `companyname`
-        varchar(255) NULL DEFAULT null, `date_created` datetime NULL DEFAULT
-        null, `date_updated` datetime NULL DEFAULT null, `id` char(36) NOT NULL
-        DEFAULT null, `sort` integer NULL DEFAULT null, `user_created` char(36)
-        NULL DEFAULT null, `user_updated` char(36) NULL DEFAULT null, PRIMARY
-        KEY (`id`), CONSTRAINT `client_user_created_foreign` FOREIGN KEY
-        (`user_created`) REFERENCES `directus_users` (`id`) ON DELETE NO ACTION,
-        CONSTRAINT `client_user_updated_foreign` FOREIGN KEY (`user_updated`)
-        REFERENCES `directus_users` (`id`) ON DELETE NO ACTION)
+        CREATE TABLE "Client" (`id` char(36) NOT NULL, `companyname`
+        varchar(255) NULL, `address` text NULL, PRIMARY KEY (`id`))
+  - collection: DailyWorkTimeTarget
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      collapse: open
+      collection: DailyWorkTimeTarget
+      color: null
+      display_template: null
+      group: WorkTimeTargetBlock
+      hidden: false
+      icon: ads_click
+      item_duplication_fields: null
+      note: null
+      singleton: false
+      sort: 1
+      sort_field: null
+      translations: null
+      unarchive_value: null
+    schema:
+      name: DailyWorkTimeTarget
+      sql: >-
+        CREATE TABLE "DailyWorkTimeTarget" (`id` char(36) NOT NULL, `dayOfWeek`
+        integer NULL, `start` time NULL, `end` time NULL, `duration` time NULL,
+        `blockId` char(36) NULL, PRIMARY KEY (`id`), CONSTRAINT
+        `dailyworktimetarget_blockid_foreign` FOREIGN KEY (`blockId`) REFERENCES
+        `WorkTimeTargetBlock` (`id`) ON DELETE SET NULL)
   - collection: Person
     meta:
       accountability: all
@@ -50,25 +71,17 @@ collections:
       note: null
       singleton: false
       sort: 1
-      sort_field: sort
+      sort_field: null
       translations: null
       unarchive_value: null
     schema:
       name: Person
       sql: >-
-        CREATE TABLE "Person" (`client` char(36) NULL DEFAULT null,
-        `date_created` datetime NULL DEFAULT null, `date_updated` datetime NULL
-        DEFAULT null, `email` varchar(255) NULL DEFAULT null, `firstname`
-        varchar(255) NULL DEFAULT null, `id` char(36) NOT NULL DEFAULT null,
-        `lastname` varchar(255) NULL DEFAULT null, `sort` integer NULL DEFAULT
-        null, `telephone` varchar(255) NULL DEFAULT null, `user_created`
-        char(36) NULL DEFAULT null, `user_updated` char(36) NULL DEFAULT null,
-        PRIMARY KEY (`id`), CONSTRAINT `person_client_foreign` FOREIGN KEY
-        (`client`) REFERENCES `Client` (`id`) ON DELETE CASCADE, CONSTRAINT
-        `person_user_created_foreign` FOREIGN KEY (`user_created`) REFERENCES
-        `directus_users` (`id`) ON DELETE NO ACTION, CONSTRAINT
-        `person_user_updated_foreign` FOREIGN KEY (`user_updated`) REFERENCES
-        `directus_users` (`id`) ON DELETE NO ACTION)
+        CREATE TABLE "Person" (`id` char(36) NOT NULL, `firstname` varchar(255)
+        NULL, `lastname` varchar(255) NULL, `email` varchar(255) NULL,
+        `telephone` varchar(255) NULL, `client` char(36) NULL, PRIMARY KEY
+        (`id`), CONSTRAINT `person_client_foreign` FOREIGN KEY (`client`)
+        REFERENCES `Client` (`id`) ON DELETE CASCADE)
   - collection: Project
     meta:
       accountability: all
@@ -86,23 +99,16 @@ collections:
       note: null
       singleton: false
       sort: 2
-      sort_field: sort
+      sort_field: null
       translations: null
       unarchive_value: null
     schema:
       name: Project
       sql: >-
-        CREATE TABLE "Project" (`client` char(36) NULL DEFAULT null,
-        `date_created` datetime NULL DEFAULT null, `date_updated` datetime NULL
-        DEFAULT null, `id` char(36) NOT NULL DEFAULT null, `sort` integer NULL
-        DEFAULT null, `title` varchar(255) NULL DEFAULT null, `user_created`
-        char(36) NULL DEFAULT null, `user_updated` char(36) NULL DEFAULT null,
-        PRIMARY KEY (`id`), CONSTRAINT `project_client_foreign` FOREIGN KEY
-        (`client`) REFERENCES `Client` (`id`) ON DELETE SET NULL, CONSTRAINT
-        `project_user_created_foreign` FOREIGN KEY (`user_created`) REFERENCES
-        `directus_users` (`id`) ON DELETE NO ACTION, CONSTRAINT
-        `project_user_updated_foreign` FOREIGN KEY (`user_updated`) REFERENCES
-        `directus_users` (`id`) ON DELETE NO ACTION)
+        CREATE TABLE "Project" (`id` char(36) NOT NULL, `title` varchar(255)
+        NULL, `client` char(36) NULL, PRIMARY KEY (`id`), CONSTRAINT
+        `project_client_foreign` FOREIGN KEY (`client`) REFERENCES `Client`
+        (`id`) ON DELETE SET NULL)
   - collection: Project_directus_users
     meta:
       accountability: all
@@ -119,21 +125,20 @@ collections:
       item_duplication_fields: null
       note: null
       singleton: false
-      sort: 5
+      sort: 6
       sort_field: null
       translations: null
       unarchive_value: null
     schema:
       name: Project_directus_users
       sql: >-
-        CREATE TABLE "Project_directus_users" (`Project_id` char(36) NULL
-        DEFAULT null, `directus_users_id` char(36) NULL DEFAULT null, `id`
-        integer PRIMARY KEY AUTOINCREMENT NOT NULL, CONSTRAINT
-        `project_directus_users_project_id_foreign` FOREIGN KEY (`Project_id`)
-        REFERENCES `Project` (`id`) ON DELETE SET NULL, CONSTRAINT
-        `project_directus_users_directus_users_id_foreign` FOREIGN KEY
-        (`directus_users_id`) REFERENCES `directus_users` (`id`) ON DELETE SET
-        NULL)
+        CREATE TABLE "Project_directus_users" (`id` integer PRIMARY KEY
+        AUTOINCREMENT NOT NULL, `Project_id` char(36) NULL, `directus_users_id`
+        char(36) NULL, CONSTRAINT `project_directus_users_project_id_foreign`
+        FOREIGN KEY (`Project_id`) REFERENCES `Project` (`id`) ON DELETE SET
+        NULL, CONSTRAINT `project_directus_users_directus_users_id_foreign`
+        FOREIGN KEY (`directus_users_id`) REFERENCES `directus_users` (`id`) ON
+        DELETE SET NULL)
   - collection: WorkCategory
     meta:
       accountability: all
@@ -157,15 +162,8 @@ collections:
     schema:
       name: WorkCategory
       sql: >-
-        CREATE TABLE "WorkCategory" (`date_created` datetime NULL DEFAULT null,
-        `date_updated` datetime NULL DEFAULT null, `id` char(36) NOT NULL
-        DEFAULT null, `name` varchar(255) NULL DEFAULT null, `user_created`
-        char(36) NULL DEFAULT null, `user_updated` char(36) NULL DEFAULT null,
-        PRIMARY KEY (`id`), CONSTRAINT `workcategory_user_created_foreign`
-        FOREIGN KEY (`user_created`) REFERENCES `directus_users` (`id`) ON
-        DELETE NO ACTION, CONSTRAINT `workcategory_user_updated_foreign` FOREIGN
-        KEY (`user_updated`) REFERENCES `directus_users` (`id`) ON DELETE NO
-        ACTION)
+        CREATE TABLE "WorkCategory" (`id` char(36) NOT NULL, `name` varchar(255)
+        NULL, PRIMARY KEY (`id`))
   - collection: WorkCategory_Project
     meta:
       accountability: all
@@ -182,20 +180,48 @@ collections:
       item_duplication_fields: null
       note: null
       singleton: false
-      sort: 6
+      sort: 7
       sort_field: null
       translations: null
       unarchive_value: null
     schema:
       name: WorkCategory_Project
       sql: >-
-        CREATE TABLE "WorkCategory_Project" (`Project_id` char(36) NULL DEFAULT
-        null, `WorkCategory_id` char(36) NULL DEFAULT null, `id` integer PRIMARY
-        KEY AUTOINCREMENT NOT NULL, CONSTRAINT
-        `workcategory_project_project_id_foreign` FOREIGN KEY (`Project_id`)
-        REFERENCES `Project` (`id`) ON DELETE SET NULL, CONSTRAINT
-        `workcategory_project_workcategory_id_foreign` FOREIGN KEY
-        (`WorkCategory_id`) REFERENCES `WorkCategory` (`id`) ON DELETE SET NULL)
+        CREATE TABLE "WorkCategory_Project" (`id` integer PRIMARY KEY
+        AUTOINCREMENT NOT NULL, `WorkCategory_id` char(36) NULL, `Project_id`
+        char(36) NULL, CONSTRAINT `workcategory_project_project_id_foreign`
+        FOREIGN KEY (`Project_id`) REFERENCES `Project` (`id`) ON DELETE SET
+        NULL, CONSTRAINT `workcategory_project_workcategory_id_foreign` FOREIGN
+        KEY (`WorkCategory_id`) REFERENCES `WorkCategory` (`id`) ON DELETE SET
+        NULL)
+  - collection: WorkTimeTargetBlock
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      collapse: open
+      collection: WorkTimeTargetBlock
+      color: null
+      display_template: null
+      group: null
+      hidden: false
+      icon: calendar_view_month
+      item_duplication_fields: null
+      note: null
+      singleton: false
+      sort: 5
+      sort_field: null
+      translations: null
+      unarchive_value: null
+    schema:
+      name: WorkTimeTargetBlock
+      sql: >-
+        CREATE TABLE "WorkTimeTargetBlock" (`id` char(36) NOT NULL, `start` date
+        NULL, `end` date NULL, `note` text NULL, `workerId` varchar(36) NOT NULL
+        DEFAULT null, PRIMARY KEY (`id`), CONSTRAINT
+        `worktimetargetblock_workerid_foreign` FOREIGN KEY (`workerId`)
+        REFERENCES `directus_users` (`id`) ON DELETE NO ACTION)
   - collection: WorkUnit
     meta:
       accountability: all
@@ -219,22 +245,15 @@ collections:
     schema:
       name: WorkUnit
       sql: >-
-        CREATE TABLE "WorkUnit" (`category` char(36) NULL DEFAULT null,
-        `date_created` datetime NULL DEFAULT null, `date_updated` datetime NULL
-        DEFAULT null, `description` text NULL DEFAULT null, `end` datetime NULL
-        DEFAULT null, `id` char(36) NOT NULL DEFAULT null, `project` char(36)
-        NULL DEFAULT null, `start` datetime NULL DEFAULT null, `user_created`
-        char(36) NULL DEFAULT null, `user_updated` char(36) NULL DEFAULT null,
-        `worker` char(36) NULL DEFAULT null, PRIMARY KEY (`id`), CONSTRAINT
-        `workunit_category_foreign` FOREIGN KEY (`category`) REFERENCES
-        `WorkCategory` (`id`) ON DELETE SET NULL, CONSTRAINT
-        `workunit_project_foreign` FOREIGN KEY (`project`) REFERENCES `Project`
-        (`id`) ON DELETE SET NULL, CONSTRAINT `workunit_user_created_foreign`
-        FOREIGN KEY (`user_created`) REFERENCES `directus_users` (`id`) ON
-        DELETE NO ACTION, CONSTRAINT `workunit_user_updated_foreign` FOREIGN KEY
-        (`user_updated`) REFERENCES `directus_users` (`id`) ON DELETE NO ACTION,
+        CREATE TABLE "WorkUnit" (`id` char(36) NOT NULL, `start` datetime NULL,
+        `end` datetime NULL, `worker` char(36) NULL, `project` char(36) NULL,
+        `category` char(36) NULL, `description` text NULL, PRIMARY KEY (`id`),
         CONSTRAINT `workunit_worker_foreign` FOREIGN KEY (`worker`) REFERENCES
-        `directus_users` (`id`) ON DELETE SET NULL)
+        `directus_users` (`id`) ON DELETE SET NULL, CONSTRAINT
+        `workunit_project_foreign` FOREIGN KEY (`project`) REFERENCES `Project`
+        (`id`) ON DELETE SET NULL, CONSTRAINT `workunit_category_foreign`
+        FOREIGN KEY (`category`) REFERENCES `WorkCategory` (`id`) ON DELETE SET
+        NULL)
 fields:
   - collection: Client
     field: address
@@ -251,7 +270,7 @@ fields:
       options: null
       readonly: false
       required: false
-      sort: 8
+      sort: null
       special: null
       translations: null
       validation: null
@@ -290,7 +309,7 @@ fields:
         iconLeft: business
       readonly: false
       required: false
-      sort: 7
+      sort: null
       special: null
       translations: null
       validation: null
@@ -330,7 +349,7 @@ fields:
         template: "{{firstname}}\_{{lastname}}"
       readonly: false
       required: false
-      sort: 9
+      sort: null
       special:
         - o2m
       translations: null
@@ -339,88 +358,6 @@ fields:
       width: full
     schema: null
     type: alias
-  - collection: Client
-    field: date_created
-    meta:
-      collection: Client
-      conditions: null
-      display: datetime
-      display_options:
-        relative: true
-      field: date_created
-      group: null
-      hidden: true
-      interface: datetime
-      note: null
-      options: null
-      readonly: true
-      required: false
-      sort: 3
-      special:
-        - cast-timestamp
-        - date-created
-      translations: null
-      validation: null
-      validation_message: null
-      width: half
-    schema:
-      data_type: datetime
-      default_value: null
-      foreign_key_column: null
-      foreign_key_table: null
-      generation_expression: null
-      has_auto_increment: false
-      is_generated: false
-      is_nullable: true
-      is_primary_key: false
-      is_unique: false
-      max_length: null
-      name: date_created
-      numeric_precision: null
-      numeric_scale: null
-      table: Client
-    type: timestamp
-  - collection: Client
-    field: date_updated
-    meta:
-      collection: Client
-      conditions: null
-      display: datetime
-      display_options:
-        relative: true
-      field: date_updated
-      group: null
-      hidden: true
-      interface: datetime
-      note: null
-      options: null
-      readonly: true
-      required: false
-      sort: 4
-      special:
-        - cast-timestamp
-        - date-updated
-      translations: null
-      validation: null
-      validation_message: null
-      width: half
-    schema:
-      data_type: datetime
-      default_value: null
-      foreign_key_column: null
-      foreign_key_table: null
-      generation_expression: null
-      has_auto_increment: false
-      is_generated: false
-      is_nullable: true
-      is_primary_key: false
-      is_unique: false
-      max_length: null
-      name: date_updated
-      numeric_precision: null
-      numeric_scale: null
-      table: Client
-    type: timestamp
   - collection: Client
     field: id
     meta:
@@ -436,7 +373,7 @@ fields:
       options: null
       readonly: true
       required: false
-      sort: 1
+      sort: null
       special:
         - uuid
       translations: null
@@ -477,7 +414,7 @@ fields:
         template: '{{title}}'
       readonly: false
       required: false
-      sort: 10
+      sort: null
       special:
         - o2m
       translations: null
@@ -486,22 +423,80 @@ fields:
       width: full
     schema: null
     type: alias
-  - collection: Client
-    field: sort
+  - collection: DailyWorkTimeTarget
+    field: blockId
     meta:
-      collection: Client
+      collection: DailyWorkTimeTarget
+      conditions: null
+      display: related-values
+      display_options:
+        template: "{{start}} -\_{{end}}"
+      field: blockId
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: "{{start}} -\_{{end}}"
+      readonly: false
+      required: true
+      sort: null
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      data_type: char
+      default_value: null
+      foreign_key_column: id
+      foreign_key_table: WorkTimeTargetBlock
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: 36
+      name: blockId
+      numeric_precision: null
+      numeric_scale: null
+      table: DailyWorkTimeTarget
+    type: string
+  - collection: DailyWorkTimeTarget
+    field: dayOfWeek
+    meta:
+      collection: DailyWorkTimeTarget
       conditions: null
       display: null
       display_options: null
-      field: sort
+      field: dayOfWeek
       group: null
-      hidden: true
-      interface: input
+      hidden: false
+      interface: select-dropdown
       note: null
-      options: null
+      options:
+        choices:
+          - text: Sunday
+            value: 0
+          - text: Monday
+            value: 1
+          - text: Tuesday
+            value: 2
+          - text: Wednesday
+            value: 3
+          - text: Thursday
+            value: 4
+          - text: Friday
+            value: 5
+          - text: Saturday
+            value: 6
+          - text: Sunday
+            value: 7
       readonly: false
-      required: false
-      sort: 2
+      required: true
+      sort: null
       special: null
       translations: null
       validation: null
@@ -519,91 +514,164 @@ fields:
       is_primary_key: false
       is_unique: false
       max_length: null
-      name: sort
+      name: dayOfWeek
       numeric_precision: null
       numeric_scale: null
-      table: Client
+      table: DailyWorkTimeTarget
     type: integer
-  - collection: Client
-    field: user_created
+  - collection: DailyWorkTimeTarget
+    field: duration
     meta:
-      collection: Client
+      collection: DailyWorkTimeTarget
       conditions: null
-      display: user
+      display: null
       display_options: null
-      field: user_created
+      field: duration
       group: null
-      hidden: true
-      interface: select-dropdown-m2o
+      hidden: false
+      interface: datetime
       note: null
-      options:
-        template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
-      readonly: true
-      required: false
-      sort: 5
-      special:
-        - user-created
+      options: null
+      readonly: false
+      required: true
+      sort: null
+      special: null
       translations: null
       validation: null
       validation_message: null
-      width: half
+      width: full
     schema:
-      data_type: char
+      data_type: time
       default_value: null
-      foreign_key_column: id
-      foreign_key_table: directus_users
+      foreign_key_column: null
+      foreign_key_table: null
       generation_expression: null
       has_auto_increment: false
       is_generated: false
       is_nullable: true
       is_primary_key: false
       is_unique: false
-      max_length: 36
-      name: user_created
+      max_length: null
+      name: duration
       numeric_precision: null
       numeric_scale: null
-      table: Client
-    type: string
-  - collection: Client
-    field: user_updated
+      table: DailyWorkTimeTarget
+    type: time
+  - collection: DailyWorkTimeTarget
+    field: end
     meta:
-      collection: Client
+      collection: DailyWorkTimeTarget
       conditions: null
-      display: user
+      display: null
       display_options: null
-      field: user_updated
+      field: end
       group: null
-      hidden: true
-      interface: select-dropdown-m2o
+      hidden: false
+      interface: datetime
       note: null
-      options:
-        template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
-      readonly: true
+      options: null
+      readonly: false
       required: false
-      sort: 6
-      special:
-        - user-updated
+      sort: null
+      special: null
       translations: null
       validation: null
       validation_message: null
       width: half
     schema:
-      data_type: char
+      data_type: time
       default_value: null
-      foreign_key_column: id
-      foreign_key_table: directus_users
+      foreign_key_column: null
+      foreign_key_table: null
       generation_expression: null
       has_auto_increment: false
       is_generated: false
       is_nullable: true
       is_primary_key: false
       is_unique: false
-      max_length: 36
-      name: user_updated
+      max_length: null
+      name: end
       numeric_precision: null
       numeric_scale: null
-      table: Client
-    type: string
+      table: DailyWorkTimeTarget
+    type: time
+  - collection: DailyWorkTimeTarget
+    field: id
+    meta:
+      collection: DailyWorkTimeTarget
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: null
+      special:
+        - uuid
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      data_type: char
+      default_value: null
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: false
+      is_primary_key: true
+      is_unique: true
+      max_length: 36
+      name: id
+      numeric_precision: null
+      numeric_scale: null
+      table: DailyWorkTimeTarget
+    type: uuid
+  - collection: DailyWorkTimeTarget
+    field: start
+    meta:
+      collection: DailyWorkTimeTarget
+      conditions: null
+      display: null
+      display_options: null
+      field: start
+      group: null
+      hidden: false
+      interface: datetime
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: null
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      data_type: time
+      default_value: null
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: null
+      name: start
+      numeric_precision: null
+      numeric_scale: null
+      table: DailyWorkTimeTarget
+    type: time
   - collection: Person
     field: client
     meta:
@@ -620,7 +688,7 @@ fields:
         template: '{{companyname}}'
       readonly: false
       required: false
-      sort: 11
+      sort: null
       special:
         - m2o
       translations: null
@@ -645,88 +713,6 @@ fields:
       table: Person
     type: string
   - collection: Person
-    field: date_created
-    meta:
-      collection: Person
-      conditions: null
-      display: datetime
-      display_options:
-        relative: true
-      field: date_created
-      group: null
-      hidden: true
-      interface: datetime
-      note: null
-      options: null
-      readonly: true
-      required: false
-      sort: 3
-      special:
-        - cast-timestamp
-        - date-created
-      translations: null
-      validation: null
-      validation_message: null
-      width: half
-    schema:
-      data_type: datetime
-      default_value: null
-      foreign_key_column: null
-      foreign_key_table: null
-      generation_expression: null
-      has_auto_increment: false
-      is_generated: false
-      is_nullable: true
-      is_primary_key: false
-      is_unique: false
-      max_length: null
-      name: date_created
-      numeric_precision: null
-      numeric_scale: null
-      table: Person
-    type: timestamp
-  - collection: Person
-    field: date_updated
-    meta:
-      collection: Person
-      conditions: null
-      display: datetime
-      display_options:
-        relative: true
-      field: date_updated
-      group: null
-      hidden: true
-      interface: datetime
-      note: null
-      options: null
-      readonly: true
-      required: false
-      sort: 4
-      special:
-        - cast-timestamp
-        - date-updated
-      translations: null
-      validation: null
-      validation_message: null
-      width: half
-    schema:
-      data_type: datetime
-      default_value: null
-      foreign_key_column: null
-      foreign_key_table: null
-      generation_expression: null
-      has_auto_increment: false
-      is_generated: false
-      is_nullable: true
-      is_primary_key: false
-      is_unique: false
-      max_length: null
-      name: date_updated
-      numeric_precision: null
-      numeric_scale: null
-      table: Person
-    type: timestamp
-  - collection: Person
     field: email
     meta:
       collection: Person
@@ -742,7 +728,7 @@ fields:
         iconLeft: alternate_email
       readonly: false
       required: false
-      sort: 9
+      sort: null
       special: null
       translations: null
       validation: null
@@ -780,7 +766,7 @@ fields:
       options: null
       readonly: false
       required: false
-      sort: 7
+      sort: null
       special: null
       translations: null
       validation: null
@@ -818,7 +804,7 @@ fields:
       options: null
       readonly: true
       required: false
-      sort: 1
+      sort: null
       special:
         - uuid
       translations: null
@@ -857,7 +843,7 @@ fields:
       options: null
       readonly: false
       required: false
-      sort: 8
+      sort: null
       special: null
       translations: null
       validation: null
@@ -881,44 +867,6 @@ fields:
       table: Person
     type: string
   - collection: Person
-    field: sort
-    meta:
-      collection: Person
-      conditions: null
-      display: null
-      display_options: null
-      field: sort
-      group: null
-      hidden: true
-      interface: input
-      note: null
-      options: null
-      readonly: false
-      required: false
-      sort: 2
-      special: null
-      translations: null
-      validation: null
-      validation_message: null
-      width: full
-    schema:
-      data_type: integer
-      default_value: null
-      foreign_key_column: null
-      foreign_key_table: null
-      generation_expression: null
-      has_auto_increment: false
-      is_generated: false
-      is_nullable: true
-      is_primary_key: false
-      is_unique: false
-      max_length: null
-      name: sort
-      numeric_precision: null
-      numeric_scale: null
-      table: Person
-    type: integer
-  - collection: Person
     field: telephone
     meta:
       collection: Person
@@ -934,7 +882,7 @@ fields:
         iconLeft: phone
       readonly: false
       required: false
-      sort: 10
+      sort: null
       special: null
       translations: null
       validation: null
@@ -953,86 +901,6 @@ fields:
       is_unique: false
       max_length: 255
       name: telephone
-      numeric_precision: null
-      numeric_scale: null
-      table: Person
-    type: string
-  - collection: Person
-    field: user_created
-    meta:
-      collection: Person
-      conditions: null
-      display: user
-      display_options: null
-      field: user_created
-      group: null
-      hidden: true
-      interface: select-dropdown-m2o
-      note: null
-      options:
-        template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
-      readonly: true
-      required: false
-      sort: 6
-      special:
-        - user-created
-      translations: null
-      validation: null
-      validation_message: null
-      width: half
-    schema:
-      data_type: char
-      default_value: null
-      foreign_key_column: id
-      foreign_key_table: directus_users
-      generation_expression: null
-      has_auto_increment: false
-      is_generated: false
-      is_nullable: true
-      is_primary_key: false
-      is_unique: false
-      max_length: 36
-      name: user_created
-      numeric_precision: null
-      numeric_scale: null
-      table: Person
-    type: string
-  - collection: Person
-    field: user_updated
-    meta:
-      collection: Person
-      conditions: null
-      display: user
-      display_options: null
-      field: user_updated
-      group: null
-      hidden: true
-      interface: select-dropdown-m2o
-      note: null
-      options:
-        template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
-      readonly: true
-      required: false
-      sort: 5
-      special:
-        - user-updated
-      translations: null
-      validation: null
-      validation_message: null
-      width: half
-    schema:
-      data_type: char
-      default_value: null
-      foreign_key_column: id
-      foreign_key_table: directus_users
-      generation_expression: null
-      has_auto_increment: false
-      is_generated: false
-      is_nullable: true
-      is_primary_key: false
-      is_unique: false
-      max_length: 36
-      name: user_updated
       numeric_precision: null
       numeric_scale: null
       table: Person
@@ -1105,88 +973,6 @@ fields:
       table: Project
     type: string
   - collection: Project
-    field: date_created
-    meta:
-      collection: Project
-      conditions: null
-      display: datetime
-      display_options:
-        relative: true
-      field: date_created
-      group: null
-      hidden: true
-      interface: datetime
-      note: null
-      options: null
-      readonly: true
-      required: false
-      sort: 4
-      special:
-        - cast-timestamp
-        - date-created
-      translations: null
-      validation: null
-      validation_message: null
-      width: half
-    schema:
-      data_type: datetime
-      default_value: null
-      foreign_key_column: null
-      foreign_key_table: null
-      generation_expression: null
-      has_auto_increment: false
-      is_generated: false
-      is_nullable: true
-      is_primary_key: false
-      is_unique: false
-      max_length: null
-      name: date_created
-      numeric_precision: null
-      numeric_scale: null
-      table: Project
-    type: timestamp
-  - collection: Project
-    field: date_updated
-    meta:
-      collection: Project
-      conditions: null
-      display: datetime
-      display_options:
-        relative: true
-      field: date_updated
-      group: null
-      hidden: true
-      interface: datetime
-      note: null
-      options: null
-      readonly: true
-      required: false
-      sort: 6
-      special:
-        - cast-timestamp
-        - date-updated
-      translations: null
-      validation: null
-      validation_message: null
-      width: half
-    schema:
-      data_type: datetime
-      default_value: null
-      foreign_key_column: null
-      foreign_key_table: null
-      generation_expression: null
-      has_auto_increment: false
-      is_generated: false
-      is_nullable: true
-      is_primary_key: false
-      is_unique: false
-      max_length: null
-      name: date_updated
-      numeric_precision: null
-      numeric_scale: null
-      table: Project
-    type: timestamp
-  - collection: Project
     field: id
     meta:
       collection: Project
@@ -1226,44 +1012,6 @@ fields:
       table: Project
     type: uuid
   - collection: Project
-    field: sort
-    meta:
-      collection: Project
-      conditions: null
-      display: null
-      display_options: null
-      field: sort
-      group: null
-      hidden: true
-      interface: input
-      note: null
-      options: null
-      readonly: false
-      required: false
-      sort: 2
-      special: null
-      translations: null
-      validation: null
-      validation_message: null
-      width: full
-    schema:
-      data_type: integer
-      default_value: null
-      foreign_key_column: null
-      foreign_key_table: null
-      generation_expression: null
-      has_auto_increment: false
-      is_generated: false
-      is_nullable: true
-      is_primary_key: false
-      is_unique: false
-      max_length: null
-      name: sort
-      numeric_precision: null
-      numeric_scale: null
-      table: Project
-    type: integer
-  - collection: Project
     field: title
     meta:
       collection: Project
@@ -1298,86 +1046,6 @@ fields:
       is_unique: false
       max_length: 255
       name: title
-      numeric_precision: null
-      numeric_scale: null
-      table: Project
-    type: string
-  - collection: Project
-    field: user_created
-    meta:
-      collection: Project
-      conditions: null
-      display: user
-      display_options: null
-      field: user_created
-      group: null
-      hidden: true
-      interface: select-dropdown-m2o
-      note: null
-      options:
-        template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
-      readonly: true
-      required: false
-      sort: 3
-      special:
-        - user-created
-      translations: null
-      validation: null
-      validation_message: null
-      width: half
-    schema:
-      data_type: char
-      default_value: null
-      foreign_key_column: id
-      foreign_key_table: directus_users
-      generation_expression: null
-      has_auto_increment: false
-      is_generated: false
-      is_nullable: true
-      is_primary_key: false
-      is_unique: false
-      max_length: 36
-      name: user_created
-      numeric_precision: null
-      numeric_scale: null
-      table: Project
-    type: string
-  - collection: Project
-    field: user_updated
-    meta:
-      collection: Project
-      conditions: null
-      display: user
-      display_options: null
-      field: user_updated
-      group: null
-      hidden: true
-      interface: select-dropdown-m2o
-      note: null
-      options:
-        template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
-      readonly: true
-      required: false
-      sort: 5
-      special:
-        - user-updated
-      translations: null
-      validation: null
-      validation_message: null
-      width: half
-    schema:
-      data_type: char
-      default_value: null
-      foreign_key_column: id
-      foreign_key_table: directus_users
-      generation_expression: null
-      has_auto_increment: false
-      is_generated: false
-      is_nullable: true
-      is_primary_key: false
-      is_unique: false
-      max_length: 36
-      name: user_updated
       numeric_precision: null
       numeric_scale: null
       table: Project
@@ -1524,88 +1192,6 @@ fields:
       table: Project_directus_users
     type: integer
   - collection: WorkCategory
-    field: date_created
-    meta:
-      collection: WorkCategory
-      conditions: null
-      display: datetime
-      display_options:
-        relative: true
-      field: date_created
-      group: null
-      hidden: true
-      interface: datetime
-      note: null
-      options: null
-      readonly: true
-      required: false
-      sort: 2
-      special:
-        - cast-timestamp
-        - date-created
-      translations: null
-      validation: null
-      validation_message: null
-      width: half
-    schema:
-      data_type: datetime
-      default_value: null
-      foreign_key_column: null
-      foreign_key_table: null
-      generation_expression: null
-      has_auto_increment: false
-      is_generated: false
-      is_nullable: true
-      is_primary_key: false
-      is_unique: false
-      max_length: null
-      name: date_created
-      numeric_precision: null
-      numeric_scale: null
-      table: WorkCategory
-    type: timestamp
-  - collection: WorkCategory
-    field: date_updated
-    meta:
-      collection: WorkCategory
-      conditions: null
-      display: datetime
-      display_options:
-        relative: true
-      field: date_updated
-      group: null
-      hidden: true
-      interface: datetime
-      note: null
-      options: null
-      readonly: true
-      required: false
-      sort: 3
-      special:
-        - cast-timestamp
-        - date-updated
-      translations: null
-      validation: null
-      validation_message: null
-      width: half
-    schema:
-      data_type: datetime
-      default_value: null
-      foreign_key_column: null
-      foreign_key_table: null
-      generation_expression: null
-      has_auto_increment: false
-      is_generated: false
-      is_nullable: true
-      is_primary_key: false
-      is_unique: false
-      max_length: null
-      name: date_updated
-      numeric_precision: null
-      numeric_scale: null
-      table: WorkCategory
-    type: timestamp
-  - collection: WorkCategory
     field: id
     meta:
       collection: WorkCategory
@@ -1620,7 +1206,7 @@ fields:
       options: null
       readonly: true
       required: false
-      sort: 1
+      sort: null
       special:
         - uuid
       translations: null
@@ -1659,7 +1245,7 @@ fields:
       options: null
       readonly: false
       required: true
-      sort: 6
+      sort: null
       special: null
       translations: null
       validation: null
@@ -1699,7 +1285,7 @@ fields:
         template: '{{Project_id.title}}'
       readonly: false
       required: false
-      sort: 7
+      sort: null
       special:
         - m2m
       translations: null
@@ -1708,86 +1294,6 @@ fields:
       width: full
     schema: null
     type: alias
-  - collection: WorkCategory
-    field: user_created
-    meta:
-      collection: WorkCategory
-      conditions: null
-      display: user
-      display_options: null
-      field: user_created
-      group: null
-      hidden: true
-      interface: select-dropdown-m2o
-      note: null
-      options:
-        template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
-      readonly: true
-      required: false
-      sort: 4
-      special:
-        - user-created
-      translations: null
-      validation: null
-      validation_message: null
-      width: half
-    schema:
-      data_type: char
-      default_value: null
-      foreign_key_column: id
-      foreign_key_table: directus_users
-      generation_expression: null
-      has_auto_increment: false
-      is_generated: false
-      is_nullable: true
-      is_primary_key: false
-      is_unique: false
-      max_length: 36
-      name: user_created
-      numeric_precision: null
-      numeric_scale: null
-      table: WorkCategory
-    type: string
-  - collection: WorkCategory
-    field: user_updated
-    meta:
-      collection: WorkCategory
-      conditions: null
-      display: user
-      display_options: null
-      field: user_updated
-      group: null
-      hidden: true
-      interface: select-dropdown-m2o
-      note: null
-      options:
-        template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
-      readonly: true
-      required: false
-      sort: 5
-      special:
-        - user-updated
-      translations: null
-      validation: null
-      validation_message: null
-      width: half
-    schema:
-      data_type: char
-      default_value: null
-      foreign_key_column: id
-      foreign_key_table: directus_users
-      generation_expression: null
-      has_auto_increment: false
-      is_generated: false
-      is_nullable: true
-      is_primary_key: false
-      is_unique: false
-      max_length: 36
-      name: user_updated
-      numeric_precision: null
-      numeric_scale: null
-      table: WorkCategory
-    type: string
   - collection: WorkCategory_Project
     field: Project_id
     meta:
@@ -1902,6 +1408,226 @@ fields:
       numeric_scale: null
       table: WorkCategory_Project
     type: integer
+  - collection: WorkTimeTargetBlock
+    field: DailyWorkTimeTargets
+    meta:
+      collection: WorkTimeTargetBlock
+      conditions: null
+      display: null
+      display_options: null
+      field: DailyWorkTimeTargets
+      group: null
+      hidden: false
+      interface: list-o2m
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: null
+      special:
+        - o2m
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema: null
+    type: alias
+  - collection: WorkTimeTargetBlock
+    field: end
+    meta:
+      collection: WorkTimeTargetBlock
+      conditions: null
+      display: null
+      display_options: null
+      field: end
+      group: null
+      hidden: false
+      interface: datetime
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: null
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      data_type: date
+      default_value: null
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: null
+      name: end
+      numeric_precision: null
+      numeric_scale: null
+      table: WorkTimeTargetBlock
+    type: date
+  - collection: WorkTimeTargetBlock
+    field: id
+    meta:
+      collection: WorkTimeTargetBlock
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: null
+      special:
+        - uuid
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      data_type: char
+      default_value: null
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: false
+      is_primary_key: true
+      is_unique: true
+      max_length: 36
+      name: id
+      numeric_precision: null
+      numeric_scale: null
+      table: WorkTimeTargetBlock
+    type: uuid
+  - collection: WorkTimeTargetBlock
+    field: note
+    meta:
+      collection: WorkTimeTargetBlock
+      conditions: null
+      display: null
+      display_options: null
+      field: note
+      group: null
+      hidden: false
+      interface: input-multiline
+      note: null
+      options:
+        trim: true
+      readonly: false
+      required: false
+      sort: null
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      data_type: text
+      default_value: null
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: null
+      name: note
+      numeric_precision: null
+      numeric_scale: null
+      table: WorkTimeTargetBlock
+    type: text
+  - collection: WorkTimeTargetBlock
+    field: start
+    meta:
+      collection: WorkTimeTargetBlock
+      conditions: null
+      display: null
+      display_options: null
+      field: start
+      group: null
+      hidden: false
+      interface: datetime
+      note: null
+      options: null
+      readonly: false
+      required: true
+      sort: null
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      data_type: date
+      default_value: null
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: null
+      name: start
+      numeric_precision: null
+      numeric_scale: null
+      table: WorkTimeTargetBlock
+    type: date
+  - collection: WorkTimeTargetBlock
+    field: workerId
+    meta:
+      collection: WorkTimeTargetBlock
+      conditions: null
+      display: related-values
+      display_options:
+        template: "{{first_name}}\_{{last_name}}"
+      field: workerId
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        enableCreate: false
+        template: "{{first_name}}\_{{last_name}}"
+      readonly: false
+      required: true
+      sort: null
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      data_type: varchar
+      default_value: null
+      foreign_key_column: id
+      foreign_key_table: directus_users
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: false
+      is_primary_key: false
+      is_unique: false
+      max_length: 36
+      name: workerId
+      numeric_precision: null
+      numeric_scale: null
+      table: WorkTimeTargetBlock
+    type: string
   - collection: WorkUnit
     field: category
     meta:
@@ -1919,7 +1645,7 @@ fields:
         template: '{{name}}'
       readonly: false
       required: true
-      sort: 10
+      sort: null
       special:
         - m2o
       translations: null
@@ -1944,88 +1670,6 @@ fields:
       table: WorkUnit
     type: string
   - collection: WorkUnit
-    field: date_created
-    meta:
-      collection: WorkUnit
-      conditions: null
-      display: datetime
-      display_options:
-        relative: true
-      field: date_created
-      group: null
-      hidden: true
-      interface: datetime
-      note: null
-      options: null
-      readonly: true
-      required: false
-      sort: 2
-      special:
-        - cast-timestamp
-        - date-created
-      translations: null
-      validation: null
-      validation_message: null
-      width: half
-    schema:
-      data_type: datetime
-      default_value: null
-      foreign_key_column: null
-      foreign_key_table: null
-      generation_expression: null
-      has_auto_increment: false
-      is_generated: false
-      is_nullable: true
-      is_primary_key: false
-      is_unique: false
-      max_length: null
-      name: date_created
-      numeric_precision: null
-      numeric_scale: null
-      table: WorkUnit
-    type: timestamp
-  - collection: WorkUnit
-    field: date_updated
-    meta:
-      collection: WorkUnit
-      conditions: null
-      display: datetime
-      display_options:
-        relative: true
-      field: date_updated
-      group: null
-      hidden: true
-      interface: datetime
-      note: null
-      options: null
-      readonly: true
-      required: false
-      sort: 3
-      special:
-        - cast-timestamp
-        - date-updated
-      translations: null
-      validation: null
-      validation_message: null
-      width: half
-    schema:
-      data_type: datetime
-      default_value: null
-      foreign_key_column: null
-      foreign_key_table: null
-      generation_expression: null
-      has_auto_increment: false
-      is_generated: false
-      is_nullable: true
-      is_primary_key: false
-      is_unique: false
-      max_length: null
-      name: date_updated
-      numeric_precision: null
-      numeric_scale: null
-      table: WorkUnit
-    type: timestamp
-  - collection: WorkUnit
     field: description
     meta:
       collection: WorkUnit
@@ -2040,7 +1684,7 @@ fields:
       options: null
       readonly: false
       required: false
-      sort: 6
+      sort: null
       special: null
       translations: null
       validation: null
@@ -2078,7 +1722,7 @@ fields:
       options: null
       readonly: false
       required: true
-      sort: 8
+      sort: null
       special: null
       translations: null
       validation: null
@@ -2116,7 +1760,7 @@ fields:
       options: null
       readonly: true
       required: false
-      sort: 1
+      sort: null
       special:
         - uuid
       translations: null
@@ -2158,7 +1802,7 @@ fields:
         template: '{{title}}'
       readonly: false
       required: true
-      sort: 9
+      sort: null
       special:
         - m2o
       translations: null
@@ -2197,7 +1841,7 @@ fields:
       options: null
       readonly: false
       required: true
-      sort: 7
+      sort: null
       special: null
       translations: null
       validation: null
@@ -2221,86 +1865,6 @@ fields:
       table: WorkUnit
     type: dateTime
   - collection: WorkUnit
-    field: user_created
-    meta:
-      collection: WorkUnit
-      conditions: null
-      display: user
-      display_options: null
-      field: user_created
-      group: null
-      hidden: true
-      interface: select-dropdown-m2o
-      note: null
-      options:
-        template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
-      readonly: true
-      required: false
-      sort: 4
-      special:
-        - user-created
-      translations: null
-      validation: null
-      validation_message: null
-      width: half
-    schema:
-      data_type: char
-      default_value: null
-      foreign_key_column: id
-      foreign_key_table: directus_users
-      generation_expression: null
-      has_auto_increment: false
-      is_generated: false
-      is_nullable: true
-      is_primary_key: false
-      is_unique: false
-      max_length: 36
-      name: user_created
-      numeric_precision: null
-      numeric_scale: null
-      table: WorkUnit
-    type: string
-  - collection: WorkUnit
-    field: user_updated
-    meta:
-      collection: WorkUnit
-      conditions: null
-      display: user
-      display_options: null
-      field: user_updated
-      group: null
-      hidden: true
-      interface: select-dropdown-m2o
-      note: null
-      options:
-        template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
-      readonly: true
-      required: false
-      sort: 5
-      special:
-        - user-updated
-      translations: null
-      validation: null
-      validation_message: null
-      width: half
-    schema:
-      data_type: char
-      default_value: null
-      foreign_key_column: id
-      foreign_key_table: directus_users
-      generation_expression: null
-      has_auto_increment: false
-      is_generated: false
-      is_nullable: true
-      is_primary_key: false
-      is_unique: false
-      max_length: 36
-      name: user_updated
-      numeric_precision: null
-      numeric_scale: null
-      table: WorkUnit
-    type: string
-  - collection: WorkUnit
     field: worker
     meta:
       collection: WorkUnit
@@ -2318,7 +1882,7 @@ fields:
         template: "{{first_name}}\_{{last_name}}"
       readonly: false
       required: true
-      sort: 11
+      sort: null
       special:
         - m2o
       translations: null
@@ -2394,48 +1958,27 @@ fields:
     schema: null
     type: alias
 relations:
-  - collection: Client
-    field: user_created
+  - collection: DailyWorkTimeTarget
+    field: blockId
     meta:
       junction_field: null
-      many_collection: Client
-      many_field: user_created
+      many_collection: DailyWorkTimeTarget
+      many_field: blockId
       one_allowed_collections: null
-      one_collection: directus_users
+      one_collection: WorkTimeTargetBlock
       one_collection_field: null
       one_deselect_action: nullify
-      one_field: null
+      one_field: DailyWorkTimeTargets
       sort_field: null
-    related_collection: directus_users
+    related_collection: WorkTimeTargetBlock
     schema:
-      column: user_created
+      column: blockId
       constraint_name: null
       foreign_key_column: id
-      foreign_key_table: directus_users
-      on_delete: NO ACTION
+      foreign_key_table: WorkTimeTargetBlock
+      on_delete: SET NULL
       on_update: NO ACTION
-      table: Client
-  - collection: Client
-    field: user_updated
-    meta:
-      junction_field: null
-      many_collection: Client
-      many_field: user_updated
-      one_allowed_collections: null
-      one_collection: directus_users
-      one_collection_field: null
-      one_deselect_action: nullify
-      one_field: null
-      sort_field: null
-    related_collection: directus_users
-    schema:
-      column: user_updated
-      constraint_name: null
-      foreign_key_column: id
-      foreign_key_table: directus_users
-      on_delete: NO ACTION
-      on_update: NO ACTION
-      table: Client
+      table: DailyWorkTimeTarget
   - collection: Person
     field: client
     meta:
@@ -2457,48 +2000,6 @@ relations:
       on_delete: CASCADE
       on_update: NO ACTION
       table: Person
-  - collection: Person
-    field: user_created
-    meta:
-      junction_field: null
-      many_collection: Person
-      many_field: user_created
-      one_allowed_collections: null
-      one_collection: directus_users
-      one_collection_field: null
-      one_deselect_action: nullify
-      one_field: null
-      sort_field: null
-    related_collection: directus_users
-    schema:
-      column: user_created
-      constraint_name: null
-      foreign_key_column: id
-      foreign_key_table: directus_users
-      on_delete: NO ACTION
-      on_update: NO ACTION
-      table: Person
-  - collection: Person
-    field: user_updated
-    meta:
-      junction_field: null
-      many_collection: Person
-      many_field: user_updated
-      one_allowed_collections: null
-      one_collection: directus_users
-      one_collection_field: null
-      one_deselect_action: nullify
-      one_field: null
-      sort_field: null
-    related_collection: directus_users
-    schema:
-      column: user_updated
-      constraint_name: null
-      foreign_key_column: id
-      foreign_key_table: directus_users
-      on_delete: NO ACTION
-      on_update: NO ACTION
-      table: Person
   - collection: Project
     field: client
     meta:
@@ -2518,48 +2019,6 @@ relations:
       foreign_key_column: id
       foreign_key_table: Client
       on_delete: SET NULL
-      on_update: NO ACTION
-      table: Project
-  - collection: Project
-    field: user_created
-    meta:
-      junction_field: null
-      many_collection: Project
-      many_field: user_created
-      one_allowed_collections: null
-      one_collection: directus_users
-      one_collection_field: null
-      one_deselect_action: nullify
-      one_field: null
-      sort_field: null
-    related_collection: directus_users
-    schema:
-      column: user_created
-      constraint_name: null
-      foreign_key_column: id
-      foreign_key_table: directus_users
-      on_delete: NO ACTION
-      on_update: NO ACTION
-      table: Project
-  - collection: Project
-    field: user_updated
-    meta:
-      junction_field: null
-      many_collection: Project
-      many_field: user_updated
-      one_allowed_collections: null
-      one_collection: directus_users
-      one_collection_field: null
-      one_deselect_action: nullify
-      one_field: null
-      sort_field: null
-    related_collection: directus_users
-    schema:
-      column: user_updated
-      constraint_name: null
-      foreign_key_column: id
-      foreign_key_table: directus_users
-      on_delete: NO ACTION
       on_update: NO ACTION
       table: Project
   - collection: Project_directus_users
@@ -2604,48 +2063,6 @@ relations:
       on_delete: SET NULL
       on_update: NO ACTION
       table: Project_directus_users
-  - collection: WorkCategory
-    field: user_created
-    meta:
-      junction_field: null
-      many_collection: WorkCategory
-      many_field: user_created
-      one_allowed_collections: null
-      one_collection: directus_users
-      one_collection_field: null
-      one_deselect_action: nullify
-      one_field: null
-      sort_field: null
-    related_collection: directus_users
-    schema:
-      column: user_created
-      constraint_name: null
-      foreign_key_column: id
-      foreign_key_table: directus_users
-      on_delete: NO ACTION
-      on_update: NO ACTION
-      table: WorkCategory
-  - collection: WorkCategory
-    field: user_updated
-    meta:
-      junction_field: null
-      many_collection: WorkCategory
-      many_field: user_updated
-      one_allowed_collections: null
-      one_collection: directus_users
-      one_collection_field: null
-      one_deselect_action: nullify
-      one_field: null
-      sort_field: null
-    related_collection: directus_users
-    schema:
-      column: user_updated
-      constraint_name: null
-      foreign_key_column: id
-      foreign_key_table: directus_users
-      on_delete: NO ACTION
-      on_update: NO ACTION
-      table: WorkCategory
   - collection: WorkCategory_Project
     field: Project_id
     meta:
@@ -2688,6 +2105,27 @@ relations:
       on_delete: SET NULL
       on_update: NO ACTION
       table: WorkCategory_Project
+  - collection: WorkTimeTargetBlock
+    field: workerId
+    meta:
+      junction_field: null
+      many_collection: WorkTimeTargetBlock
+      many_field: workerId
+      one_allowed_collections: null
+      one_collection: directus_users
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: WorkTimeTargetBlocks
+      sort_field: null
+    related_collection: directus_users
+    schema:
+      column: workerId
+      constraint_name: null
+      foreign_key_column: id
+      foreign_key_table: directus_users
+      on_delete: NO ACTION
+      on_update: NO ACTION
+      table: WorkTimeTargetBlock
   - collection: WorkUnit
     field: category
     meta:
@@ -2728,48 +2166,6 @@ relations:
       foreign_key_column: id
       foreign_key_table: Project
       on_delete: SET NULL
-      on_update: NO ACTION
-      table: WorkUnit
-  - collection: WorkUnit
-    field: user_created
-    meta:
-      junction_field: null
-      many_collection: WorkUnit
-      many_field: user_created
-      one_allowed_collections: null
-      one_collection: directus_users
-      one_collection_field: null
-      one_deselect_action: nullify
-      one_field: null
-      sort_field: null
-    related_collection: directus_users
-    schema:
-      column: user_created
-      constraint_name: null
-      foreign_key_column: id
-      foreign_key_table: directus_users
-      on_delete: NO ACTION
-      on_update: NO ACTION
-      table: WorkUnit
-  - collection: WorkUnit
-    field: user_updated
-    meta:
-      junction_field: null
-      many_collection: WorkUnit
-      many_field: user_updated
-      one_allowed_collections: null
-      one_collection: directus_users
-      one_collection_field: null
-      one_deselect_action: nullify
-      one_field: null
-      sort_field: null
-    related_collection: directus_users
-    schema:
-      column: user_updated
-      constraint_name: null
-      foreign_key_column: id
-      foreign_key_table: directus_users
-      on_delete: NO ACTION
       on_update: NO ACTION
       table: WorkUnit
   - collection: WorkUnit

@@ -1,61 +1,84 @@
 table User {
-  id uuid
-  directus_stuff any
-  projectsIds uuid[]
-  
-  indexes {
-    (id) [pk]
-  }
+    id uuid
+    directus_stuff any
+    projectsIds uuid[]
+    
+    indexes {
+        (id) [pk]
+    }
 }
 
 table Client {
-  id uuid
-  companyname string
-  address string
-  correspondentId uuid [ref:> Person.id]
-  indexes {
-    (id) [pk]
-  }
+    id uuid
+    companyname string
+    address string
+    correspondentId uuid [ref:> Person.id]
+    indexes {
+        (id) [pk]
+    }
 }
 
 table Person {
-  id uuid
-  firstname string
-  lastname string
-  email email
-  telephone string
+    id uuid
+    firstname string
+    lastname string
+    email email
+    telephone string
 }
 
 table Project {
-  id uuid
-  title string
-  clientId uuid [ref:> Client.id]
-  categoriesIds uuid[]
-  workersIds uuid[]
-  indexes {
-    (id) [pk]
-  }
+    id uuid
+    title string
+    clientId uuid [ref:> Client.id]
+    categoriesIds uuid[]
+    workersIds uuid[]
+    indexes {
+        (id) [pk]
+    }
 }
 
 table WorkCategory {
-  id uuid
-  name string
-  projectsIds uuid[]
-  indexes {
-    (id) [pk]
-  }
+    id uuid
+    name string
+    projectsIds uuid[]
+    indexes {
+        (id) [pk]
+    }
 }
 
 table WorkUnit {
-  id uuid
-  start timestamp
-  end timestamp
-  workerId uuid [ref:> User.id]
-  categoryId uuid [ref:> WorkCategory.id]
-  projectId uuid [ref:> Project.id]
-  indexes {
-    (id) [pk]
-  }
+    id uuid
+    start timestamp
+    end timestamp
+    workerId uuid [ref:> User.id]
+    categoryId uuid [ref:> WorkCategory.id]
+    projectId uuid [ref:> Project.id]
+    indexes {
+        (id) [pk]
+    }
+}
+
+table DailyWorkTimeTarget {
+    id uuid
+    dayOfWeek int [note: "0 = Sunday, 1 = Monday, 2 = Tuesday, 3 = Wednesday, 4 = Thursday, 5 = Friday, 6 = Saturday, 7 = Sunday"]
+    start? time
+    end? time
+    duration time
+    blockId uuid [ref:> WorkTimeTargetBlock.id]
+    indexes {
+        (id) [pk]
+    }
+}
+
+table WorkTimeTargetBlock {
+    id uuid
+    start date
+    end? date [note: "if null, this block will essentially go on forever"]
+    note? string
+    workerId [ref:> User.id]
+    indexes {
+        (id) [pk]
+    }
 }
 
 ref: Project.categoriesIds <> WorkCategory.projectsIds
