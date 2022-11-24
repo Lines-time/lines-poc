@@ -1,6 +1,6 @@
 import { A, Outlet } from "@solidjs/router";
 import { ChevronDown, Settings } from "lucide-solid";
-import { Component, createMemo, createResource, createSignal, For, Show } from "solid-js";
+import { Component, createMemo, createResource, createSignal, For, Show, Suspense } from "solid-js";
 import Avatar from "~/Avatar";
 import Button from "~/Button";
 import Dropdown from "~/Dropdown";
@@ -70,15 +70,17 @@ const App: Component = () => {
                         </div>
                         <ul class="menu w-full p-2 rounded-box">
                             <li>
-                                <A href="/" end>
+                                <A href="/" end activeClass="text-primary bg-white bg-opacity-5">
                                     Overview
                                 </A>
                             </li>
                             <li>
-                                <A href="/track">Track time</A>
+                                <A href="/track" activeClass="text-primary bg-white bg-opacity-5">
+                                    Track time
+                                </A>
                             </li>
                             <li>
-                                <A href="/vacation" end>
+                                <A href="/vacation" end activeClass="text-primary bg-white bg-opacity-5">
                                     Vacation
                                 </A>
                             </li>
@@ -86,7 +88,7 @@ const App: Component = () => {
                                 <span>Reports</span>
                             </li>
                             <li>
-                                <A href="/reports" end>
+                                <A href="/reports" end activeClass="text-primary bg-white bg-opacity-5">
                                     Overview
                                 </A>
                             </li>
@@ -94,12 +96,16 @@ const App: Component = () => {
                         <div class="flex-1"></div>
                         <div class="bg-base-300 p-2 pl-4 gap-2 flex flex-row items-center">
                             <Show when={currentUser.latest?.avatar && servers.state.activeServer?.type !== "offline"}>
-                                <Avatar id={currentUser.latest?.avatar}  />
+                                <Suspense fallback={<span>Loading...</span>}>
+                                    <Avatar id={currentUser.latest?.avatar} />
+                                </Suspense>
                             </Show>
-                            <A class="flex-1" href="/personal">
-                                <Show when={currentUser.latest?.first_name && currentUser.latest?.last_name}>
-                                    {`${currentUser.latest!.first_name} ${currentUser.latest!.last_name}`}
-                                </Show>
+                            <A class="flex-1" href="/personal" activeClass="text-primary">
+                                <Suspense fallback={<span>Loading...</span>}>
+                                    <Show when={currentUser.latest?.first_name && currentUser.latest?.last_name}>
+                                        {`${currentUser.latest!.first_name} ${currentUser.latest!.last_name}`}
+                                    </Show>
+                                </Suspense>
                             </A>
                             <Button class="btn-circle" icon={Settings}></Button>
                         </div>
