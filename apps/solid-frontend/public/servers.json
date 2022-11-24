@@ -1,12 +1,6 @@
 {
     "servers": [
         {
-            "id": "offline",
-            "display_name": "Offline",
-            "type": "offline",
-            "default": true
-        },
-        {
             "id": "directus-dev",
             "display_name": "Directus dev backend",
             "type": "directus",
