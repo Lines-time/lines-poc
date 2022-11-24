@@ -19,7 +19,7 @@ const Track: Component = () => {
         },
     ];
     return (
-        <div class="h-full grid grid-rows-[min-content_1fr]">
+        <div class="h-full grid grid-rows-[64px_1fr]">
             <Navbar title="Track time" center={<Tabs tabs={tabs} />} />
             <Outlet />
         </div>
