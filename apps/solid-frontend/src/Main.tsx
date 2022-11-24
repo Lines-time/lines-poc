@@ -11,6 +11,7 @@ const Month = lazy(() => import("@/track/Month"));
 const Overview = lazy(() => import("@/Overview"));
 const Vacation = lazy(() => import("@/Vacation"));
 const ReportsOverview = lazy(() => import("@/reports/Overview"));
+const Personal = lazy(() => import("@/Personal"));
 
 const Main: Component = () => {
     servers.init();
@@ -29,6 +30,7 @@ const Main: Component = () => {
                     <Route path="/reports">
                         <Route path="/" component={ReportsOverview}></Route>
                     </Route>
+                    <Route path="/personal" component={Personal}></Route>
                 </Route>
             </Routes>
         </>

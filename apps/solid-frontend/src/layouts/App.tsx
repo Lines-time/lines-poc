@@ -96,11 +96,11 @@ const App: Component = () => {
                             <Show when={currentUser.latest?.avatar && servers.state.activeServer?.type !== "offline"}>
                                 <Avatar id={currentUser.latest?.avatar}  />
                             </Show>
-                            <span class="flex-1">
+                            <A class="flex-1" href="/personal">
                                 <Show when={currentUser.latest?.first_name && currentUser.latest?.last_name}>
                                     {`${currentUser.latest!.first_name} ${currentUser.latest!.last_name}`}
                                 </Show>
-                            </span>
+                            </A>
                             <Button class="btn-circle" icon={Settings}></Button>
                         </div>
                     </div>
