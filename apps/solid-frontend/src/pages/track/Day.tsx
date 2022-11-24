@@ -1,8 +1,9 @@
 import { useSearchParams } from "@solidjs/router";
 import dayjs from "dayjs";
 import { Plus } from "lucide-solid";
-import { Component, createMemo, createResource, createSignal, For, onMount } from "solid-js";
+import { Component, createMemo, createResource, createSignal, For, onMount, Suspense } from "solid-js";
 import Button from "~/Button";
+import Loading from "~/Loading";
 import WorkUnitModal from "~/modals/WorkUnitModal";
 import WorkUnit from "~/WorkUnit";
 
@@ -48,10 +49,12 @@ const Day: Component = () => {
                 <h2 class="text-xl font-bold col-span-3">{dayjs().format("dddd, DD.MM.YYYY")}</h2>
                 <div class="calendarday">{/* TODO: calendar day here */}</div>
                 <div class="flex flex-col gap-2">
-                    <For each={workUnits()}>{(unit) => unit && <WorkUnit unit={unit} />}</For>
-                    <Button onClick={() => setShowWorkUnitModal(true)}>
-                        <Plus />
-                    </Button>
+                    <Suspense fallback={<Loading />}>
+                        <For each={workUnits()}>{(unit) => unit && <WorkUnit unit={unit} />}</For>
+                        <Button onClick={() => setShowWorkUnitModal(true)}>
+                            <Plus />
+                        </Button>
+                    </Suspense>
                 </div>
             </div>
             <div class="bg-base-200 border-l-2 border-base-300 border-solid w-full"></div>

@@ -18,6 +18,7 @@ const Button: Component<TProps> = (props) => {
         "btn-ghost": !primary,
         "gap-2": icon !== undefined,
         "btn-square": icon && !children,
+        "loading": loading,
     }));
 
     return (

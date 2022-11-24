@@ -20,6 +20,7 @@ const WorkUnitModal: Component<TProps> = (props) => {
     const [description, setDescription] = createSignal(props.presetData?.().description ?? "");
     const [start, setStart] = createSignal(dayjs(props.presetData?.().start ?? undefined).toDate());
     const [end, setEnd] = createSignal(dayjs(props.presetData?.().end ?? undefined).toDate());
+    const [loading, setLoading] = createSignal(false);
     const [projects, projectsResource] = createResource(async () => await servers.currentServer()?.project?.getAll());
     const [categories, categoriesResource] = createResource(
         () => [projects(), projectId()],
@@ -53,6 +54,7 @@ const WorkUnitModal: Component<TProps> = (props) => {
         const _projectId = projectId();
         const _categoryId = categoryId();
         if (_projectId && _categoryId) {
+            setLoading(true);
             await servers.currentServer()?.workUnit?.createOne({
                 project: _projectId,
                 category: _categoryId,
@@ -60,6 +62,7 @@ const WorkUnitModal: Component<TProps> = (props) => {
                 end: end().toISOString(),
                 description: description(),
             });
+            setLoading(false);
             props.onSave?.();
             props.onClose();
         }
@@ -116,7 +119,7 @@ const WorkUnitModal: Component<TProps> = (props) => {
                     </FormControl>
                 </div>
                 <div class="modal-action">
-                    <Button primary submit>
+                    <Button primary submit loading={loading()}>
                         Save
                     </Button>
                 </div>

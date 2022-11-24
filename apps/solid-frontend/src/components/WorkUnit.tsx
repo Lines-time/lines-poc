@@ -1,10 +1,10 @@
 import dayjs from "dayjs";
-import { Component, createMemo, createResource } from "solid-js";
+import { Component, createMemo, createResource, Suspense } from "solid-js";
 
 import servers from "../store/servers";
+import Loading from "./Loading";
 
 import type { TWorkUnit } from "lines-types";
-
 type TProps = {
     unit: TWorkUnit;
 };
@@ -30,10 +30,12 @@ const WorkUnit: Component<TProps> = (props) => {
                 <span>{end().format("HH:mm")}</span>
             </div>
             <div class="flex flex-col pl-2 border-solid border-base-300 border-l-2">
-                <span>
-                    <b>{project()?.title}</b>
-                    {` - ${category()?.name}`}
-                </span>
+                <Suspense fallback={<Loading />}>
+                    <span>
+                        <b>{project()?.title}</b>
+                        {` - ${category()?.name}`}
+                    </span>
+                </Suspense>
                 <p>{unit?.description}</p>
             </div>
         </div>
