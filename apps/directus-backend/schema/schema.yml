@@ -430,14 +430,14 @@ fields:
       conditions: null
       display: related-values
       display_options:
-        template: "{{start}} -\_{{end}}"
+        template: "{{start}} -\_{{end}} -\_{{workerId.first_name}}\_{{workerId.last_name}}"
       field: blockId
       group: null
       hidden: false
       interface: select-dropdown-m2o
       note: null
       options:
-        template: "{{start}} -\_{{end}}"
+        template: "{{start}} -\_{{end}} -\_{{workerId.first_name}}\_{{workerId.last_name}}"
       readonly: false
       required: true
       sort: null
@@ -469,8 +469,33 @@ fields:
     meta:
       collection: DailyWorkTimeTarget
       conditions: null
-      display: null
-      display_options: null
+      display: formatted-value
+      display_options:
+        conditionalFormatting:
+          - operator: eq
+            value: 0
+            text: Sunday
+          - operator: eq
+            value: 1
+            text: Monday
+          - operator: eq
+            value: 2
+            text: Tuesday
+          - operator: eq
+            value: 3
+            text: Wednesday
+          - operator: eq
+            value: 4
+            text: Thursday
+          - operator: eq
+            value: 5
+            text: Friday
+          - operator: eq
+            value: 6
+            text: Saturday
+          - operator: eq
+            value: 7
+            text: Sunday
       field: dayOfWeek
       group: null
       hidden: false
@@ -524,8 +549,9 @@ fields:
     meta:
       collection: DailyWorkTimeTarget
       conditions: null
-      display: null
-      display_options: null
+      display: datetime
+      display_options:
+        format: HH:mm
       field: duration
       group: null
       hidden: false
@@ -562,8 +588,9 @@ fields:
     meta:
       collection: DailyWorkTimeTarget
       conditions: null
-      display: null
-      display_options: null
+      display: datetime
+      display_options:
+        format: HH:mm
       field: end
       group: null
       hidden: false
@@ -639,8 +666,9 @@ fields:
     meta:
       collection: DailyWorkTimeTarget
       conditions: null
-      display: null
-      display_options: null
+      display: datetime
+      display_options:
+        format: HH:mm
       field: start
       group: null
       hidden: false
@@ -1413,14 +1441,16 @@ fields:
     meta:
       collection: WorkTimeTargetBlock
       conditions: null
-      display: null
-      display_options: null
+      display: related-values
+      display_options:
+        template: "{{dayOfWeek}}:\_{{start}} -\_{{end}}"
       field: DailyWorkTimeTargets
       group: null
       hidden: false
       interface: list-o2m
       note: null
-      options: null
+      options:
+        template: "{{dayOfWeek}}:\_{{start}} -\_{{end}}"
       readonly: false
       required: false
       sort: null
@@ -1437,8 +1467,9 @@ fields:
     meta:
       collection: WorkTimeTargetBlock
       conditions: null
-      display: null
-      display_options: null
+      display: datetime
+      display_options:
+        format: LLLL do, yyyy
       field: end
       group: null
       hidden: false
@@ -1514,8 +1545,9 @@ fields:
     meta:
       collection: WorkTimeTargetBlock
       conditions: null
-      display: null
-      display_options: null
+      display: formatted-value
+      display_options:
+        format: true
       field: note
       group: null
       hidden: false
@@ -1553,8 +1585,9 @@ fields:
     meta:
       collection: WorkTimeTargetBlock
       conditions: null
-      display: null
-      display_options: null
+      display: datetime
+      display_options:
+        format: LLLL do, yyyy
       field: start
       group: null
       hidden: false
