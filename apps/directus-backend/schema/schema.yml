@@ -221,7 +221,7 @@ collections:
         NULL, `end` date NULL, `note` text NULL, `workerId` varchar(36) NOT NULL
         DEFAULT null, PRIMARY KEY (`id`), CONSTRAINT
         `worktimetargetblock_workerid_foreign` FOREIGN KEY (`workerId`)
-        REFERENCES `directus_users` (`id`) ON DELETE NO ACTION)
+        REFERENCES `directus_users` (`id`) ON DELETE SET NULL)
   - collection: WorkUnit
     meta:
       accountability: all
@@ -1957,6 +1957,32 @@ fields:
       width: full
     schema: null
     type: alias
+  - collection: directus_users
+    field: workTimeTargetBlocks
+    meta:
+      collection: directus_users
+      conditions: null
+      display: related-values
+      display_options:
+        template: "{{start}} -\_{{end}}"
+      field: workTimeTargetBlocks
+      group: null
+      hidden: false
+      interface: list-o2m
+      note: null
+      options:
+        template: "{{start}} -\_{{end}}"
+      readonly: false
+      required: false
+      sort: null
+      special:
+        - o2m
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema: null
+    type: alias
 relations:
   - collection: DailyWorkTimeTarget
     field: blockId
@@ -2115,7 +2141,7 @@ relations:
       one_collection: directus_users
       one_collection_field: null
       one_deselect_action: nullify
-      one_field: WorkTimeTargetBlocks
+      one_field: workTimeTargetBlocks
       sort_field: null
     related_collection: directus_users
     schema:
@@ -2123,7 +2149,7 @@ relations:
       constraint_name: null
       foreign_key_column: id
       foreign_key_table: directus_users
-      on_delete: NO ACTION
+      on_delete: SET NULL
       on_update: NO ACTION
       table: WorkTimeTargetBlock
   - collection: WorkUnit
