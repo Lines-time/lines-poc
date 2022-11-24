@@ -58,8 +58,8 @@ const WorkUnitModal: Component<TProps> = (props) => {
             await servers.currentServer()?.workUnit?.createOne({
                 project: _projectId,
                 category: _categoryId,
-                start: start().toISOString(),
-                end: end().toISOString(),
+                start: dayjs(start()).second(0).toDate().toISOString(),
+                end: dayjs(end()).second(0).toDate().toISOString(),
                 description: description(),
             });
             setLoading(false);
