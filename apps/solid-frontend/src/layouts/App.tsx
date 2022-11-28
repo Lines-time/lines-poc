@@ -69,7 +69,7 @@ const App: Component = () => {
                                 </For>
                             </Dropdown>
                         </div>
-                        <ul class="menu w-full p-2 rounded-box">
+                        <ul class="menu w-full p-2 rounded-box gap-2">
                             <li>
                                 <A href="/" end activeClass="text-primary bg-white bg-opacity-5">
                                     Overview

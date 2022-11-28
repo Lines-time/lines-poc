@@ -43,7 +43,9 @@ export type TApi = {
     workTimeTargetBlock: Pick<ApiGetters<TWorkTimeTargetBlock>, "getById"> & {
         getForUser: (id: string) => PromiseOptional<Optional<TWorkTimeTargetBlock>[]>;
     };
-    dailyWorkTimeTarget: Pick<ApiGetters<TDailyWorkTimeTarget>, "getById"> & {};
+    dailyWorkTimeTarget: Pick<ApiGetters<TDailyWorkTimeTarget>, "getById"> & {
+        getForDate: (date: Date) => PromiseOptional<Optional<TDailyWorkTimeTarget>[]>;
+    };
 };
 
 type TDirectusCollectionProperties = {

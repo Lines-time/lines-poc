@@ -4,7 +4,7 @@ import ForNumber from "~/ForNumber";
 import Loading from "~/Loading";
 
 import servers from "../../store/servers";
-import { scale } from "../../utils/utils";
+import { parseTimeString, scale } from "../../utils/utils";
 
 import type { TDailyWorkTimeTarget } from "lines-types";
 type TProps = {
@@ -57,7 +57,6 @@ const Daily: Component<{ day: number; dailies: (TDailyWorkTimeTarget | undefined
 
     const day = props.day + 1;
     const daily = dailies.filter((d) => d?.dayOfWeek === day);
-    const parseTimeString = (time?: string) => dayjs(time, "HH:mm:ss");
 
     const duration = (d: (TDailyWorkTimeTarget | undefined | null)[] | TDailyWorkTimeTarget | undefined | null) => {
         if (Array.isArray(d))

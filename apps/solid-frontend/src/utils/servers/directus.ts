@@ -149,6 +149,38 @@ export const directus = (server: TDirectusServer): TApi => {
                 const result = await _directus.items("DailyWorkTimeTarget").readOne(id);
                 return result;
             },
+            getForDate: async (date) => {
+                const currentBlock = await _directus.items("WorkTimeTargetBlock").readByQuery({
+                    filter: {
+                        _or: [
+                            {
+                                end: {
+                                    _null: true,
+                                },
+                            },
+                            {
+                                end: {
+                                    _gte: date,
+                                },
+                            },
+                        ],
+                        start: {
+                            _lt: dayjs(date).toString(),
+                        },
+                    },
+                });
+                const result = await _directus.items("DailyWorkTimeTarget").readByQuery({
+                    filter: {
+                        id: {
+                            _in: currentBlock.data?.map((block) => block?.DailyWorkTimeTargets).flat() ?? [],
+                        },
+                        dayOfWeek: {
+                            _eq: dayjs(date).weekday(),
+                        },
+                    },
+                });
+                return result.data;
+            },
         },
     };
 };
