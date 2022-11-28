@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { Component, createResource, Show, Suspense } from "solid-js";
+import { Component, createResource, For, Show, Suspense } from "solid-js";
 import ForNumber from "~/ForNumber";
 import Loading from "~/Loading";
 
@@ -56,28 +56,49 @@ const Daily: Component<{ day: number; dailies: (TDailyWorkTimeTarget | undefined
     const { dailies } = props;
 
     const day = props.day + 1;
-    const daily = dailies.find((d) => d?.dayOfWeek === day);
+    const daily = dailies.filter((d) => d?.dayOfWeek === day);
 
-    const duration = (d: TDailyWorkTimeTarget | undefined | null) =>
-        dayjs
+    const duration = (d: (TDailyWorkTimeTarget | undefined | null)[] | TDailyWorkTimeTarget | undefined | null) => {
+        if (Array.isArray(d))
+            return d.reduce(
+                (a, b) =>
+                    a +
+                    dayjs
+                        .duration({
+                            hours: dayjs(b?.duration, "HH:mm:ss").hour(),
+                            minutes: dayjs(b?.duration, "HH:mm:ss").minute(),
+                        })
+                        .asMinutes(),
+                0
+            );
+        return dayjs
             .duration({
                 hours: dayjs(d?.duration, "HH:mm:ss").hour(),
                 minutes: dayjs(d?.duration, "HH:mm:ss").minute(),
             })
             .asMinutes();
+    };
 
-    const longestDay = Math.max(...(dailies.map((daily) => duration(daily)) ?? []));
-    const height = scale(duration(daily), longestDay, 0, 100, 0);
+    const longestDay = Math.max(
+        ...([0, 1, 2, 3, 4, 5, 6, 7].map((day) => duration(dailies.filter((d) => d?.dayOfWeek === day))) ?? [])
+    );
+    const height = (d: TDailyWorkTimeTarget) => scale(duration(d), longestDay, 0, 100, 0);
 
     return (
         <div class="h-full flex flex-col" classList={{ "opacity-50": !daily }}>
-            <div class="rounded flex-1 flex flex-col justify-end">
-                <div
-                    class="bg-primary rounded"
-                    style={{
-                        height: `${height}%`,
-                    }}
-                ></div>
+            <div class="rounded flex-1 flex flex-col justify-end gap-1">
+                <For each={daily}>
+                    {(d) =>
+                        d && (
+                            <div
+                                class="bg-primary rounded"
+                                style={{
+                                    height: `${height(d)}%`,
+                                }}
+                            ></div>
+                        )
+                    }
+                </For>
             </div>
             <span class="text-center">{dayjs().day(day).format("ddd")}</span>
             <span class="text-center">{dayjs.duration(duration(daily), "minutes").format("H:mm")}h</span>
