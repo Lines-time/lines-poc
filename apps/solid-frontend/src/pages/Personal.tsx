@@ -10,10 +10,6 @@ const Personal: Component = () => {
         async () => await servers.currentServer()?.auth.getCurrentUser()
     );
 
-    const [workTimeTargets, workTimeTargetsResource] = createResource(async () => {
-        return [{ id: "asd" }];
-    });
-
     return (
         <div class="h-full grid grid-rows-[64px_1fr]">
             <Navbar title="Personal Info" />
