@@ -37,7 +37,7 @@ collections:
       color: null
       display_template: null
       group: WorkTimeTargetBlock
-      hidden: false
+      hidden: true
       icon: ads_click
       item_duplication_fields: null
       note: null
