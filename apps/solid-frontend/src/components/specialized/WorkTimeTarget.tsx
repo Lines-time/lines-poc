@@ -92,7 +92,7 @@ const Daily: Component<{ day: number; dailies: (TDailyWorkTimeTarget | undefined
             : parseTimeString(d.duration).format("H:mm[h]");
 
     return (
-        <div class="h-full flex flex-col" classList={{ "opacity-50": !daily }}>
+        <div class="h-full flex flex-col" classList={{ "opacity-50": !daily.length }}>
             <div class="rounded flex-1 flex flex-col justify-end gap-1">
                 <For each={daily}>
                     {(d) =>
