@@ -57,6 +57,7 @@ const Daily: Component<{ day: number; dailies: (TDailyWorkTimeTarget | undefined
 
     const day = props.day + 1;
     const daily = dailies.filter((d) => d?.dayOfWeek === day);
+    const parseTimeString = (time?: string) => dayjs(time, "HH:mm:ss");
 
     const duration = (d: (TDailyWorkTimeTarget | undefined | null)[] | TDailyWorkTimeTarget | undefined | null) => {
         if (Array.isArray(d))
@@ -65,16 +66,16 @@ const Daily: Component<{ day: number; dailies: (TDailyWorkTimeTarget | undefined
                     a +
                     dayjs
                         .duration({
-                            hours: dayjs(b?.duration, "HH:mm:ss").hour(),
-                            minutes: dayjs(b?.duration, "HH:mm:ss").minute(),
+                            hours: parseTimeString(b?.duration).hour(),
+                            minutes: parseTimeString(b?.duration).minute(),
                         })
                         .asMinutes(),
                 0
             );
         return dayjs
             .duration({
-                hours: dayjs(d?.duration, "HH:mm:ss").hour(),
-                minutes: dayjs(d?.duration, "HH:mm:ss").minute(),
+                hours: parseTimeString(d?.duration).hour(),
+                minutes: parseTimeString(d?.duration).minute(),
             })
             .asMinutes();
     };
@@ -91,11 +92,20 @@ const Daily: Component<{ day: number; dailies: (TDailyWorkTimeTarget | undefined
                     {(d) =>
                         d && (
                             <div
-                                class="bg-primary rounded"
+                                class="tooltip hover:z-50"
+                                data-tip={
+                                    d.start && d.end
+                                        ? `${parseTimeString(d.start).format("HH:mm")} - ${parseTimeString(
+                                              d.end
+                                          ).format("HH:mm")} (${d.duration})`
+                                        : parseTimeString(d.duration).format("HH:mm")
+                                }
                                 style={{
                                     height: `${height(d)}%`,
                                 }}
-                            ></div>
+                            >
+                                <div class="bg-primary rounded h-full"></div>
+                            </div>
                         )
                     }
                 </For>
