@@ -84,6 +84,12 @@ const Daily: Component<{ day: number; dailies: (TDailyWorkTimeTarget | undefined
         ...([0, 1, 2, 3, 4, 5, 6, 7].map((day) => duration(dailies.filter((d) => d?.dayOfWeek === day))) ?? [])
     );
     const height = (d: TDailyWorkTimeTarget) => scale(duration(d), longestDay, 0, 100, 0);
+    const tooltip = (d: TDailyWorkTimeTarget) =>
+        d.start && d.end
+            ? parseTimeString(d.start).format("HH:mm") +
+              ` - ${parseTimeString(d.end).format("HH:mm")}` +
+              `(${parseTimeString(d.duration).format("H:mm[h]")})`
+            : parseTimeString(d.duration).format("H:mm[h]");
 
     return (
         <div class="h-full flex flex-col" classList={{ "opacity-50": !daily }}>
@@ -93,13 +99,7 @@ const Daily: Component<{ day: number; dailies: (TDailyWorkTimeTarget | undefined
                         d && (
                             <div
                                 class="tooltip hover:z-50"
-                                data-tip={
-                                    d.start && d.end
-                                        ? `${parseTimeString(d.start).format("HH:mm")} - ${parseTimeString(
-                                              d.end
-                                          ).format("HH:mm")} (${d.duration})`
-                                        : parseTimeString(d.duration).format("HH:mm")
-                                }
+                                data-tip={tooltip(d)}
                                 style={{
                                     height: `${height(d)}%`,
                                 }}
