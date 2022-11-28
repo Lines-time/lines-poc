@@ -21,7 +21,7 @@ const Personal: Component = () => {
                 <div class="p-6">
                     <h2 class="text-2xl font-bold">{`${currentUser.latest?.first_name} ${currentUser.latest?.last_name}`}</h2>
                     <h3 class="text-lg">Work time targets</h3>
-                    <div class="flex flex-row flex-wrap">
+                    <div class="flex flex-row flex-wrap gap-2">
                         <For each={currentUser()?.workTimeTargetBlocks}>{(id) => id && <WorkTimeTarget id={id} />}</For>
                     </div>
                 </div>
