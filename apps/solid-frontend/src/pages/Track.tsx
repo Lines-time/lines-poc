@@ -1,8 +1,9 @@
 import { Outlet } from "@solidjs/router";
+import { Component, Suspense } from "solid-js";
+import Loading from "~/Loading";
 import Navbar from "~/Navbar";
 import Tabs, { TTab } from "~/Tabs";
 
-import type { Component } from "solid-js";
 const Track: Component = () => {
     const tabs: TTab[] = [
         {
@@ -21,7 +22,9 @@ const Track: Component = () => {
     return (
         <div class="h-full grid grid-rows-[64px_1fr]">
             <Navbar title="Track time" center={<Tabs tabs={tabs} />} />
-            <Outlet />
+            <Suspense fallback={<Loading />}>
+                <Outlet />
+            </Suspense>
         </div>
     );
 };

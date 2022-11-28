@@ -46,7 +46,9 @@ const App: Component = () => {
                     class="drawer-toggle"
                 />
                 <div class="drawer-content">
-                    <Outlet />
+                    <Suspense fallback={<Loading />}>
+                        <Outlet />
+                    </Suspense>
                 </div>
                 <div class="drawer-side">
                     <label for="main-drawer" class="drawer-overlay"></label>
