@@ -1,5 +1,5 @@
 import { A, Outlet } from "@solidjs/router";
-import { ChevronDown, Settings } from "lucide-solid";
+import { BarChart3, ChevronDown, LayoutDashboard, Palmtree, Settings, Timer } from "lucide-solid";
 import { Component, createMemo, createResource, createSignal, For, Show, Suspense } from "solid-js";
 import Avatar from "~/Avatar";
 import Button from "~/Button";
@@ -72,16 +72,19 @@ const App: Component = () => {
                         <ul class="menu w-full p-2 rounded-box gap-2">
                             <li>
                                 <A href="/" end activeClass="text-primary bg-white bg-opacity-5">
+                                    <LayoutDashboard />
                                     Overview
                                 </A>
                             </li>
                             <li>
                                 <A href="/track" activeClass="text-primary bg-white bg-opacity-5">
+                                    <Timer />
                                     Track time
                                 </A>
                             </li>
                             <li>
                                 <A href="/vacation" end activeClass="text-primary bg-white bg-opacity-5">
+                                    <Palmtree />
                                     Vacation
                                 </A>
                             </li>
@@ -90,6 +93,7 @@ const App: Component = () => {
                             </li>
                             <li>
                                 <A href="/reports" end activeClass="text-primary bg-white bg-opacity-5">
+                                    <BarChart3 />
                                     Overview
                                 </A>
                             </li>
