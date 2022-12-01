@@ -28,6 +28,25 @@ const Overview: Component = () => {
                 ?.dailyWorkTimeTarget.getForDateRange(dayjs().weekday(1).toDate(), dayjs().weekday(7).toDate())
     );
 
+    const [monthData, monthDataResource] = createResource(
+        async () =>
+            await servers
+                .currentServer()
+                ?.workUnit.getForDateRangeAndUser(
+                    dayjs().date(1).toDate(),
+                    dayjs().date(dayjs().daysInMonth()).toDate()
+                )
+    );
+    const [monthTarget, monthTargetResource] = createResource(
+        async () =>
+            await servers
+                .currentServer()
+                ?.dailyWorkTimeTarget.getForDateRange(
+                    dayjs().date(1).toDate(),
+                    dayjs().date(dayjs().daysInMonth()).toDate()
+                )
+    );
+
     const todayWorkedTime = createMemo(() => todayData.latest?.reduce((a, b) => a + dayjs(b?.end).diff(b?.start), 0));
     const todayTargetTime = createMemo(() =>
         todayTarget.latest?.reduce(
@@ -61,6 +80,23 @@ const Overview: Component = () => {
     );
     const weekTargetReached = createMemo(() => !dayjs(weekWorkedTime()).isBefore(weekTargetTime()));
     const weekDiff = createMemo(() => Math.abs(dayjs(weekWorkedTime()).diff(weekTargetTime())));
+
+    const monthWorkedTime = createMemo(() => monthData.latest?.reduce((a, b) => a + dayjs(b?.end).diff(b?.start), 0));
+    const monthTargetTime = createMemo(() =>
+        monthTarget.latest?.reduce(
+            (a, b) =>
+                a +
+                dayjs
+                    .duration({
+                        hours: parseTimeString(b?.duration).hour(),
+                        minutes: parseTimeString(b?.duration).minute(),
+                    })
+                    .asMilliseconds(),
+            0
+        )
+    );
+    const monthTargetReached = createMemo(() => !dayjs(monthWorkedTime()).isBefore(monthTargetTime()));
+    const monthDiff = createMemo(() => Math.abs(dayjs(monthWorkedTime()).diff(monthTargetTime())));
 
     return (
         <div class="h-full grid grid-rows-[64px_1fr]">
@@ -122,9 +158,28 @@ const Overview: Component = () => {
                             ></Stat>
                             <Stat
                                 title="This month"
-                                value="value"
-                                description="Description"
-                                figure={<div class="radial-progress" style="--value:70;"></div>}
+                                value={dayjs.duration(monthWorkedTime() ?? 0).format("H:mm[h]")}
+                                description={
+                                    <span
+                                        classList={{
+                                            "text-error": !monthTargetReached(),
+                                            "text-success": monthTargetReached(),
+                                        }}
+                                    >
+                                        {!monthTargetReached() ? "-" : "+"}
+                                        {dayjs.duration(monthDiff()).format("D[d], H:mm[h]")}
+                                    </span>
+                                }
+                                figure={
+                                    <div
+                                        class="radial-progress"
+                                        style={{
+                                            "--value": scale(monthWorkedTime() ?? 0, monthTargetTime() ?? 0, 0, 100, 0),
+                                        }}
+                                    >
+                                        {dayjs.duration(monthWorkedTime() ?? 0).format("H:mm[h]")}
+                                    </div>
+                                }
                             ></Stat>
                         </div>
                     </div>

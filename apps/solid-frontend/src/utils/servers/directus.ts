@@ -224,7 +224,7 @@ export const directus = (server: TDirectusServer): TApi => {
                                 _or: [
                                     {
                                         end: {
-                                            _gt: dayjs(end).toString(),
+                                            _gt: dayjs(start).toString(),
                                         },
                                     },
                                     {
@@ -245,20 +245,21 @@ export const directus = (server: TDirectusServer): TApi => {
                         },
                     },
                 });
-                const result = dailies.data?.filter((daily) => {
-                    let select = false;
-                    const date = dayjs().weekday(daily.dayOfWeek);
-                    blocks.data?.forEach((block) => {
-                        if (
-                            date.isAfter(dayjs(block.start)) &&
-                            (block.end ? date.isBefore(dayjs(block.end), "day") : true) &&
-                            block.DailyWorkTimeTargets.includes(daily.id)
-                        ) {
-                            select = true;
-                        }
-                    });
-                    return select;
-                });
+                const dayRange = dayjs(end).diff(start, "day");
+                const result: TDailyWorkTimeTarget[] = [];
+                for (let day = 0; day <= dayRange; day++) {
+                    const block = blocks.data?.find((b) =>
+                        dayjs()
+                            .date(day)
+                            .isBetween(b.start, b.end ?? dayjs().date(dayjs().daysInMonth()), "day", "[]")
+                    );
+                    if (block) {
+                        const daily = dailies.data
+                            ?.filter((d) => block?.DailyWorkTimeTargets.includes(d.id))
+                            .find((d) => d.dayOfWeek === dayjs(start).add(day, "day").weekday());
+                        if (daily) result.push(daily);
+                    }
+                }
                 return result;
             },
         },
