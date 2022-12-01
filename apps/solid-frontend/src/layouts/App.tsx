@@ -8,24 +8,22 @@ import Loading from "~/Loading";
 import LoginModal from "~/modals/LoginModal";
 
 import servers from "../store/servers";
-import createServer from "../utils/server";
 
 const App: Component = () => {
     const [drawerOpen, setDrawerOpen] = createSignal(false);
-    const activeServer = createMemo(
-        () => (servers.state.activeServer ? createServer(servers.state.activeServer) : null),
-        null
-    );
     const [isAuthenticated, authResource] = createResource(async () => {
-        return (await servers.currentServer()?.auth?.isAuthenticated()) ?? false;
+        const result = await servers.currentServer()?.auth?.isAuthenticated?.();
+        return result;
     });
     const [currentUser, currentUserResource] = createResource(
         async () => await servers.currentServer()?.auth.getCurrentUser()
     );
 
+    const loginModalOpen = createMemo(() => !isAuthenticated.loading && !isAuthenticated());
+
     const login = async (email: string, password: string) => {
-        await servers.currentServer()?.auth?.login(email, password);
-        await authResource.refetch();
+        await servers.currentServer()?.auth?.login?.(email, password);
+        authResource.refetch();
     };
     const closeLoginModal = async () => {
         await authResource.refetch();
@@ -102,15 +100,15 @@ const App: Component = () => {
                         </ul>
                         <div class="flex-1"></div>
                         <div class="bg-base-300 p-2 pl-4 gap-2 flex flex-row items-center">
-                            <Show when={currentUser.latest?.avatar && servers.state.activeServer?.type !== "offline"}>
+                            <Show when={currentUser()?.avatar && servers.state.activeServer?.type !== "offline"}>
                                 <Suspense fallback={<Loading size="md" />}>
-                                    <Avatar id={currentUser.latest?.avatar} />
+                                    <Avatar id={currentUser()?.avatar} />
                                 </Suspense>
                             </Show>
                             <A class="flex-1" href="/personal" activeClass="text-primary">
                                 <Suspense fallback={<Loading size="md" />}>
-                                    <Show when={currentUser.latest?.first_name && currentUser.latest?.last_name}>
-                                        {`${currentUser.latest!.first_name} ${currentUser.latest!.last_name}`}
+                                    <Show when={currentUser()?.first_name && currentUser()?.last_name}>
+                                        {`${currentUser()!.first_name} ${currentUser()!.last_name}`}
                                     </Show>
                                 </Suspense>
                             </A>
@@ -120,9 +118,10 @@ const App: Component = () => {
                 </div>
             </div>
             <LoginModal
-                open={!isAuthenticated.loading && !isAuthenticated.latest}
+                open={loginModalOpen()}
                 onClose={closeLoginModal}
                 onSave={login}
+                loading={isAuthenticated.loading}
             />
         </>
     );
