@@ -39,7 +39,7 @@ const Overview: Component = () => {
                 <main class="p-6">
                     <h2 class="text-xl font-bold col-span-3">Your Activity</h2>
                     <div class="grid grid-cols-3 pt-4">
-                        <div class="stats max-lg:stats-vertical col-span-3 bg-base-200">
+                        <div class="stats max-lg:stats-vertical col-span-3 bg-base-200 border-2 border-base-100">
                             <Stat
                                 title="Today"
                                 value={dayjs.duration(todayWorkedTime() ?? 0).format("H:mm[h]")}

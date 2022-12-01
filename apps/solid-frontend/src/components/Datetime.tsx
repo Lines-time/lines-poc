@@ -49,7 +49,7 @@ const Datetime: Component<TProps> = (props) => {
                     onClick={() => setValue(dayjs().second(0))}
                 ></Button>
             </div>
-            <div tabindex={0} class="dropdown-content card card-bordered bg-base-100 shadow p-2 flex flex-col gap-2">
+            <div tabindex={0} class="dropdown-content card card-bordered bg-base-300 shadow p-2 flex flex-col gap-2">
                 <Show when={props.date}>
                     <div class="flex flex-row justify-between items-center gap-2 w-full">
                         <Button

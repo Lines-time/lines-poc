@@ -1,3 +1,36 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+    font-family: "Rubik";
+    font-weight: bold;
+    src: url("/fonts/Rubik-Bold.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: "Rubik";
+    font-weight: normal;
+    src: url("/fonts/Rubik-Regular.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: "Rubik";
+    font-weight: 800;
+    src: url("/fonts/Rubik-ExtraBold.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: "Secular One";
+    src: url("/fonts/SecularOne-Regular.woff2") format("woff2");
+}
+
+@layer components {
+    .btn:not(.btn-square):not(.btn-circle) {
+        @apply min-h-0 h-10;
+    }
+
+    .btn-sm:not(.btn-square):not(.btn-circle) {
+        @apply min-h-0 h-8;
+    }
+}

@@ -3,7 +3,12 @@ module.exports = {
     content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx,css,md,mdx,html,json,scss}"],
     darkMode: "class",
     theme: {
-        extend: {},
+        extend: {
+            fontFamily: {
+                secular: ["Secular One", "sans-serif"],
+                rubik: ["Rubik", "sans-serif"],
+            },
+        },
     },
     plugins: [require("@tailwindcss/typography"), require("daisyui")],
     daisyui: {
@@ -14,10 +19,10 @@ module.exports = {
                     primary: "#EF9A11",
                     secondary: "#EF9A11",
                     accent: "#EF9A11",
-                    neutral: "#262827",
-                    "base-100": "#262827",
-                    "base-200": "#1D1F1E",
-                    "base-300": "#151616",
+                    neutral: "#212430",
+                    "base-100": "#212430",
+                    "base-200": "#1A1D26",
+                    "base-300": "#15171F",
                 },
             },
             {

@@ -75,7 +75,7 @@ const WorkUnitModal: Component<TProps> = (props) => {
                     <div>
                         <FormControl label="Project">
                             <select
-                                class="select select-bordered"
+                                class="select select-bordered bg-base-200"
                                 value={projectId() ?? "null"}
                                 onChange={(e) => setProjectId(e.currentTarget.value)}
                             >
@@ -89,7 +89,7 @@ const WorkUnitModal: Component<TProps> = (props) => {
                         </FormControl>
                         <FormControl label="Service">
                             <select
-                                class="select select-bordered"
+                                class="select select-bordered bg-base-200"
                                 value={categoryId() ?? "null"}
                                 onChange={(e) => setCategoryId(e.currentTarget.value)}
                             >
@@ -104,7 +104,7 @@ const WorkUnitModal: Component<TProps> = (props) => {
                     </div>
                     <FormControl label="Description">
                         <textarea
-                            class="textarea textarea-bordered h-full"
+                            class="textarea textarea-bordered h-full bg-base-200"
                             value={description()}
                             onInput={(e) => setDescription(e.currentTarget.value)}
                         />

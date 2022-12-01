@@ -37,7 +37,7 @@ const WorkTimeTarget: Component<TProps> = (props) => {
                         ? `${dayjs(workTimeTarget.latest?.end).format("dddd, DD.MM.YYYY")}`
                         : "today"}
                 </span>
-                <div class="bg-base-200 rounded-lg p-2 grid grid-cols-7 gap-1 h-64">
+                <div class="bg-base-200 border-2 border-base-100 rounded-lg p-2 grid grid-cols-7 gap-1 h-64">
                     <Show when={dailyWorkTimeTargets.latest}>
                         <ForNumber each={7}>
                             {(day) =>

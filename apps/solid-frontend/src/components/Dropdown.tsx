@@ -23,7 +23,7 @@ const Dropdown: ParentComponent<TProps> = (props) => {
             <label tabindex="0" class={`${labelClass}`}>
                 {label}
             </label>
-            <ul tabIndex={0} class="dropdown-content shadow bg-base-100 rounded w-64 menu">
+            <ul tabIndex={0} class="dropdown-content p-2 shadow bg-base-300 rounded-xl w-64 menu menu-compact">
                 {children}
             </ul>
         </div>

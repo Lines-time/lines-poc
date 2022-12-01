@@ -23,13 +23,13 @@ const WorkUnit: Component<TProps> = (props) => {
     const end = createMemo(() => dayjs(unit?.end));
     const duration = createMemo(() => dayjs().hour(0).minute(0).second(0).millisecond(end().diff(start())));
     return (
-        <div class="grid grid-cols-[max-content_1fr_1fr] p-2 gap-2 bg-base-200 rounded-lg">
+        <div class="grid grid-cols-[max-content_1fr_1fr] p-2 gap-2 bg-base-200 border-base-100 border-2 rounded-lg">
             <div class="flex flex-col">
                 <span>{start().format("HH:mm")}</span>
                 <span class="text-xs text-center">{duration().format("HH:mm")}</span>
                 <span>{end().format("HH:mm")}</span>
             </div>
-            <div class="flex flex-col pl-2 border-solid border-base-300 border-l-2">
+            <div class="flex flex-col pl-2 border-base-100 border-l-2">
                 <Suspense fallback={<Loading />}>
                     <span>
                         <b>{project()?.title}</b>
