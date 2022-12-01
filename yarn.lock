@@ -1523,12 +1523,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@directus/sdk@npm:^10.1.5":
-  version: 10.1.5
-  resolution: "@directus/sdk@npm:10.1.5"
+"@directus/sdk@npm:^10.3.0":
+  version: 10.3.0
+  resolution: "@directus/sdk@npm:10.3.0"
   dependencies:
     axios: ^0.27.2
-  checksum: dd92ff50d15946f965ea9528bf557316f566a79e41b3acff6019fc63b51d215c71dab26207bd89d1693fd2baefcb2bf044fcb1d3db61f88f85406ddd404e0ebc
+  checksum: 0effe7dc1d211bb5d8ddb478c4610d8151022ab79a03628298059ae7d63b349e1c33570ec3b33f3ddcf77e9553adf52f578dac0ac2d5f318123dc7b330ac813d
   languageName: node
   linkType: hard
 
@@ -2204,12 +2204,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@solidjs/router@npm:^0.5.0":
-  version: 0.5.0
-  resolution: "@solidjs/router@npm:0.5.0"
+"@solidjs/router@npm:^0.5.1":
+  version: 0.5.1
+  resolution: "@solidjs/router@npm:0.5.1"
   peerDependencies:
     solid-js: ^1.5.3
-  checksum: f066bf3d44e3fd93e3dcb910c08e98da9013c7b1f6922f2b4d458a07ff6c060d856f76b94ba984c19e2d5a57077b36df246401dcd9e433f28550d62b743b07e4
+  checksum: 522018eb8d9ce90309ef96b996637391f49404722e26499a266ed632cf1b9c158b6ec858d104e32c646b4c67da3c3865fef9c5dd8e5dcddd1fde96b767fbe915
   languageName: node
   linkType: hard
 
@@ -6936,22 +6936,22 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "lines-frontend@workspace:apps/solid-frontend"
   dependencies:
-    "@directus/sdk": ^10.1.5
-    "@solidjs/router": ^0.5.0
+    "@directus/sdk": ^10.3.0
+    "@solidjs/router": ^0.5.1
     "@tailwindcss/typography": ^0.5.7
     "@types/node": ^18.11.9
     autoprefixer: ^10.4.13
     daisyui: ^2.38.0
     dayjs: ^1.11.6
     lines-types: "workspace:*"
-    lucide-solid: ^0.100.0
+    lucide-solid: ^0.103.0
     postcss: ^8.4.18
     solid-js: ^1.6.2
     tailwindcss: ^3.2.1
     theme-change: ^2.2.0
-    typescript: ^4.8.4
+    typescript: ^4.9.3
     vite: ^3.2.2
-    vite-plugin-solid: ^2.3.10
+    vite-plugin-solid: ^2.4.0
     zod: ^3.19.1
   languageName: unknown
   linkType: soft
@@ -7147,12 +7147,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lucide-solid@npm:^0.100.0":
-  version: 0.100.0
-  resolution: "lucide-solid@npm:0.100.0"
+"lucide-solid@npm:^0.103.0":
+  version: 0.103.0
+  resolution: "lucide-solid@npm:0.103.0"
   peerDependencies:
     solid-js: ^1.4.7
-  checksum: 68e9098d9f45ea264e82f5f2b2d65b216db4933c9c9279c432756df162d115e45fe92109fc22946c571cfdc76fb7f9725080c62af3db1139dac2d2cf79117ad6
+  checksum: 2b28fb54f6c6e09581f693acf7d1c5e39c8a8a796d1a3bc615b474f30e7e6b57c5d9710a2f70d204a1faddce101dba89d6783e70d52443ebffac775240c37346
   languageName: node
   linkType: hard
 
@@ -10924,23 +10924,23 @@ turbo@latest:
   languageName: node
   linkType: hard
 
-"typescript@npm:^4.8.4":
-  version: 4.8.4
-  resolution: "typescript@npm:4.8.4"
+"typescript@npm:^4.9.3":
+  version: 4.9.3
+  resolution: "typescript@npm:4.9.3"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 3e4f061658e0c8f36c820802fa809e0fd812b85687a9a2f5430bc3d0368e37d1c9605c3ce9b39df9a05af2ece67b1d844f9f6ea8ff42819f13bcb80f85629af0
+  checksum: 17b8f816050b412403e38d48eef0e893deb6be522d6dc7caf105e54a72e34daf6835c447735fd2b28b66784e72bfbf87f627abb4818a8e43d1fa8106396128dc
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@^4.8.4#~builtin<compat/typescript>":
-  version: 4.8.4
-  resolution: "typescript@patch:typescript@npm%3A4.8.4#~builtin<compat/typescript>::version=4.8.4&hash=0102e9"
+"typescript@patch:typescript@^4.9.3#~builtin<compat/typescript>":
+  version: 4.9.3
+  resolution: "typescript@patch:typescript@npm%3A4.9.3#~builtin<compat/typescript>::version=4.9.3&hash=d73830"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 301459fc3eb3b1a38fe91bf96d98eb55da88a9cb17b4ef80b4d105d620f4d547ba776cc27b44cc2ef58b66eda23fe0a74142feb5e79a6fb99f54fc018a696afa
+  checksum: 67ca21a387c0572f1c04936e638dde7782c5aa520c3754aadc7cc9b7c915da9ebc3e27c601bfff4ccb7d7264e82dce6d277ada82ec09dc75024349e0ef64926d
   languageName: node
   linkType: hard
 
@@ -11181,19 +11181,20 @@ turbo@latest:
   languageName: node
   linkType: hard
 
-"vite-plugin-solid@npm:^2.3.10":
-  version: 2.3.10
-  resolution: "vite-plugin-solid@npm:2.3.10"
+"vite-plugin-solid@npm:^2.4.0":
+  version: 2.4.0
+  resolution: "vite-plugin-solid@npm:2.4.0"
   dependencies:
     "@babel/core": ^7.18.6
     "@babel/preset-typescript": ^7.18.6
     babel-preset-solid: ^1.4.6
     merge-anything: ^5.0.2
     solid-refresh: ^0.4.1
+    vitefu: ^0.1.1
   peerDependencies:
     solid-js: ^1.3.17
     vite: ^3.0.0
-  checksum: 1436c69a7f68d5f2cbb7b70d4cedde6807453757020b9dfb4dc2d487257b1423cac3b4c7f781891fe1f626f34eff6e98f04ce2bcdf3ea5a794b58dad9c3a8db7
+  checksum: 6cb8cbb71e9645f661461a3c82a401d3d14c6290b9061ad882113937f861fa094c9d8726a6360443fa3164167182cdb7d17f626d8cac647f8a5f32326f86f419
   languageName: node
   linkType: hard
 
@@ -11229,6 +11230,18 @@ turbo@latest:
   bin:
     vite: bin/vite.js
   checksum: 7197ac91c612dda922367a95afa1b210353d6168d41845c186e2217bda1328d17b021b93d8089e336f9533b94645ae5dca18bb10937759f559c87006dd957fcd
+  languageName: node
+  linkType: hard
+
+"vitefu@npm:^0.1.1":
+  version: 0.1.1
+  resolution: "vitefu@npm:0.1.1"
+  peerDependencies:
+    vite: ^3.0.0
+  peerDependenciesMeta:
+    vite:
+      optional: true
+  checksum: f6be61a04437b2cc3bd42f39a4bae1c6246f7b0f99cfad649deb9059975147e3450ca8ba8a253a3fcb4c73aeeda4cb1b6bc1604d31869323d5e1adeeb38a1ca3
   languageName: node
   linkType: hard
 
