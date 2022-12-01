@@ -15,7 +15,7 @@ const TextInput: Component<TProps> = (props) => {
     return (
         <FormControl {...formControlProps}>
             <input
-                class="input input-bordered w-full max-w-xs"
+                class="input input-bordered w-full max-w-xs bg-transparent"
                 type={type}
                 required={required}
                 placeholder={placeholder}
