@@ -112,11 +112,8 @@ export const directus = (server: TDirectusServer): TApi => {
                 await _directus.auth.logout();
             },
             isAuthenticated: async () => {
-                try {
-                    const me = await _directus.users.me.read();
-                    if (me) return true;
-                } catch (e) {}
-                return false;
+                const me = await _directus.users.me.read().catch(() => false);
+                return !!me;
             },
             getCurrentUser: async () => {
                 const me = await _directus.users.me.read();
