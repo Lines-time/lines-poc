@@ -15,7 +15,7 @@ const LoginModal: Component<TProps> = (props) => {
         props.onSave(email(), password());
     };
     return (
-        <Modal title="Login" {...props}>
+        <Modal title="Login" onClose={props.onClose} open={props.open}>
             <form onSubmit={save}>
                 <TextInput label="Email" required value={email()} setValue={setEmail} />
                 <TextInput label="Password" type="password" required value={password()} setValue={setPassword} />

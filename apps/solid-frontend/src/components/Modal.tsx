@@ -12,7 +12,7 @@ interface IProps {
 
 const Modal: ParentComponent<IProps> = (props) => {
     const toggle = (value: boolean) => {
-        if (props.open && !value) props.onClose();
+        if (!value) props.onClose();
     };
     return (
         <Portal mount={document.getElementsByTagName("body")[0]}>

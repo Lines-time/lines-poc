@@ -69,7 +69,7 @@ const WorkUnitModal: Component<TProps> = (props) => {
     };
 
     return (
-        <Modal {...props} title="Track your time">
+        <Modal onClose={props.onClose} open={props.open} title="Track your time">
             <form onSubmit={formSubmit}>
                 <div class="flex flex-row gap-2">
                     <div>
