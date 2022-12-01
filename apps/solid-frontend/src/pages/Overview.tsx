@@ -15,6 +15,19 @@ const Overview: Component = () => {
         async () => await servers.currentServer()?.dailyWorkTimeTarget.getForDate(dayjs().toDate())
     );
 
+    const [weekData, weekDataResource] = createResource(
+        async () =>
+            await servers
+                .currentServer()
+                ?.workUnit.getForDateRangeAndUser(dayjs().weekday(1).toDate(), dayjs().weekday(7).toDate())
+    );
+    const [weekTargets, weekTargetsResource] = createResource(
+        async () =>
+            await servers
+                .currentServer()
+                ?.dailyWorkTimeTarget.getForDateRange(dayjs().weekday(1).toDate(), dayjs().weekday(7).toDate())
+    );
+
     const todayWorkedTime = createMemo(() => todayData.latest?.reduce((a, b) => a + dayjs(b?.end).diff(b?.start), 0));
     const todayTargetTime = createMemo(() =>
         todayTarget.latest?.reduce(
@@ -31,6 +44,23 @@ const Overview: Component = () => {
     );
     const todayTargetReached = createMemo(() => !dayjs(todayWorkedTime()).isBefore(todayTargetTime()));
     const todayDiff = createMemo(() => Math.abs(dayjs(todayWorkedTime()).diff(todayTargetTime())));
+
+    const weekWorkedTime = createMemo(() => weekData.latest?.reduce((a, b) => a + dayjs(b?.end).diff(b?.start), 0));
+    const weekTargetTime = createMemo(() =>
+        weekTargets.latest?.reduce(
+            (a, b) =>
+                a +
+                dayjs
+                    .duration({
+                        hours: parseTimeString(b?.duration).hour(),
+                        minutes: parseTimeString(b?.duration).minute(),
+                    })
+                    .asMilliseconds(),
+            0
+        )
+    );
+    const weekTargetReached = createMemo(() => !dayjs(weekWorkedTime()).isBefore(weekTargetTime()));
+    const weekDiff = createMemo(() => Math.abs(dayjs(weekWorkedTime()).diff(weekTargetTime())));
 
     return (
         <div class="h-full grid grid-rows-[64px_1fr]">
@@ -67,9 +97,28 @@ const Overview: Component = () => {
                             ></Stat>
                             <Stat
                                 title="This week"
-                                value="value"
-                                description="Description"
-                                figure={<div class="radial-progress" style="--value:70;"></div>}
+                                value={dayjs.duration(weekWorkedTime() ?? 0).format("H:mm[h]")}
+                                description={
+                                    <span
+                                        classList={{
+                                            "text-error": !weekTargetReached(),
+                                            "text-success": weekTargetReached(),
+                                        }}
+                                    >
+                                        {!weekTargetReached() ? "-" : "+"}
+                                        {dayjs.duration(weekDiff()).format("H:mm[h]")}
+                                    </span>
+                                }
+                                figure={
+                                    <div
+                                        class="radial-progress"
+                                        style={{
+                                            "--value": scale(weekWorkedTime() ?? 0, weekTargetTime() ?? 0, 0, 100, 0),
+                                        }}
+                                    >
+                                        {dayjs.duration(weekWorkedTime() ?? 0).format("H:mm[h]")}
+                                    </div>
+                                }
                             ></Stat>
                             <Stat
                                 title="This month"

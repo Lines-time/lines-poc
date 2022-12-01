@@ -90,6 +90,24 @@ export const directus = (server: TDirectusServer): TApi => {
                 });
                 return result.data;
             },
+            getForDateRangeAndUser: async (start, end, userId = "$CURRENT_USER") => {
+                const result = await _directus.items("WorkUnit").readByQuery({
+                    filter: {
+                        worker: {
+                            id: {
+                                _eq: userId,
+                            },
+                        },
+                        start: {
+                            _between: [
+                                dayjs(start).hour(0).second(0).minute(0).toString(),
+                                dayjs(end).hour(23).second(59).minute(59).toString(),
+                            ],
+                        },
+                    },
+                });
+                return result.data;
+            },
             createOne: async (data) => {
                 const me = await _directus.users.me.read();
                 const result = await _directus.items("WorkUnit").createOne({
@@ -177,6 +195,71 @@ export const directus = (server: TDirectusServer): TApi => {
                     },
                 });
                 return result.data;
+            },
+            getForDateRange: async (start, end) => {
+                const blocks = await _directus.items("WorkTimeTargetBlock").readByQuery({
+                    filter: {
+                        _or: [
+                            {
+                                start: {
+                                    _lt: dayjs(end).toString(),
+                                },
+                                _or: [
+                                    {
+                                        end: {
+                                            _gt: dayjs(end).toString(),
+                                        },
+                                    },
+                                    {
+                                        end: {
+                                            _null: true,
+                                        },
+                                    },
+                                ],
+                            },
+                            {
+                                start: {
+                                    _lt: dayjs(start).toString(),
+                                },
+                                _or: [
+                                    {
+                                        end: {
+                                            _gt: dayjs(end).toString(),
+                                        },
+                                    },
+                                    {
+                                        end: {
+                                            _null: true,
+                                        },
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                });
+                const dailiesIds = blocks.data?.map((block) => block.DailyWorkTimeTargets).flat();
+                const dailies = await _directus.items("DailyWorkTimeTarget").readByQuery({
+                    filter: {
+                        id: {
+                            _in: dailiesIds,
+                        },
+                    },
+                });
+                const result = dailies.data?.filter((daily) => {
+                    let select = false;
+                    const date = dayjs().weekday(daily.dayOfWeek);
+                    blocks.data?.forEach((block) => {
+                        if (
+                            date.isAfter(dayjs(block.start)) &&
+                            (block.end ? date.isBefore(dayjs(block.end), "day") : true) &&
+                            block.DailyWorkTimeTargets.includes(daily.id)
+                        ) {
+                            select = true;
+                        }
+                    });
+                    return select;
+                });
+                return result;
             },
         },
     };
