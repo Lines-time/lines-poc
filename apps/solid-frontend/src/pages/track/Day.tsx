@@ -47,7 +47,7 @@ const Day: Component = () => {
         <div class="grid grid-cols-3">
             <div class="p-6 grid col-span-2 grid-cols-2 grid-rows-[min-content_1fr] w-full">
                 <h2 class="text-xl font-bold col-span-3">{dayjs().format("dddd, DD.MM.YYYY")}</h2>
-                <div class="calendarday">{/* TODO: calendar day here */}</div>
+                <div class="calendarday">{/* TODO: @fullcalendar calendar day here */}</div>
                 <div class="flex flex-col gap-2">
                     <Suspense fallback={<Loading />}>
                         <For each={workUnits()}>{(unit) => unit && <WorkUnit unit={unit} />}</For>
