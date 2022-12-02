@@ -142,7 +142,7 @@ const Overview: Component = () => {
                                         }}
                                     >
                                         {!weekTargetReached() ? "-" : "+"}
-                                        {dayjs.duration(weekDiff()).format("H:mm[h]")}
+                                        {dayjs.duration(weekDiff()).format("D[d], H:mm[h]")}
                                     </span>
                                 }
                                 figure={
