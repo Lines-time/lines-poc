@@ -1,0 +1,33 @@
+.fc {
+    @apply border-2 border-base-100 rounded-lg px-2;
+}
+
+.fc-scrollgrid-section:first-child,
+.fc-scrollgrid-section:nth-child(2),
+.fc-scrollgrid-section:nth-child(3) {
+    @apply hidden !important;
+}
+
+.fc tr {
+    @apply border-b-2 border-base-100 border-dotted !important;
+}
+
+.fc table {
+    @apply border-none !important;
+}
+
+.fc-v-event {
+    @apply rounded bg-primary border-2 border-primary-focus shadow-none !important;
+}
+
+.fc-v-event * {
+    @apply text-primary-content;
+}
+
+.fc .fc-timegrid-col.fc-day-today {
+    @apply bg-transparent !important;
+}
+
+.fc-theme-standard td {
+    border: none !important;
+}

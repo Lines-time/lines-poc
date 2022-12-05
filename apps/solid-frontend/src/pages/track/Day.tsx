@@ -5,10 +5,12 @@ import { Component, createMemo, createResource, For, onMount, Show, Suspense } f
 import Button from "~/Button";
 import Loading from "~/Loading";
 import WorkUnitForm from "~/modals/WorkUnitForm";
+import CalendarDay from "~/specialized/CalendarDay";
 import WorkUnit from "~/specialized/WorkUnit";
 
 import servers from "../../store/servers";
 
+import type { TWorkUnit } from "lines-types";
 const Day: Component = () => {
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -59,12 +61,40 @@ const Day: Component = () => {
         setSearchParams({ edit: undefined });
     };
 
+    const makeCalendarEventTitle = async (wu: TWorkUnit) => {
+        const _project = await servers.currentServer()?.project.getById(wu.project);
+        const _category = await servers.currentServer()?.category.getById(wu.category);
+        console.log("Hello");
+        return `${_project?.title} - ${_category?.name} - ${wu.description}`;
+    };
+
+    const [calendarEvents] = createResource(workUnits, async () => {
+        if (workUnits()) {
+            return await Promise.all(
+                workUnits()!.map(
+                    async (wu) =>
+                        wu && {
+                            id: wu.id,
+                            title: await makeCalendarEventTitle(wu),
+                            start: wu.start,
+                            end: wu.end,
+                        }
+                )
+            );
+        }
+        return [];
+    });
+
     return (
         <div class="grid grid-cols-3">
-            <div class="p-6 grid col-span-2 grid-cols-2 grid-rows-[min-content_1fr] w-full">
+            <div class="p-6 grid col-span-2 grid-cols-2 gap-x-2 grid-rows-[min-content_1fr] w-full">
                 <h2 class="text-xl font-bold col-span-3">{dayjs().format("dddd, DD.MM.YYYY")}</h2>
-                <div class="calendarday">{/* TODO: @fullcalendar calendar day here */}</div>
-                <div class="flex flex-col gap-2">
+                <div class="pt-2">
+                    <Suspense>
+                        <CalendarDay events={calendarEvents() ?? []} />
+                    </Suspense>
+                </div>
+                <div class="flex flex-col gap-2 pt-2">
                     <Suspense fallback={<Loading />}>
                         <For each={workUnits()}>
                             {(unit) =>
