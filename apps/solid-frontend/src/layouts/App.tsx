@@ -77,19 +77,19 @@ const App: Component = () => {
                         </div>
                         <ul class="menu menu-compact w-full p-2 rounded-box gap-2">
                             <li>
-                                <A href="/" end activeClass="text-primary bg-white bg-opacity-5">
+                                <A href="/" end activeClass="text-primary bg-base-100">
                                     <LayoutDashboard />
                                     Overview
                                 </A>
                             </li>
                             <li>
-                                <A href="/track" activeClass="text-primary bg-white bg-opacity-5">
+                                <A href="/track" activeClass="text-primary bg-base-100">
                                     <Timer />
                                     Track time
                                 </A>
                             </li>
                             <li>
-                                <A href="/vacation" end activeClass="text-primary bg-white bg-opacity-5">
+                                <A href="/vacation" end activeClass="text-primary bg-base-100">
                                     <Palmtree />
                                     Vacation
                                 </A>
@@ -98,7 +98,7 @@ const App: Component = () => {
                                 <span>Reports</span>
                             </li>
                             <li>
-                                <A href="/reports" end activeClass="text-primary bg-white bg-opacity-5">
+                                <A href="/reports" end activeClass="text-primary bg-base-100">
                                     <BarChart3 />
                                     Overview
                                 </A>

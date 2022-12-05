@@ -8,6 +8,7 @@ import type { TWorkUnit } from "lines-types";
 type TProps = {
     unit: TWorkUnit;
     onClick?: (event: Event) => void;
+    active?: boolean;
 };
 
 const WorkUnit: Component<TProps> = (props) => {
@@ -25,9 +26,12 @@ const WorkUnit: Component<TProps> = (props) => {
     const duration = createMemo(() => dayjs().hour(0).minute(0).second(0).millisecond(end().diff(start())));
     return (
         <div
-            class="grid grid-cols-[max-content_1fr_1fr] p-2 gap-2 bg-base-200 border-base-100 border-2 rounded-lg"
+            class="grid grid-cols-[max-content_1fr_1fr] p-2 gap-2 border-base-100 border-2 rounded-lg transition-colors"
             classList={{
                 "cursor-pointer": !!props.onClick,
+                "bg-base-300": !props.active,
+                "bg-base-200": props.active,
+                "hover:bg-base-200": !!props.onClick,
             }}
             onClick={props.onClick}
         >

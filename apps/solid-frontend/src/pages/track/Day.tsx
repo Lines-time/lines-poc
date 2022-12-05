@@ -1,7 +1,7 @@
 import { useSearchParams } from "@solidjs/router";
 import dayjs from "dayjs";
 import { Plus, X } from "lucide-solid";
-import { Component, createMemo, createResource, createSignal, For, onMount, Show, Suspense } from "solid-js";
+import { Component, createMemo, createResource, For, onMount, Show, Suspense } from "solid-js";
 import Button from "~/Button";
 import Loading from "~/Loading";
 import WorkUnitForm from "~/modals/WorkUnitForm";
@@ -11,7 +11,6 @@ import servers from "../../store/servers";
 
 const Day: Component = () => {
     const [searchParams, setSearchParams] = useSearchParams();
-    const [showWorkUnitModal, setShowWorkUnitModal] = createSignal(false);
 
     onMount(() => {
         if (searchParams.d === undefined) {
@@ -56,6 +55,10 @@ const Day: Component = () => {
         return {};
     });
 
+    const closeEdit = () => {
+        setSearchParams({ edit: undefined });
+    };
+
     return (
         <div class="grid grid-cols-3">
             <div class="p-6 grid col-span-2 grid-cols-2 grid-rows-[min-content_1fr] w-full">
@@ -65,7 +68,13 @@ const Day: Component = () => {
                     <Suspense fallback={<Loading />}>
                         <For each={workUnits()}>
                             {(unit) =>
-                                unit && <WorkUnit unit={unit} onClick={() => setSearchParams({ edit: unit.id })} />
+                                unit && (
+                                    <WorkUnit
+                                        unit={unit}
+                                        active={searchParams.edit === unit.id}
+                                        onClick={() => setSearchParams({ edit: unit.id })}
+                                    />
+                                )
                             }
                         </For>
                         <Button
@@ -84,12 +93,12 @@ const Day: Component = () => {
                 <div class="bg-base-300 border-l-2 border-base-100 border-solid w-full">
                     <div class="flex flex-row p-2 pl-3 justify-between">
                         <h2 class="font-bold text-xl">{searchParams.edit === "new" ? "Create new" : "Edit"}</h2>
-                        <Button class="btn-sm" icon={X} onClick={() => setSearchParams({ edit: undefined })}></Button>
+                        <Button class="btn-sm" icon={X} onClick={() => closeEdit()}></Button>
                     </div>
                     <div class="p-2">
                         <WorkUnitForm
                             presetData={workUnitModalPresetData()}
-                            onClose={() => setSearchParams({ edit: undefined })}
+                            onClose={() => closeEdit()}
                             onSave={() => workUnitsResource.refetch()}
                         ></WorkUnitForm>
                     </div>
