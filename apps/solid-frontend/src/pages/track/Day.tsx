@@ -1,10 +1,10 @@
 import { useSearchParams } from "@solidjs/router";
 import dayjs from "dayjs";
-import { Plus } from "lucide-solid";
-import { Component, createMemo, createResource, createSignal, For, onMount, Suspense } from "solid-js";
+import { Plus, X } from "lucide-solid";
+import { Component, createMemo, createResource, createSignal, For, onMount, Show, Suspense } from "solid-js";
 import Button from "~/Button";
 import Loading from "~/Loading";
-import WorkUnitModal from "~/modals/WorkUnitModal";
+import WorkUnitForm from "~/modals/WorkUnitForm";
 import WorkUnit from "~/specialized/WorkUnit";
 
 import servers from "../../store/servers";
@@ -31,14 +31,18 @@ const Day: Component = () => {
     );
 
     const workUnitModalPresetData = createMemo(() => {
-        const units = workUnits();
-        if (units) {
-            const lastUnit = units[units.length - 1];
-            if (lastUnit) {
-                return {
-                    start: lastUnit.end,
-                };
+        if (searchParams.edit === "new") {
+            const units = workUnits();
+            if (units) {
+                const lastUnit = units[units.length - 1];
+                if (lastUnit) {
+                    return {
+                        start: lastUnit.end,
+                    };
+                }
             }
+        } else if (searchParams.edit) {
+            return {};
         }
         return {};
     });
@@ -51,21 +55,33 @@ const Day: Component = () => {
                 <div class="flex flex-col gap-2">
                     <Suspense fallback={<Loading />}>
                         <For each={workUnits()}>{(unit) => unit && <WorkUnit unit={unit} />}</For>
-                        <Button onClick={() => setShowWorkUnitModal(true)}>
+                        <Button
+                            onClick={() =>
+                                setSearchParams({
+                                    edit: "new",
+                                })
+                            }
+                        >
                             <Plus />
                         </Button>
                     </Suspense>
                 </div>
             </div>
-            <div class="bg-base-300 border-l-2 border-base-100 border-solid w-full">
-                
-            </div>
-            <WorkUnitModal
-                open={showWorkUnitModal()}
-                presetData={() => workUnitModalPresetData()}
-                onClose={() => setShowWorkUnitModal(false)}
-                onSave={() => workUnitsResource.refetch()}
-            ></WorkUnitModal>
+            <Show when={searchParams.edit}>
+                <div class="bg-base-300 border-l-2 border-base-100 border-solid w-full">
+                    <div class="flex flex-row p-2 pl-3 justify-between">
+                        <h2 class="font-bold text-xl">{searchParams.edit === "new" ? "Create new" : "Edit"}</h2>
+                        <Button class="btn-sm" icon={X} onClick={() => setSearchParams({ edit: undefined })}></Button>
+                    </div>
+                    <div class="p-2">
+                        <WorkUnitForm
+                            presetData={() => workUnitModalPresetData()}
+                            onClose={() => setSearchParams({ edit: undefined })}
+                            onSave={() => workUnitsResource.refetch()}
+                        ></WorkUnitForm>
+                    </div>
+                </div>
+            </Show>
         </div>
     );
 };

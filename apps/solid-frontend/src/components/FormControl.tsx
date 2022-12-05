@@ -5,12 +5,13 @@ import type { TParentComponent } from "../types";
 type TProps = {
     label?: JSX.Element;
     altLabels?: JSX.Element[];
+    class?: string;
 };
 
 const FormControl: TParentComponent<TProps> = (props) => {
     const { label, altLabels = [] } = props;
     return (
-        <div class="form-control w-full max-w-xs">
+        <div class={`form-control w-full max-w-xs ${props.class}`}>
             <Show when={label || altLabels.length > 0}>
                 <label class="label">
                     <Show when={label}>
