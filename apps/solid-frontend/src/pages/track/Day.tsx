@@ -42,7 +42,16 @@ const Day: Component = () => {
                 }
             }
         } else if (searchParams.edit) {
-            return {};
+            const _wu = workUnits()?.find((wu) => wu && wu.id === searchParams.edit);
+            if (_wu)
+                return {
+                    id: _wu.id,
+                    start: _wu.start,
+                    end: _wu.end,
+                    project: _wu.project,
+                    category: _wu.category,
+                    description: _wu.description,
+                };
         }
         return {};
     });
@@ -54,7 +63,11 @@ const Day: Component = () => {
                 <div class="calendarday">{/* TODO: @fullcalendar calendar day here */}</div>
                 <div class="flex flex-col gap-2">
                     <Suspense fallback={<Loading />}>
-                        <For each={workUnits()}>{(unit) => unit && <WorkUnit unit={unit} />}</For>
+                        <For each={workUnits()}>
+                            {(unit) =>
+                                unit && <WorkUnit unit={unit} onClick={() => setSearchParams({ edit: unit.id })} />
+                            }
+                        </For>
                         <Button
                             onClick={() =>
                                 setSearchParams({
@@ -75,7 +88,7 @@ const Day: Component = () => {
                     </div>
                     <div class="p-2">
                         <WorkUnitForm
-                            presetData={() => workUnitModalPresetData()}
+                            presetData={workUnitModalPresetData()}
                             onClose={() => setSearchParams({ edit: undefined })}
                             onSave={() => workUnitsResource.refetch()}
                         ></WorkUnitForm>

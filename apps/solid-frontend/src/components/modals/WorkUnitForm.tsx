@@ -11,32 +11,25 @@ import type { TWorkUnit } from "lines-types";
 type TProps = {
     onClose: () => void;
     onSave?: () => void;
-    presetData?: () => Partial<TWorkUnit>;
+    presetData?: Partial<TWorkUnit>;
 };
 
 const WorkUnitForm: Component<TProps> = (props) => {
-    const [projectId, setProjectId] = createSignal<string | null>(props.presetData?.().project ?? null);
-    const [categoryId, setCategoryId] = createSignal<string | null>(props.presetData?.().category ?? null);
-    const [description, setDescription] = createSignal(props.presetData?.().description ?? "");
-    const [start, setStart] = createSignal(dayjs(props.presetData?.().start ?? undefined).toDate());
-    const [end, setEnd] = createSignal(dayjs(props.presetData?.().end ?? undefined).toDate());
+    const [projectId, setProjectId] = createSignal<string | null>(props.presetData?.project ?? null);
+    const [categoryId, setCategoryId] = createSignal<string | null>(props.presetData?.category ?? null);
+    const [description, setDescription] = createSignal(props.presetData?.description ?? "");
+    const [start, setStart] = createSignal(dayjs(props.presetData?.start ?? undefined).toDate());
+    const [end, setEnd] = createSignal(dayjs(props.presetData?.end ?? undefined).toDate());
     const [loading, setLoading] = createSignal(false);
     const [projects, projectsResource] = createResource(async () => await servers.currentServer()?.project?.getAll());
-    const [categories, categoriesResource] = createResource(
-        () => [projects(), projectId()],
-        async () => {
-            if (projectId()) {
-                return await servers
-                    .currentServer()
-                    ?.category?.getForProject(
-                        projects()?.find((p) => p!.id === projectId())?.id ?? projects()?.[0]?.id ?? ""
-                    );
-            }
+    const [categories, categoriesResource] = createResource(projectId, async () => {
+        if (projectId()) {
+            return await servers.currentServer()?.category?.getForProject(projectId() ?? projects()?.[0]?.id ?? "");
         }
-    );
+    });
 
     createEffect(() => {
-        const data = props.presetData?.();
+        const data = props.presetData;
         untrack(() => {
             batch(() => {
                 setProjectId(data?.project ?? null);
@@ -54,13 +47,23 @@ const WorkUnitForm: Component<TProps> = (props) => {
         const _categoryId = categoryId();
         if (_projectId && _categoryId) {
             setLoading(true);
-            await servers.currentServer()?.workUnit?.createOne({
-                project: _projectId,
-                category: _categoryId,
-                start: dayjs(start()).second(0).toDate().toISOString(),
-                end: dayjs(end()).second(0).toDate().toISOString(),
-                description: description(),
-            });
+            if (!props.presetData?.id) {
+                await servers.currentServer()?.workUnit?.createOne({
+                    project: _projectId,
+                    category: _categoryId,
+                    start: dayjs(start()).second(0).toDate().toISOString(),
+                    end: dayjs(end()).second(0).toDate().toISOString(),
+                    description: description(),
+                });
+            } else {
+                await servers.currentServer()?.workUnit?.updateOne(props.presetData.id, {
+                    project: _projectId,
+                    category: _categoryId,
+                    start: dayjs(start()).second(0).toDate().toISOString(),
+                    end: dayjs(end()).second(0).toDate().toISOString(),
+                    description: description(),
+                });
+            }
             setLoading(false);
             props.onSave?.();
             props.onClose();

@@ -116,6 +116,10 @@ export const directus = (server: TDirectusServer): TApi => {
                 });
                 return result;
             },
+            updateOne: async (id, data) => {
+                const result = await _directus.items("WorkUnit").updateOne(id, data);
+                return result;
+            },
         },
         auth: {
             login: async (email, password) => {

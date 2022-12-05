@@ -7,6 +7,7 @@ import Loading from "../Loading";
 import type { TWorkUnit } from "lines-types";
 type TProps = {
     unit: TWorkUnit;
+    onClick?: (event: Event) => void;
 };
 
 const WorkUnit: Component<TProps> = (props) => {
@@ -23,7 +24,13 @@ const WorkUnit: Component<TProps> = (props) => {
     const end = createMemo(() => dayjs(unit?.end));
     const duration = createMemo(() => dayjs().hour(0).minute(0).second(0).millisecond(end().diff(start())));
     return (
-        <div class="grid grid-cols-[max-content_1fr_1fr] p-2 gap-2 bg-base-200 border-base-100 border-2 rounded-lg">
+        <div
+            class="grid grid-cols-[max-content_1fr_1fr] p-2 gap-2 bg-base-200 border-base-100 border-2 rounded-lg"
+            classList={{
+                "cursor-pointer": !!props.onClick,
+            }}
+            onClick={props.onClick}
+        >
             <div class="flex flex-col">
                 <span>{start().format("HH:mm")}</span>
                 <span class="text-xs text-center">{duration().format("HH:mm")}</span>

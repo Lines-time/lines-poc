@@ -23,6 +23,7 @@ type ApiGetters<T> = {
 
 type ApiSetters<T> = {
     createOne: (data: Partial<T>) => PromiseOptional<T>;
+    updateOne: (id: string, data: Partial<T>) => PromiseOptional<T>;
 };
 
 export type TApi = {
