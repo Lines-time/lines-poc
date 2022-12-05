@@ -57,7 +57,9 @@ const Day: Component = () => {
                     </Suspense>
                 </div>
             </div>
-            <div class="bg-base-300 border-l-2 border-base-100 border-solid w-full"></div>
+            <div class="bg-base-300 border-l-2 border-base-100 border-solid w-full">
+                
+            </div>
             <WorkUnitModal
                 open={showWorkUnitModal()}
                 presetData={() => workUnitModalPresetData()}

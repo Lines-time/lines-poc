@@ -19,7 +19,7 @@ const Modal: ParentComponent<IProps> = (props) => {
             <input type="checkbox" checked={props.open} class="modal-toggle" />
             <Show when={props.open}>
                 <div class="modal modal-bottom sm:modal-middle">
-                    <div class="modal-box bg-base-200">
+                    <div class="modal-box bg-base-200 !rounded-xl">
                         <Button onClick={() => toggle(false)} class="btn-sm btn-circle absolute right-2 top-2">
                             <X />
                         </Button>
