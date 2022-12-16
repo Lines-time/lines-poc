@@ -81,5 +81,12 @@ table WorkTimeTargetBlock {
     }
 }
 
+table FreeDay {
+    id uuid
+    date date
+    percentage number [node: "the percentage of time free on this day, in decimal (1.0 == 100%, 0.5 == 50%)"]
+    description string
+}
+
 ref: Project.categoriesIds <> WorkCategory.projectsIds
 ref: User.projectsIds <> Project.workersIds
