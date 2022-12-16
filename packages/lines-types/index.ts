@@ -47,7 +47,10 @@ export type TApi = {
     };
     dailyWorkTimeTarget: Pick<ApiGetters<TDailyWorkTimeTarget>, "getById"> & {
         getForDate: (date: Date) => PromiseOptional<Optional<TDailyWorkTimeTarget>[]>;
-        getForDateRange: (start: Date, end: Date) => PromiseOptional<Optional<TDailyWorkTimeTarget>[]>;
+        getForDateRange: (start: Date, end: Date) => PromiseOptional<Optional<TDailyWorkTimeTarget & { date: Date }>[]>;
+    };
+    freeDay: {
+        getForDateRange: (start: Date, end: Date) => PromiseOptional<Optional<TFreeDay>[]>;
     };
 };
 
@@ -122,4 +125,10 @@ export type TDailyWorkTimeTarget = TDirectusCollectionProperties & {
     end: string | null;
     duration: string;
     blockId: string;
+};
+
+export type TFreeDay = TDirectusCollectionProperties & {
+    date: string;
+    description: string | null;
+    percentage: number;
 };

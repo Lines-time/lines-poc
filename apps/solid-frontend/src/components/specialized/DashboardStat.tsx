@@ -18,6 +18,9 @@ const createData = (start: dayjs.Dayjs, end: dayjs.Dayjs) => {
     const [target_value, target_resource] = createResource(
         async () => await servers.currentServer()?.dailyWorkTimeTarget.getForDateRange(start.toDate(), end.toDate())
     );
+    const [free_value, free_resource] = createResource(
+        async () => await servers.currentServer()?.freeDay.getForDateRange(start.toDate(), end.toDate())
+    );
     const workedTime = createMemo(() => data_value.latest?.reduce((a, b) => a + dayjs(b?.end).diff(b?.start), 0));
     const targetTime = createMemo(() =>
         target_value.latest?.reduce(
@@ -28,7 +31,8 @@ const createData = (start: dayjs.Dayjs, end: dayjs.Dayjs) => {
                         hours: parseTimeString(b?.duration).hour(),
                         minutes: parseTimeString(b?.duration).minute(),
                     })
-                    .asMilliseconds(),
+                    .asMilliseconds() *
+                    (1 - (free_value()?.find((fd) => dayjs(b?.date).isSame(fd?.date, "day"))?.percentage ?? 0)),
             0
         )
     );
@@ -45,6 +49,9 @@ const createData = (start: dayjs.Dayjs, end: dayjs.Dayjs) => {
 const DashboardStat: Component<TProps> = (props) => {
     const data = createData(props.start, props.end);
 
+    const missingDuration = createMemo(() => dayjs.duration(data.diff()));
+    const workedPercent = createMemo(() => scale(data.workedTime() ?? 0, data.targetTime() ?? 0, 0, 100, 0));
+
     return (
         <Stat
             title={props.title}
@@ -57,17 +64,17 @@ const DashboardStat: Component<TProps> = (props) => {
                     }}
                 >
                     {!data.targetReached() ? "-" : "+"}
-                    {dayjs.duration(data.diff()).format("H:mm[h]")}
+                    {`${missingDuration().asHours()}h`}
                 </span>
             }
             figure={
                 <div
                     class="radial-progress"
                     style={{
-                        "--value": scale(data.workedTime() ?? 0, data.targetTime() ?? 0, 0, 100, 0),
+                        "--value": isNaN(workedPercent()) ? 100 : workedPercent(),
                     }}
                 >
-                    {dayjs.duration(data.workedTime() ?? 0).format("H:mm[h]")}
+                    {isNaN(workedPercent()) ? 100 : workedPercent().toFixed(2)}%
                 </div>
             }
         ></Stat>

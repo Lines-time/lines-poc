@@ -6,6 +6,7 @@ import type {
     TCategory,
     TClient,
     TDailyWorkTimeTarget,
+    TFreeDay,
     TPerson,
     TProject,
     TServer,
@@ -26,6 +27,7 @@ type TDirectus = {
     WorkUnit: TWorkUnit;
     WorkTimeTargetBlock: TWorkTimeTargetBlock;
     DailyWorkTimeTarget: TDailyWorkTimeTarget;
+    FreeDay: TFreeDay;
     directus_users: TUser;
 };
 
@@ -250,7 +252,7 @@ export const directus = (server: TDirectusServer): TApi => {
                     },
                 });
                 const dayRange = dayjs(end).diff(start, "day");
-                const result: TDailyWorkTimeTarget[] = [];
+                const result: (TDailyWorkTimeTarget & { date: Date })[] = [];
                 for (let day = 0; day <= dayRange; day++) {
                     const block = blocks.data?.find((b) =>
                         dayjs()
@@ -261,10 +263,29 @@ export const directus = (server: TDirectusServer): TApi => {
                         const daily = dailies.data
                             ?.filter((d) => block?.DailyWorkTimeTargets.includes(d.id))
                             .find((d) => d.dayOfWeek === dayjs(start).add(day, "day").weekday());
-                        if (daily) result.push(daily);
+                        if (daily)
+                            result.push({
+                                ...daily,
+                                date: dayjs(start).add(day, "day").toDate(),
+                            });
                     }
                 }
                 return result;
+            },
+        },
+        freeDay: {
+            getForDateRange: async (start, end) => {
+                const result = await _directus.items("FreeDay").readByQuery({
+                    filter: {
+                        date: {
+                            _between: [
+                                dayjs(start).hour(0).minute(0).second(0).toString(),
+                                dayjs(end).hour(59).minute(59).second(59).toString(),
+                            ],
+                        },
+                    },
+                });
+                return result.data;
             },
         },
     };
