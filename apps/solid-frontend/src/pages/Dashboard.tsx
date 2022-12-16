@@ -4,10 +4,10 @@ import Loading from "~/Loading";
 import Navbar from "~/Navbar";
 import DashboardStat from "~/specialized/DashboardStat";
 
-const Overview: Component = () => {
+const Dashboard: Component = () => {
     return (
         <div class="h-full grid grid-rows-[64px_1fr]">
-            <Navbar title="Overview" />
+            <Navbar title="Dashboard" />
             <Suspense fallback={<Loading />}>
                 <main class="p-6">
                     <h2 class="text-xl font-bold col-span-3">Your Activity</h2>
@@ -27,4 +27,4 @@ const Overview: Component = () => {
         </div>
     );
 };
-export default Overview;
+export default Dashboard;

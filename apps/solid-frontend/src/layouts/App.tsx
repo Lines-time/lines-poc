@@ -79,7 +79,7 @@ const App: Component = () => {
                             <li>
                                 <A href="/" end activeClass="text-primary bg-base-100">
                                     <LayoutDashboard />
-                                    Overview
+                                    Dashboard
                                 </A>
                             </li>
                             <li>
