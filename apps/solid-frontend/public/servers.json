@@ -2,7 +2,7 @@
     "servers": [
         {
             "id": "directus-dev",
-            "display_name": "Directus dev backend",
+            "display_name": "Local Directus",
             "type": "directus",
             "url": "/api"
         }
