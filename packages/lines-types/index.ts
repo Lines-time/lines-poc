@@ -131,7 +131,7 @@ export type TDailyWorkTimeTarget = TDirectusCollectionProperties & {
 };
 
 export type TFreeDay = TDirectusCollectionProperties & {
-    date: string;
+    date: Date;
     description: string | null;
     percentage: number;
 };

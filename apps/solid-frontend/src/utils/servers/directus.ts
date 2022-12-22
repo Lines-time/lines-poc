@@ -281,8 +281,8 @@ export const directus = (server: TDirectusServer): TApi => {
                     filter: {
                         date: {
                             _between: [
-                                dayjs(start).hour(0).minute(0).second(0).toString(),
-                                dayjs(end).hour(59).minute(59).second(59).toString(),
+                                dayjs(start).hour(0).minute(0).second(0).toDate(),
+                                dayjs(end).hour(59).minute(59).second(59).toDate(),
                             ],
                         },
                     },

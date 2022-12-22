@@ -1,10 +1,12 @@
+import dayjs from "dayjs";
+import { Component, createSignal } from "solid-js";
 import CalendarMonth from "~/specialized/CalendarMonth";
 
-import type { Component } from "solid-js";
 const Month: Component = () => {
+    const [now, setNow] = createSignal(dayjs());
     return (
         <div>
-            <CalendarMonth />
+            <CalendarMonth now={now} />
         </div>
     );
 };

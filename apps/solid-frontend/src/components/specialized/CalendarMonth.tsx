@@ -1,16 +1,25 @@
 import dayjs from "dayjs";
 import { ChevronLeft, ChevronRight } from "lucide-solid";
-import { Component, createMemo, createSignal } from "solid-js";
+import { Accessor, Component, createMemo } from "solid-js";
+import { Dynamic } from "solid-js/web";
 import Button from "~/Button";
 import ForNumber from "~/ForNumber";
 
-type TProps = {};
+type TProps = {
+    now: Accessor<dayjs.Dayjs>;
+    onUpdateNow?: (value: dayjs.Dayjs) => void;
+    events?: Accessor<
+        Array<{
+            start: Date;
+            end: Date;
+            render: Component;
+        }>
+    >;
+};
 
 const CalendarMonth: Component<TProps> = (props) => {
-    const [now, setNow] = createSignal(dayjs());
-    const weekAmount = createMemo(
-        () => now().date(now().daysInMonth()).day(0).diff(now().date(1).day(0), "week") + 1
-    );
+    const { now, onUpdateNow } = props;
+    const weekAmount = createMemo(() => now().date(now().daysInMonth()).day(0).diff(now().date(1).day(0), "week") + 1);
 
     return (
         <div class="h-full grid grid-rows-[min-content_min-content_1fr] p-1">
@@ -19,13 +28,13 @@ const CalendarMonth: Component<TProps> = (props) => {
                 <Button
                     class="btn-sm"
                     icon={ChevronLeft}
-                    onClick={() => setNow(now().month(now().month() - 1))}
+                    onClick={() => onUpdateNow?.(now().month(now().month() - 1))}
                 ></Button>
                 <span>{now().format("MMMM YYYY")}</span>
                 <Button
                     class="btn-sm"
                     icon={ChevronRight}
-                    onClick={() => setNow(now().month(now().month() + 1))}
+                    onClick={() => onUpdateNow?.(now().month(now().month() + 1))}
                 ></Button>
             </div>
             <div class="grid grid-cols-7">
@@ -55,7 +64,17 @@ const CalendarMonth: Component<TProps> = (props) => {
                 </ForNumber>
                 {/* Days of this month */}
                 <ForNumber each={now().daysInMonth()}>
-                    {(day) => <div class="border-base-100 border-2 rounded-lg px-2 py-1">{day + 1}</div>}
+                    {(day) => (
+                        <div class="border-base-100 border-2 rounded-lg px-2 py-1">
+                            {day + 1}
+                            {props
+                                .events?.()
+                                .filter((e) => dayjs(e.start).date() === day + 1)
+                                .map((event) => (
+                                    <Dynamic component={event?.render}></Dynamic>
+                                ))}
+                        </div>
+                    )}
                 </ForNumber>
                 {/* Fill the rest of the days with days from the next month */}
                 <ForNumber each={6 - now().date(now().daysInMonth()).weekday()}>
