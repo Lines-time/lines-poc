@@ -5,3 +5,10 @@ export const scale = (value: number, maxIn: number, minIn: number, maxOut: numbe
 };
 
 export const parseTimeString = (time?: string) => dayjs(time, "HH:mm:ss");
+
+export const parseTimeStringDuration = (time?: string) =>
+    dayjs.duration({
+        hours: parseTimeString(time).hour(),
+        minutes: parseTimeString(time).minute(),
+        seconds: parseTimeString(time).second(),
+    });

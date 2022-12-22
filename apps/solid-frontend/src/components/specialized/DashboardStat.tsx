@@ -3,7 +3,7 @@ import { Component, createMemo, createResource } from "solid-js";
 import Stat from "~/Stat";
 
 import servers from "../../store/servers";
-import { parseTimeString, scale } from "../../utils/utils";
+import { parseTimeStringDuration, scale } from "../../utils/utils";
 
 type TProps = {
     start: dayjs.Dayjs;
@@ -26,12 +26,7 @@ const createData = (start: dayjs.Dayjs, end: dayjs.Dayjs) => {
         target_value.latest?.reduce(
             (a, b) =>
                 a +
-                dayjs
-                    .duration({
-                        hours: parseTimeString(b?.duration).hour(),
-                        minutes: parseTimeString(b?.duration).minute(),
-                    })
-                    .asMilliseconds() *
+                parseTimeStringDuration(b?.duration).asMilliseconds() *
                     (1 - (free_value()?.find((fd) => dayjs(b?.date).isSame(fd?.date, "day"))?.percentage ?? 0)),
             0
         )
