@@ -68,8 +68,10 @@ type TDirectusJoinCollectionProperties = {
 export type TProject = TDirectusCollectionProperties & {
     title: string;
     client: string;
+    tracking_increment: number | null;
     workers: unknown[];
     categories: unknown[];
+    color: string;
 };
 
 export type TClient = TDirectusCollectionProperties & {
@@ -111,6 +113,7 @@ export type TUser = TDirectusCollectionProperties & {
     last_name: string;
     email: string;
     avatar: string;
+    use_project_colors: boolean;
     workTimeTargetBlocks: (string | undefined)[];
 };
 
@@ -142,4 +145,9 @@ export type TVacation = TDirectusCollectionProperties & {
     worker: string;
     category: string;
     description: string;
+    approved: boolean;
+};
+
+export type TSettings = {
+    tracking_increment: number;
 };

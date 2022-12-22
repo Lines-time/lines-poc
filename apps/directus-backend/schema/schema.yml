@@ -132,7 +132,8 @@ collections:
       name: Project
       sql: >-
         CREATE TABLE "Project" (`id` char(36) NOT NULL, `title` varchar(255)
-        NULL, `client` char(36) NULL, PRIMARY KEY (`id`), CONSTRAINT
+        NULL, `client` char(36) NULL, `tracking_increment` integer NULL DEFAULT
+        '0', `color` varchar(255) null, PRIMARY KEY (`id`), CONSTRAINT
         `project_client_foreign` FOREIGN KEY (`client`) REFERENCES `Client`
         (`id`) ON DELETE SET NULL)
   - collection: Project_directus_users
@@ -165,6 +166,31 @@ collections:
         NULL, CONSTRAINT `project_directus_users_directus_users_id_foreign`
         FOREIGN KEY (`directus_users_id`) REFERENCES `directus_users` (`id`) ON
         DELETE SET NULL)
+  - collection: Settings
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      collapse: open
+      collection: Settings
+      color: null
+      display_template: null
+      group: null
+      hidden: false
+      icon: settings
+      item_duplication_fields: null
+      note: Lines settings
+      singleton: true
+      sort: null
+      sort_field: null
+      translations: null
+      unarchive_value: null
+    schema:
+      name: Settings
+      sql: >-
+        CREATE TABLE `Settings` (`id` integer not null primary key
+        autoincrement, `tracking_increment` integer null default '15')
   - collection: Vacation
     meta:
       accountability: all
@@ -190,10 +216,10 @@ collections:
       sql: >-
         CREATE TABLE "Vacation" (`id` char(36) NOT NULL, `start` date NULL,
         `end` date NULL, `category` char(36) NULL, `worker` char(36) NULL,
-        `description` text null, PRIMARY KEY (`id`), CONSTRAINT
-        `vacation_category_foreign` FOREIGN KEY (`category`) REFERENCES
-        `VacationType` (`id`) ON DELETE SET NULL, CONSTRAINT
-        `vacation_worker_foreign` FOREIGN KEY (`worker`) REFERENCES
+        `description` text null, `approved` boolean null default '0', PRIMARY
+        KEY (`id`), CONSTRAINT `vacation_category_foreign` FOREIGN KEY
+        (`category`) REFERENCES `VacationType` (`id`) ON DELETE SET NULL,
+        CONSTRAINT `vacation_worker_foreign` FOREIGN KEY (`worker`) REFERENCES
         `directus_users` (`id`) ON DELETE SET NULL)
   - collection: VacationType
     meta:
@@ -1239,6 +1265,70 @@ fields:
       table: Project
     type: string
   - collection: Project
+    field: color
+    meta:
+      collection: Project
+      conditions: null
+      display: null
+      display_options: null
+      field: color
+      group: null
+      hidden: false
+      interface: select-color
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: null
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      data_type: varchar
+      default_value: null
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: 255
+      name: color
+      numeric_precision: null
+      numeric_scale: null
+      table: Project
+    type: string
+  - collection: Project
+    field: divider-mickdr
+    meta:
+      collection: Project
+      conditions: null
+      display: null
+      display_options: null
+      field: divider-mickdr
+      group: null
+      hidden: false
+      interface: presentation-divider
+      note: null
+      options:
+        title: Settings
+      readonly: false
+      required: false
+      sort: null
+      special:
+        - alias
+        - no-data
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema: null
+    type: alias
+  - collection: Project
     field: id
     meta:
       collection: Project
@@ -1316,6 +1406,47 @@ fields:
       numeric_scale: null
       table: Project
     type: string
+  - collection: Project
+    field: tracking_increment
+    meta:
+      collection: Project
+      conditions: null
+      display: formatted-value
+      display_options:
+        conditionalFormatting: null
+      field: tracking_increment
+      group: null
+      hidden: false
+      interface: input
+      note: 0 or nothing = use global value
+      options:
+        max: 60
+        min: 0
+      readonly: false
+      required: false
+      sort: null
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      data_type: integer
+      default_value: 0
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: null
+      name: tracking_increment
+      numeric_precision: null
+      numeric_scale: null
+      table: Project
+    type: integer
   - collection: Project
     field: workers
     meta:
@@ -1457,6 +1588,123 @@ fields:
       numeric_scale: null
       table: Project_directus_users
     type: integer
+  - collection: Settings
+    field: id
+    meta:
+      collection: Settings
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: null
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      data_type: integer
+      default_value: null
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: true
+      is_generated: false
+      is_nullable: false
+      is_primary_key: true
+      is_unique: false
+      max_length: null
+      name: id
+      numeric_precision: null
+      numeric_scale: null
+      table: Settings
+    type: integer
+  - collection: Settings
+    field: tracking_increment
+    meta:
+      collection: Settings
+      conditions: null
+      display: null
+      display_options: null
+      field: tracking_increment
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options:
+        max: 60
+        min: 1
+      readonly: false
+      required: false
+      sort: null
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      data_type: integer
+      default_value: 15
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: null
+      name: tracking_increment
+      numeric_precision: null
+      numeric_scale: null
+      table: Settings
+    type: integer
+  - collection: Vacation
+    field: approved
+    meta:
+      collection: Vacation
+      conditions: null
+      display: null
+      display_options: null
+      field: approved
+      group: null
+      hidden: false
+      interface: boolean
+      note: null
+      options: null
+      readonly: false
+      required: true
+      sort: null
+      special:
+        - cast-boolean
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      data_type: boolean
+      default_value: false
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: null
+      name: approved
+      numeric_precision: null
+      numeric_scale: null
+      table: Vacation
+    type: boolean
   - collection: Vacation
     field: category
     meta:
@@ -2542,6 +2790,45 @@ fields:
       width: full
     schema: null
     type: alias
+  - collection: directus_users
+    field: use_project_colors
+    meta:
+      collection: directus_users
+      conditions: null
+      display: null
+      display_options: null
+      field: use_project_colors
+      group: null
+      hidden: false
+      interface: boolean
+      note: null
+      options: {}
+      readonly: false
+      required: false
+      sort: null
+      special:
+        - cast-boolean
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      data_type: boolean
+      default_value: true
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: null
+      name: use_project_colors
+      numeric_precision: null
+      numeric_scale: null
+      table: directus_users
+    type: boolean
   - collection: directus_users
     field: workTimeTargetBlocks
     meta:

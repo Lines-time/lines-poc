@@ -10,6 +10,7 @@ import type {
     TPerson,
     TProject,
     TServer,
+    TSettings,
     TUser,
     TVacation,
     TWorkTimeTargetBlock,
@@ -30,6 +31,7 @@ type TDirectus = {
     DailyWorkTimeTarget: TDailyWorkTimeTarget;
     FreeDay: TFreeDay;
     Vacation: TVacation;
+    Settings: TSettings;
     directus_users: TUser;
 };
 
