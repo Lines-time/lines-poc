@@ -12,22 +12,24 @@ const Calendar: Component = () => {
     const end = createMemo(() => now().date(now().daysInMonth()));
 
     const [targetTime, targetTimeResource] = createResource(
+        () => now(),
         async () =>
             (await servers.currentServer()?.dailyWorkTimeTarget.getForDateRange(start().toDate(), end().toDate())) ?? []
     );
     const [freeDays, freeDaysResource] = createResource(
-        async () => (await servers.currentServer()?.freeDay.getForDateRange(start().toDate(), end().toDate())) ?? []
+        () => now(),
+        async () => await servers.currentServer()?.freeDay.getForDateRange(start().toDate(), end().toDate())
     );
 
     const events = createMemo(() => {
         return (
-            targetTime()?.map((tt) => ({
+            targetTime.latest?.map((tt) => ({
                 start: tt!.date,
                 end: tt!.date,
                 render: () => <div>{parseTimeStringDuration(tt?.duration).format("H:mm[h]")}</div>,
             })) ?? []
         ).concat(
-            freeDays()?.map((fd) => ({
+            freeDays.latest?.map((fd) => ({
                 start: fd!.date,
                 end: fd!.date,
                 render: () => <div>{fd?.description}</div>,
