@@ -7,27 +7,29 @@ import ForNumber from "~/ForNumber";
 type TProps = {};
 
 const CalendarMonth: Component<TProps> = (props) => {
-    const [month, setMonth] = createSignal(dayjs());
+    const [now, setNow] = createSignal(dayjs());
     const weekAmount = createMemo(
-        () => month().date(month().daysInMonth()).day(0).diff(month().date(1).day(0), "week") + 1
+        () => now().date(now().daysInMonth()).day(0).diff(now().date(1).day(0), "week") + 1
     );
 
     return (
         <div class="h-full grid grid-rows-[min-content_min-content_1fr] p-1">
             <div class="flex flex-row justify-between items-center gap-2 w-full">
+                {/* Controls to change the month */}
                 <Button
                     class="btn-sm"
                     icon={ChevronLeft}
-                    onClick={() => setMonth(month().month(month().month() - 1))}
+                    onClick={() => setNow(now().month(now().month() - 1))}
                 ></Button>
-                <span>{month().format("MMMM YYYY")}</span>
+                <span>{now().format("MMMM YYYY")}</span>
                 <Button
                     class="btn-sm"
                     icon={ChevronRight}
-                    onClick={() => setMonth(month().month(month().month() + 1))}
+                    onClick={() => setNow(now().month(now().month() + 1))}
                 ></Button>
             </div>
             <div class="grid grid-cols-7">
+                {/* Weekday names above the columns */}
                 <ForNumber each={7}>
                     {(day) => (
                         <div class="flex flex-row items-center justify-center p-2">
@@ -43,9 +45,21 @@ const CalendarMonth: Component<TProps> = (props) => {
                     "grid-rows-6": weekAmount() === 6,
                 }}
             >
-                <ForNumber each={month().date(1).weekday()}>{(day) => <div></div>}</ForNumber>
-                <ForNumber each={month().daysInMonth()}>
+                {/* Fill the days before the first of this month with the days from the previous month */}
+                <ForNumber each={now().date(1).weekday()}>
+                    {(day) => (
+                        <div class="opacity-50">
+                            {now().subtract(1, "month").daysInMonth() + (day - now().date(0).weekday())}
+                        </div>
+                    )}
+                </ForNumber>
+                {/* Days of this month */}
+                <ForNumber each={now().daysInMonth()}>
                     {(day) => <div class="border-base-100 border-2 rounded-lg px-2 py-1">{day + 1}</div>}
+                </ForNumber>
+                {/* Fill the rest of the days with days from the next month */}
+                <ForNumber each={6 - now().date(now().daysInMonth()).weekday()}>
+                    {(day) => <div class="opacity-50">{day + 1}</div>}
                 </ForNumber>
             </div>
         </div>
