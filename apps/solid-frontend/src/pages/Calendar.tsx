@@ -4,7 +4,7 @@ import Navbar from "~/Navbar";
 import CalendarMonth from "~/specialized/CalendarMonth";
 
 import servers from "../store/servers";
-import { parseTimeString } from "../utils/utils";
+import { parseTimeStringDuration } from "../utils/utils";
 
 const Calendar: Component = () => {
     const [now, setNow] = createSignal(dayjs());
@@ -12,10 +12,11 @@ const Calendar: Component = () => {
     const end = createMemo(() => now().date(now().daysInMonth()));
 
     const [targetTime, targetTimeResource] = createResource(
-        async () => await servers.currentServer()?.dailyWorkTimeTarget.getForDateRange(start().toDate(), end().toDate()) ?? []
+        async () =>
+            (await servers.currentServer()?.dailyWorkTimeTarget.getForDateRange(start().toDate(), end().toDate())) ?? []
     );
     const [freeDays, freeDaysResource] = createResource(
-        async () => await servers.currentServer()?.freeDay.getForDateRange(start().toDate(), end().toDate()) ?? []
+        async () => (await servers.currentServer()?.freeDay.getForDateRange(start().toDate(), end().toDate())) ?? []
     );
 
     const events = createMemo(() => {
@@ -23,7 +24,7 @@ const Calendar: Component = () => {
             targetTime()?.map((tt) => ({
                 start: tt!.date,
                 end: tt!.date,
-                render: () => <div>{parseTimeString(tt?.duration).format("H:mm[h]")}</div>,
+                render: () => <div>{parseTimeStringDuration(tt?.duration).format("H:mm[h]")}</div>,
             })) ?? []
         ).concat(
             freeDays()?.map((fd) => ({
