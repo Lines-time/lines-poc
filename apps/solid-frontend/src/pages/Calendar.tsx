@@ -7,7 +7,7 @@ const Calendar: Component = () => {
         <div class="h-full grid grid-rows-[64px_1fr]">
             <Navbar title="Calendar" />
             <div>
-                <CalendarMonth events={[]} />
+                <CalendarMonth />
             </div>
         </div>
     );
