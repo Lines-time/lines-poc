@@ -43,7 +43,7 @@ const App: Component = () => {
                     onInput={(e) => setDrawerOpen(e.currentTarget.checked)}
                     class="drawer-toggle"
                 />
-                <div class="drawer-content">
+                <div class="drawer-content overflow-hidden">
                     <Suspense fallback={<Loading />}>
                         <Outlet />
                     </Suspense>
