@@ -6,7 +6,7 @@ const Week: Component = () => {
     const [now, setNow] = createSignal(dayjs());
     return (
         <div>
-            <CalendarWeek now={now} onUpdateNow={setNow} controls={false} />
+            <CalendarWeek now={now} controls={false} />
         </div>
     );
 };

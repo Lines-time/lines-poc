@@ -8,6 +8,7 @@ import ForNumber from "~/ForNumber";
 type TProps = {
     now: Accessor<dayjs.Dayjs>;
     onUpdateNow?: (value: dayjs.Dayjs) => void;
+    controls?: boolean;
     events?: Accessor<
         Array<{
             start: Date;
@@ -18,24 +19,34 @@ type TProps = {
 };
 
 const CalendarMonth: Component<TProps> = (props) => {
-    const { now, onUpdateNow } = props;
+    const { now, onUpdateNow, controls = true } = props;
     const weekAmount = createMemo(() => now().date(now().daysInMonth()).day(0).diff(now().date(1).day(0), "week") + 1);
 
     return (
         <div class="h-full grid grid-rows-[min-content_min-content_1fr] p-1">
-            <div class="flex flex-row justify-between items-center gap-2 w-full">
+            <div
+                class="flex flex-row items-center gap-2 w-full"
+                classList={{
+                    "justify-between": controls,
+                    "justify-center": !controls,
+                }}
+            >
                 {/* Controls to change the month */}
-                <Button
-                    class="btn-sm"
-                    icon={ChevronLeft}
-                    onClick={() => onUpdateNow?.(now().month(now().month() - 1))}
-                ></Button>
+                {controls && (
+                    <Button
+                        class="btn-sm"
+                        icon={ChevronLeft}
+                        onClick={() => onUpdateNow?.(now().month(now().month() - 1))}
+                    ></Button>
+                )}
                 <span>{now().format("MMMM YYYY")}</span>
-                <Button
-                    class="btn-sm"
-                    icon={ChevronRight}
-                    onClick={() => onUpdateNow?.(now().month(now().month() + 1))}
-                ></Button>
+                {controls && (
+                    <Button
+                        class="btn-sm"
+                        icon={ChevronRight}
+                        onClick={() => onUpdateNow?.(now().month(now().month() + 1))}
+                    ></Button>
+                )}
             </div>
             <div class="grid grid-cols-7">
                 {/* Weekday names above the columns */}

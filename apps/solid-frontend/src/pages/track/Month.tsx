@@ -6,7 +6,7 @@ const Month: Component = () => {
     const [now, setNow] = createSignal(dayjs());
     return (
         <div>
-            <CalendarMonth now={now} />
+            <CalendarMonth now={now} controls={false} />
         </div>
     );
 };
