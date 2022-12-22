@@ -9,7 +9,7 @@ const Day = lazy(() => import("@/track/Day"));
 const Week = lazy(() => import("@/track/Week"));
 const Month = lazy(() => import("@/track/Month"));
 const Dashboard = lazy(() => import("@/Dashboard"));
-const Vacation = lazy(() => import("@/Vacation"));
+const Calendar = lazy(() => import("@/Calendar"));
 const ReportsOverview = lazy(() => import("@/reports/Overview"));
 const Personal = lazy(() => import("@/Personal"));
 
@@ -26,7 +26,7 @@ const Main: Component = () => {
                         <Route path="/week" component={Week}></Route>
                         <Route path="/month" component={Month}></Route>
                     </Route>
-                    <Route path="/vacation" component={Vacation}></Route>
+                    <Route path="/calendar" component={Calendar}></Route>
                     <Route path="/reports">
                         <Route path="/" component={ReportsOverview}></Route>
                     </Route>

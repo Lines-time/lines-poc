@@ -1,5 +1,5 @@
 import { A, Outlet } from "@solidjs/router";
-import { BarChart3, ChevronDown, LayoutDashboard, Palmtree, Settings, Timer } from "lucide-solid";
+import { BarChart3, Calendar, ChevronDown, LayoutDashboard, Settings, Timer } from "lucide-solid";
 import { Component, createMemo, createResource, createSignal, For, Show, Suspense } from "solid-js";
 import Avatar from "~/Avatar";
 import Button from "~/Button";
@@ -89,9 +89,9 @@ const App: Component = () => {
                                 </A>
                             </li>
                             <li>
-                                <A href="/vacation" end activeClass="text-primary bg-base-100">
-                                    <Palmtree />
-                                    Vacation
+                                <A href="/calendar" end activeClass="text-primary bg-base-100">
+                                    <Calendar />
+                                    Calendar
                                 </A>
                             </li>
                             <li class="menu-title">

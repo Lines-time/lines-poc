@@ -11,6 +11,7 @@ import type {
     TProject,
     TServer,
     TUser,
+    TVacation,
     TWorkTimeTargetBlock,
     TWorkUnit,
 } from "lines-types";
@@ -28,6 +29,7 @@ type TDirectus = {
     WorkTimeTargetBlock: TWorkTimeTargetBlock;
     DailyWorkTimeTarget: TDailyWorkTimeTarget;
     FreeDay: TFreeDay;
+    Vacation: TVacation;
     directus_users: TUser;
 };
 
@@ -282,6 +284,18 @@ export const directus = (server: TDirectusServer): TApi => {
                                 dayjs(start).hour(0).minute(0).second(0).toString(),
                                 dayjs(end).hour(59).minute(59).second(59).toString(),
                             ],
+                        },
+                    },
+                });
+                return result.data;
+            },
+        },
+        vacation: {
+            getForUser: async (userId = "$CURRENT_USER") => {
+                const result = await _directus.items("Vacation").readByQuery({
+                    filter: {
+                        worker: {
+                            _eq: userId,
                         },
                     },
                 });
