@@ -6,7 +6,8 @@
     "scripts": {
         "dev": "yarn directus start",
         "preview": "yarn directus start",
-        "snapshot:schema": "node ./scripts/create-schema-snapshot.js"
+        "snapshot:schema": "node ./scripts/create-schema-snapshot.js",
+        "migrate": "yarn directus schema apply ./schema/schema.yml"
     },
     "dependencies": {
         "directus": "^9.20.4"
