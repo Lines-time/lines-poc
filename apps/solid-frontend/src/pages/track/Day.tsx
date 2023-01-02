@@ -123,14 +123,14 @@ const Day: Component = () => {
                 <div class="bg-base-300 border-l-2 border-base-100 border-solid w-full">
                     <div class="flex flex-row p-2 pl-3 justify-between">
                         <h2 class="font-bold text-xl">{searchParams.edit === "new" ? "Create new" : "Edit"}</h2>
-                        <Button class="btn-sm" icon={X} onClick={() => closeEdit()}></Button>
+                        <Button class="btn-sm" icon={X} onClick={() => closeEdit()} />
                     </div>
                     <div class="p-2">
                         <WorkUnitForm
                             presetData={workUnitModalPresetData()}
                             onClose={() => closeEdit()}
                             onSave={() => workUnitsResource.refetch()}
-                        ></WorkUnitForm>
+                        />
                     </div>
                 </div>
             </Show>
