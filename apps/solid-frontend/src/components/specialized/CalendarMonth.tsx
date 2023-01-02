@@ -37,7 +37,7 @@ const CalendarMonth: Component<TProps> = (props) => {
                         class="btn-sm"
                         icon={ChevronLeft}
                         onClick={() => onUpdateNow?.(now().month(now().month() - 1))}
-                    ></Button>
+                    />
                 )}
                 <span>{now().format("MMMM YYYY")}</span>
                 {controls && (
@@ -45,7 +45,7 @@ const CalendarMonth: Component<TProps> = (props) => {
                         class="btn-sm"
                         icon={ChevronRight}
                         onClick={() => onUpdateNow?.(now().month(now().month() + 1))}
-                    ></Button>
+                    />
                 )}
             </div>
             <div class="grid grid-cols-7">
@@ -86,7 +86,7 @@ const CalendarMonth: Component<TProps> = (props) => {
                                         .isBetween(e.start, e.end, "day", "[]")
                                 )
                                 .map((event) => (
-                                    <Dynamic component={event?.render}></Dynamic>
+                                    <Dynamic component={event?.render} />
                                 ))}
                         </div>
                     )}
