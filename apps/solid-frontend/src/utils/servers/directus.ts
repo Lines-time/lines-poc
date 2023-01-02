@@ -203,7 +203,7 @@ export const directus = (server: TDirectusServer): TApi => {
                                 ) ?? [],
                         },
                         dayOfWeek: {
-                            _eq: dayjs(date).weekday(),
+                            _eq: dayjs(date).isoWeekday(),
                         },
                     },
                 });
@@ -274,7 +274,7 @@ export const directus = (server: TDirectusServer): TApi => {
                     if (block) {
                         const daily = dailies.data
                             ?.filter((d) => block?.DailyWorkTimeTargets.includes(d.id))
-                            .find((d) => d.dayOfWeek === dayjs(start).add(day, "day").weekday());
+                            .find((d) => d.dayOfWeek === dayjs(start).add(day, "day").isoWeekday());
                         if (daily)
                             result.push({
                                 ...daily,

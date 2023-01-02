@@ -14,7 +14,7 @@ const Dashboard: Component = () => {
                     <div class="grid grid-cols-3 pt-4">
                         <div class="stats max-lg:stats-vertical col-span-3 bg-base-200 border-2 border-base-100">
                             <DashboardStat start={dayjs()} end={dayjs()} title="Today" />
-                            <DashboardStat start={dayjs().weekday(1)} end={dayjs().weekday(7)} title="This week" />
+                            <DashboardStat start={dayjs().isoWeekday(1)} end={dayjs().isoWeekday(7)} title="This week" />
                             <DashboardStat
                                 start={dayjs().date(1)}
                                 end={dayjs().date(dayjs().daysInMonth())}

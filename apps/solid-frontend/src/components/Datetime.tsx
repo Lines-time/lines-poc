@@ -72,10 +72,12 @@ const Datetime: Component<TProps> = (props) => {
                         <ForNumber each={7}>
                             {(day) => <div class="flex flex-row items-center justify-center" />}
                         </ForNumber>
-                        <ForNumber each={value().date(0).weekday()}>{(day) => ""}</ForNumber>
+                        <ForNumber each={value().date(0).isoWeekday()}>
+                            {(day) => <div />}
+                        </ForNumber>
                         <ForNumber each={value().daysInMonth()}>
                             {(day) => (
-                                // rome-ignore lint/a11y/useKeyWithClickEvents: why would I want this?
+                                // rome-ignore lint/a11y/useKeyWithClickEvents:
                                 <div
                                     class="btn btn-square btn-sm"
                                     classList={{

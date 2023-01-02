@@ -27,11 +27,11 @@ const CalendarWeek: Component<TProps> = (props) => {
                         class="btn-sm"
                         icon={ChevronLeft}
                         onClick={() => onUpdateNow?.(now().subtract(1, "week"))}
-                    ></Button>
+                    />
                 )}
                 <span class="flex items-center gap-2">
                     <span>
-                        {now().weekday(0).format("dddd, DD.MM.YYYY")} - {now().weekday(6).format("dddd, DD.MM.YYYY")}
+                        {now().isoWeekday(1).format("dddd, LL")} - {now().isoWeekday(7).format("dddd, LL")}
                     </span>
                     {controls && now().isoWeek() !== dayjs().isoWeek() ? (
                         <Button class="btn-sm" onClick={() => onUpdateNow?.(dayjs())}>
@@ -46,7 +46,7 @@ const CalendarWeek: Component<TProps> = (props) => {
                         class="btn-sm"
                         icon={ChevronRight}
                         onClick={() => onUpdateNow?.(now().add(1, "week"))}
-                    ></Button>
+                    />
                 )}
             </div>
             <div class="grid grid-cols-[max-content_repeat(7,_1fr)] grid-rows-[min-content_1fr] grid-flow-row gap-1 h-full overflow-y-auto">
@@ -55,7 +55,7 @@ const CalendarWeek: Component<TProps> = (props) => {
                     {(day) => (
                         <div class="flex flex-row items-center justify-center p-2">
                             {/* Weekday names above the columns */}
-                            {now().weekday(day).format("ddd")}
+                            {now().isoWeekday(day + 1).format("ddd")}
                         </div>
                     )}
                 </ForNumber>
@@ -76,7 +76,7 @@ const CalendarWeek: Component<TProps> = (props) => {
                     {(day) => (
                         <div class="grid grid-rows-48 border-2 border-base-100 rounded-lg">
                             <ForNumber each={48}>
-                                {(day) => <div class="border-b border-dashed border-base-100"></div>}
+                                {(day) => <div class="border-b border-dashed border-base-100" />}
                             </ForNumber>
                         </div>
                     )}

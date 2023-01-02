@@ -62,10 +62,15 @@ const CalendarMonth: Component<TProps> = (props) => {
                             <div
                                 class="flex flex-row items-center justify-center p-2"
                                 classList={{
-                                    "text-primary": dayjs().isSame(now().weekday(day), "day"),
+                                    "text-primary": dayjs().isSame(
+                                        now().isoWeekday(day + 1),
+                                        "day"
+                                    ),
                                 }}
                             >
-                                {now().weekday(day).format("ddd")}
+                                {now()
+                                    .isoWeekday(day + 1)
+                                    .format("ddd")}
                             </div>
                         )}
                     </ForNumber>
@@ -107,7 +112,11 @@ const Grid: Component<TGridProps> = (props) => {
     const { now } = props;
 
     const weekAmount = createMemo(
-        () => now().date(now().daysInMonth()).day(0).diff(now().date(1).day(0), "week") + 1
+        () =>
+            now()
+                .date(now().daysInMonth())
+                .isoWeekday(1)
+                .diff(now().date(1).isoWeekday(1), "week") + 1
     );
 
     return (
@@ -119,17 +128,18 @@ const Grid: Component<TGridProps> = (props) => {
             }}
         >
             {/* Fill the days before the first of this month with the days from the previous month */}
-            <ForNumber each={now().date(1).weekday()}>
+            <ForNumber each={now().date(1).isoWeekday() - 1}>
                 {(day) => (
                     <div class="opacity-50">
-                        {now().subtract(1, "month").daysInMonth() + (day - now().date(0).weekday())}
+                        {now().subtract(1, "month").daysInMonth() +
+                            (day + 1 - now().date(0).isoWeekday())}
                     </div>
                 )}
             </ForNumber>
             {/* Days of this month */}
             <ForNumber each={now().daysInMonth()}>{props.children}</ForNumber>
             {/* Fill the rest of the days with days from the next month */}
-            <ForNumber each={6 - now().date(now().daysInMonth()).weekday()}>
+            <ForNumber each={7 - now().date(now().daysInMonth()).isoWeekday()}>
                 {(day) => <div class="opacity-50">{day + 1}</div>}
             </ForNumber>
         </div>
