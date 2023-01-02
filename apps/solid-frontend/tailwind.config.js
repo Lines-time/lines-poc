@@ -17,7 +17,7 @@ module.exports = {
             {
                 "lines-dark": {
                     primary: "#EF9A11",
-                    secondary: "#EF9A11",
+                    secondary: "#22ad78",
                     accent: "#EF9A11",
                     neutral: "#212430",
                     "base-100": "#212430",
@@ -28,7 +28,7 @@ module.exports = {
             {
                 "lines-light": {
                     primary: "#EF9A11",
-                    secondary: "#EF9A11",
+                    secondary: "#22ad78",
                     accent: "#EF9A11",
                     neutral: "#FFFFFF",
                     "base-100": "#FFFFFF",
