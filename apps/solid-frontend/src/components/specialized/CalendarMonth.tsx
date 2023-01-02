@@ -20,7 +20,6 @@ type TProps = {
 
 const CalendarMonth: Component<TProps> = (props) => {
     const { now, onUpdateNow, controls = true } = props;
-
     return (
         <div class="h-full grid grid-rows-[min-content_1fr] p-1">
             <div

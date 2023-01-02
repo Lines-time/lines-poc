@@ -19,11 +19,11 @@ import servers from "../store/servers";
 import { parseTimeStringDuration } from "../utils/utils";
 
 const Calendar: Component = () => {
-    const [now, setNow] = createSignal(dayjs());
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [now, setNow] = createSignal(searchParams.d ? dayjs(searchParams.d) : dayjs());
     const [vacationModalOpen, setVacationModalOpen] = createSignal(false);
     const start = createMemo(() => now().date(1));
     const end = createMemo(() => now().date(now().daysInMonth()));
-    const [searchParams, setSearchParams] = useSearchParams();
 
     onMount(() => {
         if (searchParams.d === undefined) {
@@ -42,11 +42,11 @@ const Calendar: Component = () => {
     });
 
     const [targetTime] = createResource(
-        () => now(),
+        () => start(),
         async () =>
             (await servers
                 .currentServer()
-                ?.dailyWorkTimeTarget.getForDateRange(start().toDate(), end().toDate())) ?? []
+                ?.dailyWorkTimeTarget.getForDateRange(start().toDate(), end().toDate()))
     );
     const [freeDays] = createResource(
         () => now(),

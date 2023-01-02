@@ -251,6 +251,7 @@ export const directus = (server: TDirectusServer): TApi => {
                     },
                 });
                 const dailiesIds = blocks.data?.flatMap((block) => block.DailyWorkTimeTargets);
+                if (dailiesIds?.length === 0) return [];
                 const dailies = await _directus.items("DailyWorkTimeTarget").readByQuery({
                     filter: {
                         id: {
@@ -259,14 +260,14 @@ export const directus = (server: TDirectusServer): TApi => {
                     },
                 });
                 const dayRange = dayjs(end).diff(start, "day");
-                const result: (TDailyWorkTimeTarget & { date: Date })[] = [];
+                let result: (TDailyWorkTimeTarget & { date: Date })[] = [];
                 for (let day = 0; day <= dayRange; day++) {
                     const block = blocks.data?.find((b) =>
-                        dayjs()
+                        dayjs(start)
                             .date(day)
                             .isBetween(
                                 b.start,
-                                b.end ?? dayjs().date(dayjs().daysInMonth()),
+                                b.end ?? dayjs(start).date(dayjs().daysInMonth()),
                                 "day",
                                 "[]"
                             )
@@ -274,12 +275,16 @@ export const directus = (server: TDirectusServer): TApi => {
                     if (block) {
                         const daily = dailies.data
                             ?.filter((d) => block?.DailyWorkTimeTargets.includes(d.id))
-                            .find((d) => d.dayOfWeek === dayjs(start).add(day, "day").isoWeekday());
+                            .filter(
+                                (d) => d.dayOfWeek === dayjs(start).add(day, "day").isoWeekday()
+                            );
                         if (daily)
-                            result.push({
-                                ...daily,
-                                date: dayjs(start).add(day, "day").toDate(),
-                            });
+                            result = result.concat(
+                                daily.map((d) => ({
+                                    ...d,
+                                    date: dayjs(start).add(day, "day").toDate(),
+                                }))
+                            );
                     }
                 }
                 return result;
