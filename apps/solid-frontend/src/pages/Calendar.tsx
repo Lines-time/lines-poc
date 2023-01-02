@@ -1,5 +1,13 @@
+import { useSearchParams } from "@solidjs/router";
 import dayjs from "dayjs";
-import { Component, createMemo, createResource, createSignal } from "solid-js";
+import {
+    Component,
+    createEffect,
+    createMemo,
+    createResource,
+    createSignal,
+    onMount,
+} from "solid-js";
 import Navbar from "~/Navbar";
 import CalendarMonth from "~/specialized/CalendarMonth";
 
@@ -10,6 +18,23 @@ const Calendar: Component = () => {
     const [now, setNow] = createSignal(dayjs());
     const start = createMemo(() => now().date(1));
     const end = createMemo(() => now().date(now().daysInMonth()));
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    onMount(() => {
+        if (searchParams.d === undefined) {
+            setSearchParams({
+                d: now().format("YYYY-MM-DD"),
+            });
+        } else {
+            setNow(dayjs(searchParams.d));
+        }
+    });
+
+    createEffect(() => {
+        setSearchParams({
+            d: now().format("YYYY-MM-DD"),
+        });
+    });
 
     const [targetTime] = createResource(
         () => now(),
@@ -55,7 +80,11 @@ const Calendar: Component = () => {
             freeDays()?.map((fd) => ({
                 start: fd!.date,
                 end: fd!.date,
-                render: () => <div class="border-2 border-secondary-focus bg-secondary rounded px-1 text-secondary-content">{fd?.description}</div>,
+                render: () => (
+                    <div class="border-2 border-secondary-focus bg-secondary rounded px-1 text-secondary-content">
+                        {fd?.description}
+                    </div>
+                ),
             })) ?? [],
             vacations()?.map((v) => ({
                 start: v!.start,

@@ -38,7 +38,14 @@ const CalendarMonth: Component<TProps> = (props) => {
                         onClick={() => onUpdateNow?.(now().month(now().month() - 1))}
                     />
                 )}
-                <span>{now().format("MMMM YYYY")}</span>
+                <span>
+                    <span>{now().format("MMMM YYYY")}</span>
+                    {controls && (
+                        <Button onClick={() => onUpdateNow?.(dayjs())} class="btn-sm">
+                            Today
+                        </Button>
+                    )}
+                </span>
                 {controls && (
                     <Button
                         class="btn-sm"
@@ -60,8 +67,8 @@ const CalendarMonth: Component<TProps> = (props) => {
                 </div>
                 <Grid now={now}>
                     {(day) => (
-                        <div class="border-base-100 border-2 rounded-lg px-2 py-1">
-                            {day + 1}
+                        <div class="border-base-100 border-2 rounded-lg px-1 py-1">
+                            <span class="px-1">{day + 1}</span>
                             {props
                                 .events?.()
                                 .filter((e) =>
@@ -87,7 +94,9 @@ type TGridProps = Omit<ComponentProps<typeof For<number, JSX.Element>>, "each"> 
 const Grid: Component<TGridProps> = (props) => {
     const { now } = props;
 
-    const weekAmount = createMemo(() => now().date(now().daysInMonth()).day(0).diff(now().date(1).day(0), "week") + 1);
+    const weekAmount = createMemo(
+        () => now().date(now().daysInMonth()).day(0).diff(now().date(1).day(0), "week") + 1
+    );
 
     return (
         <div
