@@ -8,6 +8,7 @@ import {
     createSignal,
     onMount,
 } from "solid-js";
+import Dropdown from "~/Dropdown";
 import Navbar from "~/Navbar";
 import CalendarMonth from "~/specialized/CalendarMonth";
 
@@ -90,9 +91,35 @@ const Calendar: Component = () => {
                 start: v!.start,
                 end: v!.end,
                 render: () => (
-                    <div class="border-2 border-primary-focus rounded bg-primary text-primary-content px-1">
-                        {v!.description}
-                    </div>
+                    <Dropdown
+                        class="w-full"
+                        labelClass="w-full cursor-pointer"
+                        label={
+                            <div
+                                class="border-2 rounded px-1"
+                                classList={{
+                                    "border-primary-focus": v!.approved,
+                                    "bg-primary": v!.approved,
+                                    "text-primary-content": v!.approved,
+                                    // if not approved
+                                    "border-error": !v!.approved,
+                                    "bg-error": !v!.approved,
+                                    "text-error-content": !v!.approved,
+                                }}
+                            >
+                                {v!.description}
+                            </div>
+                        }
+                    >
+                        <h3>{v!.description}</h3>
+                        {!v!.approved ? (
+                            <div class="text-error">This vacation has not yet been approved</div>
+                        ) : (
+                            <div class="text-success">This vacation has been approved</div>
+                        )}
+                        <p>Start: {dayjs(v!.start).format("LL")}</p>
+                        <p>End: {dayjs(v!.end).format("LL")}</p>
+                    </Dropdown>
                 ),
             })) ?? []
         );

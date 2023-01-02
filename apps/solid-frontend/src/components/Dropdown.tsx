@@ -6,10 +6,18 @@ type TProps = {
     location?: "top" | "bottom" | "left" | "right";
     hover?: boolean;
     labelClass?: string;
+    class?: string;
 };
 
 const Dropdown: ParentComponent<TProps> = (props) => {
-    const { label, alignment = "start", location = "bottom", hover, children, labelClass = "btn" } = props;
+    const {
+        label,
+        alignment = "start",
+        location = "bottom",
+        hover,
+        children,
+        labelClass = "btn",
+    } = props;
     const classes = createMemo(() => ({
         "dropdown-end": alignment === "end",
         "dropdown-top": location === "top",
@@ -19,11 +27,14 @@ const Dropdown: ParentComponent<TProps> = (props) => {
         "dropdown-hover": hover,
     }));
     return (
-        <div class="dropdown" classList={classes()}>
+        <div class={`dropdown ${props.class}`} classList={classes()}>
             <label tabindex="0" class={`${labelClass}`}>
                 {label}
             </label>
-            <ul tabIndex={0} class="dropdown-content p-2 shadow bg-base-300 rounded-xl w-64 menu menu-compact">
+            <ul
+                tabIndex={0}
+                class="dropdown-content p-2 shadow bg-base-300 rounded-xl w-64 menu menu-compact"
+            >
                 {children}
             </ul>
         </div>

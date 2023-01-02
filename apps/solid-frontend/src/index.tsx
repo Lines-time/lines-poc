@@ -7,6 +7,7 @@ import duration from "dayjs/plugin/duration";
 import isBetween from "dayjs/plugin/isBetween";
 import isoWeek from "dayjs/plugin/isoWeek";
 import isToday from "dayjs/plugin/isToday";
+import localizedFormat from "dayjs/plugin/localizedFormat";
 import weekday from "dayjs/plugin/weekday";
 import { render } from "solid-js/web";
 
@@ -18,6 +19,7 @@ dayjs.extend(duration);
 dayjs.extend(CustomParseFormat);
 dayjs.extend(isBetween);
 dayjs.extend(isoWeek);
+dayjs.extend(localizedFormat)
 
 render(
     () => (
