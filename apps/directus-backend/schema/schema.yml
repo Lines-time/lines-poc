@@ -215,12 +215,12 @@ collections:
       name: Vacation
       sql: >-
         CREATE TABLE "Vacation" (`id` char(36) NOT NULL, `start` date NULL,
-        `end` date NULL, `category` char(36) NULL, `worker` char(36) NULL,
-        `description` text null, `approved` boolean null default '0', PRIMARY
-        KEY (`id`), CONSTRAINT `vacation_category_foreign` FOREIGN KEY
-        (`category`) REFERENCES `VacationType` (`id`) ON DELETE SET NULL,
+        `end` date NULL, `category` char(36) NULL, `worker` varchar(36) NOT NULL
+        DEFAULT null, `description` text NULL, `approved` boolean NULL DEFAULT
+        '0', PRIMARY KEY (`id`), CONSTRAINT `vacation_category_foreign` FOREIGN
+        KEY (`category`) REFERENCES `VacationType` (`id`) ON DELETE SET NULL,
         CONSTRAINT `vacation_worker_foreign` FOREIGN KEY (`worker`) REFERENCES
-        `directus_users` (`id`) ON DELETE SET NULL)
+        `directus_users` (`id`) ON DELETE NO ACTION)
   - collection: VacationType
     meta:
       accountability: all
@@ -610,8 +610,6 @@ fields:
       note: null
       options:
         choices:
-          - text: Sunday
-            value: 0
           - text: Monday
             value: 1
           - text: Tuesday
@@ -1926,14 +1924,14 @@ fields:
       validation_message: null
       width: full
     schema:
-      data_type: char
+      data_type: varchar
       default_value: null
       foreign_key_column: id
       foreign_key_table: directus_users
       generation_expression: null
       has_auto_increment: false
       is_generated: false
-      is_nullable: true
+      is_nullable: false
       is_primary_key: false
       is_unique: false
       max_length: 36
@@ -3000,7 +2998,7 @@ relations:
       constraint_name: null
       foreign_key_column: id
       foreign_key_table: directus_users
-      on_delete: SET NULL
+      on_delete: NO ACTION
       on_update: NO ACTION
       table: Vacation
   - collection: WorkCategory_Project
