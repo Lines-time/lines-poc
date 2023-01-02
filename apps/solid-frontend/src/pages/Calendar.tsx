@@ -20,19 +20,28 @@ const Calendar: Component = () => {
         () => now(),
         async () => await servers.currentServer()?.freeDay.getForDateRange(start().toDate(), end().toDate())
     );
+    const [vacations, vacationsResource] = createResource(
+        () => now(),
+        async () => await servers.currentServer()?.vacation.getForDateRangeAndUser(start().toDate(), end().toDate())
+    );
 
     const events = createMemo(() => {
         return (
-            targetTime.latest?.map((tt) => ({
+            targetTime()?.map((tt) => ({
                 start: tt!.date,
                 end: tt!.date,
                 render: () => <div>{parseTimeStringDuration(tt?.duration).format("H:mm[h]")}</div>,
             })) ?? []
         ).concat(
-            freeDays.latest?.map((fd) => ({
+            freeDays()?.map((fd) => ({
                 start: fd!.date,
                 end: fd!.date,
                 render: () => <div>{fd?.description}</div>,
+            })) ?? [],
+            vacations()?.map((v) => ({
+                start: v!.start,
+                end: v!.end,
+                render: () => <div>{v!.description}</div>,
             })) ?? []
         );
     });

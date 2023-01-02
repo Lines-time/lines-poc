@@ -80,7 +80,14 @@ const CalendarMonth: Component<TProps> = (props) => {
                             {day + 1}
                             {props
                                 .events?.()
-                                .filter((e) => dayjs(e.start).date() === day + 1)
+                                .filter(
+                                    (e) =>
+                                        dayjs(e.start).date() === day + 1 ||
+                                        dayjs(e.end).date() === day + 1 ||
+                                        dayjs()
+                                            .date(day + 1)
+                                            .isBetween(e.start, e.end, "day", "[]")
+                                )
                                 .map((event) => (
                                     <Dynamic component={event?.render}></Dynamic>
                                 ))}

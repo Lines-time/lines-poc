@@ -53,7 +53,7 @@ export type TApi = {
         getForDateRange: (start: Date, end: Date) => PromiseOptional<Optional<TFreeDay>[]>;
     };
     vacation: {
-        getForUser: (userId?: string) => PromiseOptional<Optional<TVacation>[]>;
+        getForDateRangeAndUser: (start: Date, end: Date, userId?: string) => PromiseOptional<Optional<TVacation>[]>;
     };
 };
 
@@ -140,8 +140,8 @@ export type TFreeDay = TDirectusCollectionProperties & {
 };
 
 export type TVacation = TDirectusCollectionProperties & {
-    start: string;
-    end: string;
+    start: Date;
+    end: Date;
     worker: string;
     category: string;
     description: string;
