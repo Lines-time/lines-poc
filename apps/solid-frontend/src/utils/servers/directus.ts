@@ -215,12 +215,12 @@ export const directus = (server: TDirectusServer): TApi => {
                         _or: [
                             {
                                 start: {
-                                    _lt: dayjs(end).toString(),
+                                    _lte: dayjs(end).toString(),
                                 },
                                 _or: [
                                     {
                                         end: {
-                                            _gt: dayjs(end).toString(),
+                                            _gte: dayjs(end).toString(),
                                         },
                                     },
                                     {
@@ -232,12 +232,12 @@ export const directus = (server: TDirectusServer): TApi => {
                             },
                             {
                                 start: {
-                                    _lt: dayjs(start).toString(),
+                                    _lte: dayjs(start).toString(),
                                 },
                                 _or: [
                                     {
                                         end: {
-                                            _gt: dayjs(start).toString(),
+                                            _gte: dayjs(start).toString(),
                                         },
                                     },
                                     {
