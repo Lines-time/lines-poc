@@ -11,16 +11,16 @@ const Calendar: Component = () => {
     const start = createMemo(() => now().date(1));
     const end = createMemo(() => now().date(now().daysInMonth()));
 
-    const [targetTime, targetTimeResource] = createResource(
+    const [targetTime] = createResource(
         () => now(),
         async () =>
             (await servers.currentServer()?.dailyWorkTimeTarget.getForDateRange(start().toDate(), end().toDate())) ?? []
     );
-    const [freeDays, freeDaysResource] = createResource(
+    const [freeDays] = createResource(
         () => now(),
         async () => await servers.currentServer()?.freeDay.getForDateRange(start().toDate(), end().toDate())
     );
-    const [vacations, vacationsResource] = createResource(
+    const [vacations] = createResource(
         () => now(),
         async () => await servers.currentServer()?.vacation.getForDateRangeAndUser(start().toDate(), end().toDate())
     );

@@ -84,7 +84,7 @@ const CalendarMonth: Component<TProps> = (props) => {
                                     (e) =>
                                         dayjs(e.start).date() === day + 1 ||
                                         dayjs(e.end).date() === day + 1 ||
-                                        dayjs()
+                                        now()
                                             .date(day + 1)
                                             .isBetween(e.start, e.end, "day", "[]")
                                 )
