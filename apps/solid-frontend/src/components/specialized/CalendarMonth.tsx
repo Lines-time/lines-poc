@@ -59,8 +59,13 @@ const CalendarMonth: Component<TProps> = (props) => {
                     {/* Weekday names above the columns */}
                     <ForNumber each={7}>
                         {(day) => (
-                            <div class="flex flex-row items-center justify-center p-2">
-                                {dayjs().weekday(day).format("ddd")}
+                            <div
+                                class="flex flex-row items-center justify-center p-2"
+                                classList={{
+                                    "text-primary": dayjs().isSame(now().weekday(day), "day"),
+                                }}
+                            >
+                                {now().weekday(day).format("ddd")}
                             </div>
                         )}
                     </ForNumber>
@@ -68,7 +73,14 @@ const CalendarMonth: Component<TProps> = (props) => {
                 <Grid now={now}>
                     {(day) => (
                         <div class="border-base-100 border-2 rounded-lg px-1 py-1">
-                            <span class="px-1">{day + 1}</span>
+                            <span
+                                class="px-1"
+                                classList={{
+                                    "text-primary": dayjs().isSame(now().date(day + 1), "day"),
+                                }}
+                            >
+                                {day + 1}
+                            </span>
                             {props
                                 .events?.()
                                 .filter((e) =>
