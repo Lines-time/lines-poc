@@ -13,23 +13,47 @@ type TProps = {
 
 const createData = (start: dayjs.Dayjs, end: dayjs.Dayjs) => {
     const [data_value, data_resource] = createResource(
-        async () => await servers.currentServer()?.workUnit.getForDateRangeAndUser(start.toDate(), end.toDate())
+        async () =>
+            await servers
+                .currentServer()
+                ?.workUnit.getForDateRangeAndUser(start.toDate(), end.toDate())
     );
     const [target_value, target_resource] = createResource(
-        async () => await servers.currentServer()?.dailyWorkTimeTarget.getForDateRange(start.toDate(), end.toDate())
+        async () =>
+            await servers
+                .currentServer()
+                ?.dailyWorkTimeTarget.getForDateRange(start.toDate(), end.toDate())
     );
     const [free_value, free_resource] = createResource(
-        async () => await servers.currentServer()?.freeDay.getForDateRange(start.toDate(), end.toDate())
+        async () =>
+            await servers.currentServer()?.freeDay.getForDateRange(start.toDate(), end.toDate())
     );
-    const workedTime = createMemo(() => data_value.latest?.reduce((a, b) => a + dayjs(b?.end).diff(b?.start), 0));
+    const [vacation_value, vacation_resource] = createResource(
+        async () =>
+            await servers
+                .currentServer()
+                ?.vacation.getForDateRangeAndUser(start.toDate(), end.toDate())
+    );
+
+    const workedTime = createMemo(() =>
+        data_value.latest?.reduce((a, b) => a + dayjs(b?.end).diff(b?.start), 0)
+    );
     const targetTime = createMemo(() =>
-        target_value.latest?.reduce(
-            (a, b) =>
-                a +
-                parseTimeStringDuration(b?.duration).asMilliseconds() *
-                    (1 - (free_value()?.find((fd) => dayjs(b?.date).isSame(fd?.date, "day"))?.percentage ?? 0)),
-            0
-        )
+        target_value.latest
+            ?.filter((tt) => {
+                return !vacation_value()?.some((v) =>
+                    dayjs(tt!.date).isBetween(v!.start, v!.end, "day", "[]")
+                );
+            })
+            .reduce(
+                (a, b) =>
+                    a +
+                    parseTimeStringDuration(b?.duration).asMilliseconds() *
+                        (1 -
+                            (free_value()?.find((fd) => dayjs(b?.date).isSame(fd?.date, "day"))
+                                ?.percentage ?? 0)),
+                0
+            )
     );
     const targetReached = createMemo(() => !dayjs(workedTime()).isBefore(targetTime()));
     const diff = createMemo(() => Math.abs(dayjs(workedTime()).diff(targetTime())));
@@ -45,7 +69,9 @@ const DashboardStat: Component<TProps> = (props) => {
     const data = createData(props.start, props.end);
 
     const missingDuration = createMemo(() => dayjs.duration(data.diff()));
-    const workedPercent = createMemo(() => scale(data.workedTime() ?? 0, data.targetTime() ?? 0, 0, 100, 0));
+    const workedPercent = createMemo(() =>
+        scale(data.workedTime() ?? 0, data.targetTime() ?? 0, 0, 100, 0)
+    );
 
     return (
         <Stat
