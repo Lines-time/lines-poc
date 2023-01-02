@@ -65,20 +65,25 @@ const Calendar: Component = () => {
         return (
             targetTime()
                 ?.filter((tt) => {
-                    return !(
-                        vacations()?.some((v) =>
-                            dayjs(tt!.date).isBetween(v!.start, v!.end, "day", "[]")
-                        ) ||
-                        freeDays()?.some((fd) =>
-                            dayjs(tt!.date).isBetween(fd!.date, fd!.date, "day", "[]")
-                        )
+                    return !vacations()?.some((v) =>
+                        dayjs(tt!.date).isBetween(v!.start, v!.end, "day", "[]")
                     );
                 })
                 .map((tt) => ({
                     start: tt!.date,
                     end: tt!.date,
                     render: () => (
-                        <div>{parseTimeStringDuration(tt?.duration).format("H:mm[h]")}</div>
+                        <div>
+                            {dayjs
+                                .duration(
+                                    parseTimeStringDuration(tt?.duration).asMilliseconds() *
+                                        (1 -
+                                            (freeDays()?.find((fd) =>
+                                                dayjs(tt?.date).isSame(fd?.date, "day")
+                                            )?.percentage ?? 0))
+                                )
+                                .format("H:mm[h]")}
+                        </div>
                     ),
                 })) ?? []
         ).concat(
