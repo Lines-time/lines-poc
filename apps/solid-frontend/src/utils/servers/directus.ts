@@ -197,7 +197,10 @@ export const directus = (server: TDirectusServer): TApi => {
                 const result = await _directus.items("DailyWorkTimeTarget").readByQuery({
                     filter: {
                         id: {
-                            _in: currentBlock.data?.map((block) => block?.DailyWorkTimeTargets).flat() ?? [],
+                            _in:
+                                currentBlock.data?.flatMap(
+                                    (block) => block?.DailyWorkTimeTargets
+                                ) ?? [],
                         },
                         dayOfWeek: {
                             _eq: dayjs(date).weekday(),
@@ -247,7 +250,7 @@ export const directus = (server: TDirectusServer): TApi => {
                         ],
                     },
                 });
-                const dailiesIds = blocks.data?.map((block) => block.DailyWorkTimeTargets).flat();
+                const dailiesIds = blocks.data?.flatMap((block) => block.DailyWorkTimeTargets);
                 const dailies = await _directus.items("DailyWorkTimeTarget").readByQuery({
                     filter: {
                         id: {
@@ -261,7 +264,12 @@ export const directus = (server: TDirectusServer): TApi => {
                     const block = blocks.data?.find((b) =>
                         dayjs()
                             .date(day)
-                            .isBetween(b.start, b.end ?? dayjs().date(dayjs().daysInMonth()), "day", "[]")
+                            .isBetween(
+                                b.start,
+                                b.end ?? dayjs().date(dayjs().daysInMonth()),
+                                "day",
+                                "[]"
+                            )
                     );
                     if (block) {
                         const daily = dailies.data
