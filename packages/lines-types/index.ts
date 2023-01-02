@@ -40,20 +40,36 @@ export type TApi = {
     };
     workUnit: ApiSetters<TWorkUnit> & {
         getForDayAndUser: (day: Date, userId?: string) => PromiseOptional<Optional<TWorkUnit>[]>;
-        getForDateRangeAndUser: (start: Date, end: Date, userId?: string) => PromiseOptional<Optional<TWorkUnit>[]>;
+        getForDateRangeAndUser: (
+            start: Date,
+            end: Date,
+            userId?: string
+        ) => PromiseOptional<Optional<TWorkUnit>[]>;
     };
     workTimeTargetBlock: Pick<ApiGetters<TWorkTimeTargetBlock>, "getById"> & {
         getForUser: (id: string) => PromiseOptional<Optional<TWorkTimeTargetBlock>[]>;
     };
     dailyWorkTimeTarget: Pick<ApiGetters<TDailyWorkTimeTarget>, "getById"> & {
         getForDate: (date: Date) => PromiseOptional<Optional<TDailyWorkTimeTarget>[]>;
-        getForDateRange: (start: Date, end: Date) => PromiseOptional<Optional<TDailyWorkTimeTarget & { date: Date }>[]>;
+        getForDateRange: (
+            start: Date,
+            end: Date
+        ) => PromiseOptional<Optional<TDailyWorkTimeTarget & { date: Date }>[]>;
     };
     freeDay: {
         getForDateRange: (start: Date, end: Date) => PromiseOptional<Optional<TFreeDay>[]>;
     };
     vacation: {
-        getForDateRangeAndUser: (start: Date, end: Date, userId?: string) => PromiseOptional<Optional<TVacation>[]>;
+        getForDateRangeAndUser: (
+            start: Date,
+            end: Date,
+            userId?: string
+        ) => PromiseOptional<Optional<TVacation>[]>;
+        submitVacationRequest: (
+            start: Date,
+            end: Date,
+            description: string
+        ) => PromiseOptional<Optional<TVacation>>;
     };
 };
 

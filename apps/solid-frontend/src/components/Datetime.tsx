@@ -23,7 +23,8 @@ const Datetime: Component<TProps> = (props) => {
     };
 
     const currentLang = () => window.navigator.languages[0];
-    const formatTimeNumber = (v: number) => `${v.toLocaleString(currentLang(), { minimumIntegerDigits: 2 })}`;
+    const formatTimeNumber = (v: number) =>
+        `${v.toLocaleString(currentLang(), { minimumIntegerDigits: 2 })}`;
 
     return (
         <div
@@ -47,40 +48,48 @@ const Datetime: Component<TProps> = (props) => {
                     class="btn-sm hidden group-hover:flex"
                     icon={CircleDot}
                     onClick={() => setValue(dayjs().second(0))}
-                ></Button>
+                />
             </div>
-            <div tabindex={0} class="dropdown-content card card-bordered bg-base-300 shadow p-2 flex flex-col gap-2">
+            <div
+                tabindex={0}
+                class="dropdown-content card card-bordered bg-base-300 shadow p-2 flex flex-col gap-2"
+            >
                 <Show when={props.date}>
                     <div class="flex flex-row justify-between items-center gap-2 w-full">
                         <Button
                             class="btn-sm"
                             icon={ChevronLeft}
                             onClick={() => setValue(value().month(value().month() - 1))}
-                        ></Button>
+                        />
                         <span>{value().format("MMMM YYYY")}</span>
                         <Button
                             class="btn-sm"
                             icon={ChevronRight}
                             onClick={() => setValue(value().month(value().month() + 1))}
-                        ></Button>
+                        />
                     </div>
                     <div class="grid grid-cols-7 gap-1">
                         <ForNumber each={7}>
-                            {(day) => <div class="flex flex-row items-center justify-center"></div>}
+                            {(day) => <div class="flex flex-row items-center justify-center" />}
                         </ForNumber>
                         <ForNumber each={value().date(0).weekday()}>{(day) => ""}</ForNumber>
                         <ForNumber each={value().daysInMonth()}>
                             {(day) => (
+                                // rome-ignore lint/a11y/useKeyWithClickEvents: why would I want this?
                                 <div
                                     class="btn btn-square btn-sm"
                                     classList={{
-                                        "btn-primary": day === value().date(),
-                                        "btn-ghost": day !== value().date(),
-                                        "text-primary": day !== value().date() && value().date(day).isToday(),
+                                        "btn-primary": day + 1 === value().date(),
+                                        "btn-ghost": day + 1 !== value().date(),
+                                        "text-primary":
+                                            day + 1 !== value().date() &&
+                                            value()
+                                                .date(day + 1)
+                                                .isToday(),
                                     }}
-                                    onClick={() => setValue(value().date(day))}
+                                    onClick={() => setValue(value().date(day + 1))}
                                 >
-                                    {day}
+                                    {day + 1}
                                 </div>
                             )}
                         </ForNumber>
@@ -105,7 +114,9 @@ const Datetime: Component<TProps> = (props) => {
                             onInput={(e) => setValue(value().minute(Number(e.currentTarget.value)))}
                         >
                             <ForNumber each={60}>
-                                {(minute) => <option value={minute}>{formatTimeNumber(minute)}</option>}
+                                {(minute) => (
+                                    <option value={minute}>{formatTimeNumber(minute)}</option>
+                                )}
                             </ForNumber>
                         </select>
                         min

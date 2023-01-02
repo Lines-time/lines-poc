@@ -1,5 +1,6 @@
 import { useSearchParams } from "@solidjs/router";
 import dayjs from "dayjs";
+import { Plus } from "lucide-solid";
 import {
     Component,
     createEffect,
@@ -8,7 +9,9 @@ import {
     createSignal,
     onMount,
 } from "solid-js";
+import Button from "~/Button";
 import Dropdown from "~/Dropdown";
+import VacationModal from "~/modals/VacationModal";
 import Navbar from "~/Navbar";
 import CalendarMonth from "~/specialized/CalendarMonth";
 
@@ -17,6 +20,7 @@ import { parseTimeStringDuration } from "../utils/utils";
 
 const Calendar: Component = () => {
     const [now, setNow] = createSignal(dayjs());
+    const [vacationModalOpen, setVacationModalOpen] = createSignal(false);
     const start = createMemo(() => now().date(1));
     const end = createMemo(() => now().date(now().daysInMonth()));
     const [searchParams, setSearchParams] = useSearchParams();
@@ -49,7 +53,7 @@ const Calendar: Component = () => {
         async () =>
             await servers.currentServer()?.freeDay.getForDateRange(start().toDate(), end().toDate())
     );
-    const [vacations] = createResource(
+    const [vacations, vacationsResource] = createResource(
         () => now(),
         async () =>
             await servers
@@ -127,10 +131,21 @@ const Calendar: Component = () => {
 
     return (
         <div class="h-full grid grid-rows-[64px_1fr]">
-            <Navbar title="Calendar" />
+            <Navbar
+                title="Calendar"
+                right={
+                    <Button icon={Plus} onClick={() => setVacationModalOpen(true)}>
+                        Vacation
+                    </Button>
+                }
+            />
             <div>
                 <CalendarMonth now={now} onUpdateNow={setNow} events={events} />
             </div>
+            <VacationModal
+                open={vacationModalOpen()}
+                onClose={() => (setVacationModalOpen(false), vacationsResource.refetch())}
+            />
         </div>
     );
 };

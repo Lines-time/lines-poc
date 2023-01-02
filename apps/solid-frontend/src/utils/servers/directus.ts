@@ -347,6 +347,16 @@ export const directus = (server: TDirectusServer): TApi => {
                 });
                 return result.data;
             },
+            submitVacationRequest: async (start, end, description) => {
+                const me = await _directus.users.me.read();
+                const response = await _directus.items("Vacation").createOne({
+                    start,
+                    end,
+                    description,
+                    worker: me.id,
+                });
+                return response;
+            },
         },
     };
 };
