@@ -72,7 +72,7 @@ const DashboardStat: Component<TProps> = (props) => {
                     {isNaN(workedPercent()) ? 100 : workedPercent().toFixed(2)}%
                 </div>
             }
-        ></Stat>
+        />
     );
 };
 export default DashboardStat;
