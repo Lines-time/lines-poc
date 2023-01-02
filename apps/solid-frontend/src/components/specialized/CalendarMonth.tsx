@@ -38,9 +38,9 @@ const CalendarMonth: Component<TProps> = (props) => {
                         onClick={() => onUpdateNow?.(now().month(now().month() - 1))}
                     />
                 )}
-                <span>
+                <span class="flex flex-row gap-2 items-center">
                     <span>{now().format("MMMM YYYY")}</span>
-                    {controls && (
+                    {controls && !now().isToday() && (
                         <Button onClick={() => onUpdateNow?.(dayjs())} class="btn-sm">
                             Today
                         </Button>
