@@ -29,9 +29,9 @@ const Calendar: Component = () => {
         return (
             targetTime()
                 ?.filter((tt) => {
-                    return (
-                        !vacations()?.some((v) => dayjs(tt!.date).isBetween(v!.start, v!.end, "day", "[]")) &&
-                        !freeDays()?.some((fd) => dayjs(tt!.date).isBetween(fd!.date, fd!.date, "day", "[]"))
+                    return !(
+                        vacations()?.some((v) => dayjs(tt!.date).isBetween(v!.start, v!.end, "day", "[]")) ||
+                        freeDays()?.some((fd) => dayjs(tt!.date).isBetween(fd!.date, fd!.date, "day", "[]"))
                     );
                 })
                 .map((tt) => ({
