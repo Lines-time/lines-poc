@@ -11,42 +11,12 @@ const [vacations] = createStore({
                     worker: {
                         _eq: userId,
                     },
-                    _or: [
-                        {
-                            start: {
-                                _lt: dayjs(end).toString(),
-                            },
-                            _or: [
-                                {
-                                    end: {
-                                        _gt: dayjs(end).toString(),
-                                    },
-                                },
-                                {
-                                    end: {
-                                        _null: true,
-                                    },
-                                },
-                            ],
-                        },
-                        {
-                            start: {
-                                _lt: dayjs(start).toString(),
-                            },
-                            _or: [
-                                {
-                                    end: {
-                                        _gt: dayjs(start).toString(),
-                                    },
-                                },
-                                {
-                                    end: {
-                                        _null: true,
-                                    },
-                                },
-                            ],
-                        },
-                    ],
+                    start: {
+                        _lt: dayjs(end).toDate(),
+                    },
+                    end: {
+                        _gt: dayjs(start).toDate(),
+                    },
                 },
             });
             return result.data;
