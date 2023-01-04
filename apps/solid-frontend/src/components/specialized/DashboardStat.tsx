@@ -85,10 +85,16 @@ const DashboardStat: Component<TProps> = (props) => {
                 <div
                     class="radial-progress"
                     style={{
-                        "--value": isNaN(workedPercent()) ? 100 : workedPercent(),
+                        "--value":
+                            isNaN(workedPercent()) || !Number.isFinite(workedPercent())
+                                ? 100
+                                : workedPercent(),
                     }}
                 >
-                    {isNaN(workedPercent()) ? 100 : workedPercent().toFixed(2)}%
+                    {isNaN(workedPercent()) || !Number.isFinite(workedPercent())
+                        ? 100
+                        : workedPercent().toFixed(2)}
+                    %
                 </div>
             }
         />
