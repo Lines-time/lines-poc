@@ -23,5 +23,29 @@ const [workTimeTargetBlocks] = createStore({
             return result.data;
         };
     },
+    get getCurrent() {
+        return async () => {
+            const result = await directus.items("WorkTimeTargetBlock").readByQuery({
+                filter: {
+                    start: {
+                        _lte: new Date(),
+                    },
+                    _or: [
+                        {
+                            end: {
+                                _gte: new Date(),
+                            },
+                        },
+                        {
+                            end: {
+                                _null: true,
+                            },
+                        },
+                    ],
+                },
+            });
+            return result.data;
+        };
+    },
 });
 export default workTimeTargetBlocks;

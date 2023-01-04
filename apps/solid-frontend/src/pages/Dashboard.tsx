@@ -1,26 +1,43 @@
 import dayjs from "dayjs";
-import { Component, Suspense } from "solid-js";
+import { Component, createResource, For, Suspense } from "solid-js";
 import Loading from "~/Loading";
 import Navbar from "~/Navbar";
 import DashboardStat from "~/specialized/DashboardStat";
+import WorkTimeTarget from "~/specialized/WorkTimeTarget";
+
+import workTimeTargetBlockStore from "../store/workTimeTargetBlockStore";
 
 const Dashboard: Component = () => {
+    const [currentWorkTimeTargets] = createResource(
+        async () => await workTimeTargetBlockStore.getCurrent()
+    );
     return (
         <div class="h-full grid grid-rows-[64px_1fr]">
             <Navbar title="Dashboard" />
             <Suspense fallback={<Loading />}>
-                <main class="p-6">
+                <main class="p-6 max-sm:p-3">
                     <h2 class="text-xl font-bold col-span-3">Your Activity</h2>
-                    <div class="grid grid-cols-3 pt-4">
-                        <div class="stats max-lg:stats-vertical col-span-3 bg-base-200 border-2 border-base-100">
+                    <div class="grid grid-cols-3 pt-4 gap-2">
+                        <div class="stats rounded-lg max-xl:stats-vertical col-span-3 bg-base-200 border-2 border-base-100">
                             <DashboardStat start={dayjs()} end={dayjs()} title="Today" />
-                            <DashboardStat start={dayjs().isoWeekday(1)} end={dayjs().isoWeekday(7)} title="This week" />
+                            <DashboardStat
+                                start={dayjs().isoWeekday(1)}
+                                end={dayjs().isoWeekday(7)}
+                                title="This week"
+                            />
                             <DashboardStat
                                 start={dayjs().date(1)}
                                 end={dayjs().date(dayjs().daysInMonth())}
                                 title="This month"
                             />
                         </div>
+                        <For each={currentWorkTimeTargets()}>
+                            {(tt) => (
+                                <div class="max-xl:col-span-2 max-sm:col-span-3">
+                                    <WorkTimeTarget id={tt.id} />
+                                </div>
+                            )}
+                        </For>
                     </div>
                 </main>
             </Suspense>

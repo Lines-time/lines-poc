@@ -31,23 +31,25 @@ const WorkTimeTarget: Component<TProps> = (props) => {
     return (
         <div class="flex flex-col gap-1">
             <Suspense fallback={<Loading />}>
-                <span>
-                    {dayjs(workTimeTarget.latest?.start).format("dddd, DD.MM.YYYY")}
-                    {" - "}
-                    {workTimeTarget.latest?.end
-                        ? `${dayjs(workTimeTarget.latest?.end).format("dddd, DD.MM.YYYY")}`
-                        : "today"}
-                </span>
-                <div class="bg-base-200 border-2 border-base-100 rounded-lg p-2 grid grid-cols-7 gap-1 h-64">
-                    <Show when={dailyWorkTimeTargets.latest}>
-                        <ForNumber each={7}>
-                            {(day) =>
-                                dailyWorkTimeTargets.latest && (
-                                    <Daily day={day} dailies={dailyWorkTimeTargets.latest} />
-                                )
-                            }
-                        </ForNumber>
-                    </Show>
+                <div class="bg-base-200 border-2 border-base-100 rounded-lg p-2 pt-0.5">
+                    <div class="mb-2">
+                        {dayjs(workTimeTarget.latest?.start).format("dddd, DD.MM.YYYY")}
+                        {" - "}
+                        {workTimeTarget.latest?.end
+                            ? `${dayjs(workTimeTarget.latest?.end).format("dddd, DD.MM.YYYY")}`
+                            : "today"}
+                    </div>
+                    <div class="grid grid-cols-7 gap-1 h-64">
+                        <Show when={dailyWorkTimeTargets.latest}>
+                            <ForNumber each={7}>
+                                {(day) =>
+                                    dailyWorkTimeTargets.latest && (
+                                        <Daily day={day} dailies={dailyWorkTimeTargets.latest} />
+                                    )
+                                }
+                            </ForNumber>
+                        </Show>
+                    </div>
                 </div>
             </Suspense>
         </div>
