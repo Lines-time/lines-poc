@@ -13,7 +13,7 @@ import Button from "~/Button";
 import Dropdown from "~/Dropdown";
 import VacationModal from "~/modals/VacationModal";
 import Navbar from "~/Navbar";
-import CalendarMonth from "~/specialized/CalendarMonth";
+import CalendarMonth from "~/specialized/Calendar/CalendarMonth";
 
 import dailyWorkTimeTargetStore from "../store/dailyWorkTimeTargetStore";
 import freeDayStore from "../store/freeDayStore";

@@ -1,20 +1,33 @@
 import { useSearchParams } from "@solidjs/router";
 import dayjs from "dayjs";
 import { Plus, X } from "lucide-solid";
-import { Component, createMemo, createResource, For, onMount, Show, Suspense } from "solid-js";
+import {
+    Component,
+    createMemo,
+    createResource,
+    createSignal,
+    For,
+    onMount,
+    Show,
+    Suspense,
+} from "solid-js";
 import Button from "~/Button";
 import Loading from "~/Loading";
 import WorkUnitForm from "~/modals/WorkUnitForm";
-import CalendarDay from "~/specialized/CalendarDay";
+import CalendarDay from "~/specialized/Calendar/CalendarDay";
 import WorkUnit from "~/specialized/WorkUnit";
+import WorkUnitCalendarEvent from "~/specialized/WorkUnitCalendarEvent";
 
-import categoryStore from "../../store/categoryStore";
-import projectStore from "../../store/projectStore";
+import settingsStore from "../../store/settingsStore";
 import workUnitStore from "../../store/workUnitStore";
 
 import type { TWorkUnit } from "lines-types";
 const Day: Component = () => {
     const [searchParams, setSearchParams] = useSearchParams();
+    const [now, setNow] = createSignal(dayjs());
+
+    const [settings] = createResource(async () => await settingsStore.get());
+    const trackingInterval = createMemo(() => settings()?.tracking_increment ?? 30);
 
     onMount(() => {
         if (searchParams.d === undefined) {
@@ -60,29 +73,14 @@ const Day: Component = () => {
         setSearchParams({ edit: undefined });
     };
 
-    const makeCalendarEventTitle = async (wu: TWorkUnit) => {
-        const _project = await projectStore.getById(wu.project);
-        const _category = await categoryStore.getById(wu.category);
-        console.log("Hello");
-        return `${_project?.title} - ${_category?.name} - ${wu.description}`;
-    };
-
-    const [calendarEvents] = createResource(workUnits, async () => {
-        if (workUnits()) {
-            return await Promise.all(
-                workUnits()!.map(
-                    async (wu) =>
-                        wu && {
-                            id: wu.id,
-                            title: await makeCalendarEventTitle(wu),
-                            start: wu.start,
-                            end: wu.end,
-                        }
-                )
-            );
-        }
-        return [];
-    });
+    const events = createMemo(
+        () =>
+            workUnits()?.map((wu) => ({
+                start: dayjs(wu.start).toDate(),
+                end: dayjs(wu.end).toDate(),
+                display: () => <WorkUnitCalendarEvent workUnit={wu} />,
+            })) ?? []
+    );
 
     return (
         <div class="grid grid-cols-3">
@@ -90,7 +88,12 @@ const Day: Component = () => {
                 <h2 class="text-xl font-bold col-span-3">{dayjs().format("dddd, DD.MM.YYYY")}</h2>
                 <div class="pt-2">
                     <Suspense>
-                        <CalendarDay events={calendarEvents() ?? []} />
+                        <CalendarDay
+                            controls={false}
+                            interval={trackingInterval}
+                            now={now}
+                            events={events}
+                        />
                     </Suspense>
                 </div>
                 <div class="flex flex-col gap-2 pt-2">
