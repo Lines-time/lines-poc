@@ -5,7 +5,6 @@ const App = lazy(() => import("./layouts/App"));
 const Track = lazy(() => import("@/Track"));
 const Day = lazy(() => import("@/track/Day"));
 const Week = lazy(() => import("@/track/Week"));
-const Month = lazy(() => import("@/track/Month"));
 const Dashboard = lazy(() => import("@/Dashboard"));
 const Calendar = lazy(() => import("@/Calendar"));
 const ReportsOverview = lazy(() => import("@/reports/Overview"));
@@ -21,7 +20,6 @@ const Main: Component = () => {
                         <Route path="/" element={<Navigate href="day" />} />
                         <Route path="/day" component={Day} />
                         <Route path="/week" component={Week} />
-                        <Route path="/month" component={Month} />
                     </Route>
                     <Route path="/calendar" component={Calendar} />
                     <Route path="/reports">

@@ -14,10 +14,6 @@ const Track: Component = () => {
             label: "Week",
             href: "/track/week",
         },
-        {
-            label: "Month",
-            href: "/track/month",
-        },
     ];
     return (
         <div class="h-full grid grid-rows-[64px_1fr]">
