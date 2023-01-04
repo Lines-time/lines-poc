@@ -1,13 +1,22 @@
 import dayjs from "dayjs";
-import { batch, Component, createEffect, createResource, createSignal, For, untrack } from "solid-js";
+import {
+    batch,
+    Component,
+    createEffect,
+    createResource,
+    createSignal,
+    For,
+    untrack,
+} from "solid-js";
 import Button from "~/Button";
 import Datetime from "~/Datetime";
 import FormControl from "~/FormControl";
 
-import servers from "../../store/servers";
+import categoryStore from "../../store/categoryStore";
+import projectStore from "../../store/projectStore";
+import workUnitStore from "../../store/workUnitStore";
 
 import type { TWorkUnit } from "lines-types";
-
 type TProps = {
     onClose: () => void;
     onSave?: () => void;
@@ -15,16 +24,20 @@ type TProps = {
 };
 
 const WorkUnitForm: Component<TProps> = (props) => {
-    const [projectId, setProjectId] = createSignal<string | null>(props.presetData?.project ?? null);
-    const [categoryId, setCategoryId] = createSignal<string | null>(props.presetData?.category ?? null);
+    const [projectId, setProjectId] = createSignal<string | null>(
+        props.presetData?.project ?? null
+    );
+    const [categoryId, setCategoryId] = createSignal<string | null>(
+        props.presetData?.category ?? null
+    );
     const [description, setDescription] = createSignal(props.presetData?.description ?? "");
     const [start, setStart] = createSignal(dayjs(props.presetData?.start ?? undefined).toDate());
     const [end, setEnd] = createSignal(dayjs(props.presetData?.end ?? undefined).toDate());
     const [loading, setLoading] = createSignal(false);
-    const [projects, projectsResource] = createResource(async () => await servers.currentServer()?.project?.getAll());
+    const [projects, projectsResource] = createResource(async () => await projectStore.getAll());
     const [categories, categoriesResource] = createResource(projectId, async () => {
         if (projectId()) {
-            return await servers.currentServer()?.category?.getForProject(projectId() ?? projects()?.[0]?.id ?? "");
+            return await categoryStore.getForProject(projectId() ?? projects()?.[0]?.id ?? "");
         }
     });
 
@@ -48,7 +61,7 @@ const WorkUnitForm: Component<TProps> = (props) => {
         if (_projectId && _categoryId) {
             setLoading(true);
             if (!props.presetData?.id) {
-                await servers.currentServer()?.workUnit?.createOne({
+                await workUnitStore.createOne({
                     project: _projectId,
                     category: _categoryId,
                     start: dayjs(start()).second(0).toDate().toISOString(),
@@ -56,7 +69,7 @@ const WorkUnitForm: Component<TProps> = (props) => {
                     description: description(),
                 });
             } else {
-                await servers.currentServer()?.workUnit?.updateOne(props.presetData.id, {
+                await workUnitStore.updateOne(props.presetData.id, {
                     project: _projectId,
                     category: _categoryId,
                     start: dayjs(start()).second(0).toDate().toISOString(),

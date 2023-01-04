@@ -1,7 +1,8 @@
 import dayjs from "dayjs";
 import { Component, createMemo, createResource, Suspense } from "solid-js";
 
-import servers from "../../store/servers";
+import categoryStore from "../../store/categoryStore";
+import projectStore from "../../store/projectStore";
 import Loading from "../Loading";
 
 import type { TWorkUnit } from "lines-types";
@@ -14,17 +15,18 @@ type TProps = {
 const WorkUnit: Component<TProps> = (props) => {
     const { unit } = props;
     const [project, projectResource] = createResource(
-        () => servers.currentServer(),
-        async () => await servers.currentServer()?.project.getById(unit.project)
+        async () => await projectStore.getById(unit.project)
     );
     const [category, categoryResource] = createResource(
-        () => servers.currentServer(),
-        async () => await servers.currentServer()?.category.getById(unit.category)
+        async () => await categoryStore.getById(unit.category)
     );
     const start = createMemo(() => dayjs(unit?.start));
     const end = createMemo(() => dayjs(unit?.end));
-    const duration = createMemo(() => dayjs().hour(0).minute(0).second(0).millisecond(end().diff(start())));
+    const duration = createMemo(() =>
+        dayjs().hour(0).minute(0).second(0).millisecond(end().diff(start()))
+    );
     return (
+        // rome-ignore lint/a11y/useKeyWithClickEvents:
         <div
             class="grid grid-cols-[max-content_1fr_1fr] p-2 gap-2 border-base-100 border-2 rounded-lg transition-colors"
             classList={{

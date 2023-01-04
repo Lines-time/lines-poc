@@ -8,7 +8,9 @@ import WorkUnitForm from "~/modals/WorkUnitForm";
 import CalendarDay from "~/specialized/CalendarDay";
 import WorkUnit from "~/specialized/WorkUnit";
 
-import servers from "../../store/servers";
+import categoryStore from "../../store/categoryStore";
+import projectStore from "../../store/projectStore";
+import workUnitStore from "../../store/workUnitStore";
 
 import type { TWorkUnit } from "lines-types";
 const Day: Component = () => {
@@ -22,14 +24,11 @@ const Day: Component = () => {
         }
     });
 
-    const [workUnits, workUnitsResource] = createResource(
-        () => servers.currentServer(),
-        async () => {
-            const result = await servers.currentServer()?.workUnit?.getForDayAndUser(dayjs(searchParams.d).toDate());
-            result?.sort((a, b) => dayjs(a?.start).diff(dayjs(b?.start)));
-            return result;
-        }
-    );
+    const [workUnits, workUnitsResource] = createResource(async () => {
+        const result = await workUnitStore.getForDayAndUser(dayjs(searchParams.d).toDate());
+        result?.sort((a, b) => dayjs(a?.start).diff(dayjs(b?.start)));
+        return result;
+    });
 
     const workUnitModalPresetData = createMemo(() => {
         if (searchParams.edit === "new") {
@@ -62,8 +61,8 @@ const Day: Component = () => {
     };
 
     const makeCalendarEventTitle = async (wu: TWorkUnit) => {
-        const _project = await servers.currentServer()?.project.getById(wu.project);
-        const _category = await servers.currentServer()?.category.getById(wu.category);
+        const _project = await projectStore.getById(wu.project);
+        const _category = await categoryStore.getById(wu.category);
         console.log("Hello");
         return `${_project?.title} - ${_category?.name} - ${wu.description}`;
     };
@@ -122,7 +121,9 @@ const Day: Component = () => {
             <Show when={searchParams.edit}>
                 <div class="bg-base-300 border-l-2 border-base-100 border-solid w-full">
                     <div class="flex flex-row p-2 pl-3 justify-between">
-                        <h2 class="font-bold text-xl">{searchParams.edit === "new" ? "Create new" : "Edit"}</h2>
+                        <h2 class="font-bold text-xl">
+                            {searchParams.edit === "new" ? "Create new" : "Edit"}
+                        </h2>
                         <Button class="btn-sm" icon={X} onClick={() => closeEdit()} />
                     </div>
                     <div class="p-2">

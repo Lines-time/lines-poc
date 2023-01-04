@@ -1,37 +1,30 @@
 import { A, Outlet } from "@solidjs/router";
-import { BarChart3, Calendar, ChevronDown, LayoutDashboard, Settings, Timer } from "lucide-solid";
-import { Component, createMemo, createResource, createSignal, For, Show, Suspense } from "solid-js";
+import { BarChart3, Calendar, LayoutDashboard, Settings, Timer } from "lucide-solid";
+import { Component, createMemo, createResource, createSignal, Show, Suspense } from "solid-js";
 import Avatar from "~/Avatar";
 import Button from "~/Button";
-import Dropdown from "~/Dropdown";
 import Loading from "~/Loading";
 import LoginModal from "~/modals/LoginModal";
 
-import servers from "../store/servers";
+import authStore from "../store/authStore";
 
 const App: Component = () => {
     const [drawerOpen, setDrawerOpen] = createSignal(false);
-    const [isAuthenticated, authResource] = createResource(async () => {
-        const result = await servers.currentServer()?.auth?.isAuthenticated?.();
-        return result;
-    });
+    const [isAuthenticated, authResource] = createResource(
+        async () => await authStore.isAuthenticated
+    );
     const [currentUser, currentUserResource] = createResource(
-        async () => await servers.currentServer()?.auth.getCurrentUser()
+        async () => await authStore.currentUser
     );
 
-    const loginModalOpen = createMemo(() => !isAuthenticated.loading && !isAuthenticated());
+    const loginModalOpen = createMemo(() => !(isAuthenticated.loading || isAuthenticated()));
 
     const login = async (email: string, password: string) => {
-        await servers.currentServer()?.auth?.login?.(email, password);
+        await authStore.login?.(email, password);
         authResource.refetch();
     };
     const closeLoginModal = async () => {
         await authResource.refetch();
-        if (!isAuthenticated()) {
-            servers.setState({
-                activeServerId: servers.state.defaultServerId,
-            });
-        }
     };
     return (
         <>
@@ -49,30 +42,11 @@ const App: Component = () => {
                     </Suspense>
                 </div>
                 <div class="drawer-side">
-                    <label for="main-drawer" class="drawer-overlay"></label>
+                    <label for="main-drawer" class="drawer-overlay" />
                     <div class="w-80 bg-base-300 border-r-2 border-base-100 border-solid text-base-content grid grid-rows-[64px_1fr]">
                         <div class="border-b-2 border-base-100 p-2">
                             <div class="w-full flex flex-row justify-between items-center h-full p-2 pl-4 gap-2 rounded-md bg-primary text-primary-content">
-                                <p>{servers.state.activeServer?.display_name}</p>
-                                <Dropdown
-                                    alignment="end"
-                                    label={<ChevronDown />}
-                                    labelClass="btn btn-circle btn-sm btn-primary"
-                                >
-                                    <For each={servers.state.servers}>
-                                        {(server) => (
-                                            <li
-                                                class="text-base-content"
-                                                onClick={() => {
-                                                    servers.setState({ activeServerId: server.id });
-                                                    authResource.refetch();
-                                                }}
-                                            >
-                                                <a>{server.display_name}</a>
-                                            </li>
-                                        )}
-                                    </For>
-                                </Dropdown>
+                                <p>Lines-time</p>
                             </div>
                         </div>
                         <ul class="menu menu-compact w-full p-2 rounded-box gap-2">
@@ -104,21 +78,23 @@ const App: Component = () => {
                                 </A>
                             </li>
                         </ul>
-                        <div class="flex-1"></div>
+                        <div class="flex-1" />
                         <div class="bg-base-300 border-t-2 border-base-100 p-2 pl-4 gap-2 flex flex-row items-center">
-                            <Show when={currentUser()?.avatar && servers.state.activeServer?.type !== "offline"}>
+                            <Show when={currentUser()?.avatar}>
                                 <Suspense fallback={<Loading size="md" />}>
                                     <Avatar id={currentUser()?.avatar} />
                                 </Suspense>
                             </Show>
                             <A class="flex-1" href="/personal" activeClass="text-primary">
                                 <Suspense fallback={<Loading size="md" />}>
-                                    <Show when={currentUser()?.first_name && currentUser()?.last_name}>
+                                    <Show
+                                        when={currentUser()?.first_name && currentUser()?.last_name}
+                                    >
                                         {`${currentUser()!.first_name} ${currentUser()!.last_name}`}
                                     </Show>
                                 </Suspense>
                             </A>
-                            <Button class="btn-circle" icon={Settings}></Button>
+                            <Button class="btn-circle" icon={Settings} />
                         </div>
                     </div>
                 </div>

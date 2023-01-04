@@ -5,7 +5,7 @@ import Datetime from "~/Datetime";
 import FormControl from "~/FormControl";
 import Modal from "~/Modal";
 
-import servers from "../../store/servers";
+import vacationStore from "../../store/vacationStore";
 
 type TProps = Pick<ComponentProps<typeof Modal>, "open" | "onClose"> & {};
 
@@ -16,9 +16,7 @@ const VacationModal: Component<TProps> = (props) => {
 
     const save = async (event: Event) => {
         event.preventDefault();
-        await servers
-            .currentServer()
-            ?.vacation.submitVacationRequest(start(), end(), description());
+        await vacationStore.submitVacationRequest(start(), end(), description());
         props.onClose();
     };
 

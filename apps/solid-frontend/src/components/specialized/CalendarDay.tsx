@@ -42,6 +42,6 @@ const CalendarDay: Component<TProps> = (props) => {
         setCalendar(new Calendar(calendarRef, calendarOptions()));
         calendar()?.render();
     });
-    return <div class="calendarDay h-full" ref={(el) => (calendarRef = el)}></div>;
+    return <div class="calendarDay h-full" ref={(el) => (calendarRef = el)} />;
 };
 export default CalendarDay;

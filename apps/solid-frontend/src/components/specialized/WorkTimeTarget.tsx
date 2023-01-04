@@ -3,7 +3,8 @@ import { Component, createResource, For, Show, Suspense } from "solid-js";
 import ForNumber from "~/ForNumber";
 import Loading from "~/Loading";
 
-import servers from "../../store/servers";
+import dailyWorkTimeTargetStore from "../../store/dailyWorkTimeTargetStore";
+import workTimeTargetBlockStore from "../../store/workTimeTargetBlockStore";
 import { parseTimeString, parseTimeStringDuration, scale } from "../../utils/utils";
 
 import type { TDailyWorkTimeTarget } from "lines-types";
@@ -13,13 +14,13 @@ type TProps = {
 
 const WorkTimeTarget: Component<TProps> = (props) => {
     const [workTimeTarget, workTimeTargetResource] = createResource(
-        async () => await servers.currentServer()?.workTimeTargetBlock.getById(props.id)
+        async () => await workTimeTargetBlockStore.getById(props.id)
     );
     const [dailyWorkTimeTargets, dailyWorkTimeTargetsResource] = createResource(
         () => workTimeTarget.latest,
         async () => {
             const result = workTimeTarget.latest?.DailyWorkTimeTargets.map(
-                async (id) => await servers.currentServer()?.dailyWorkTimeTarget.getById(id)
+                async (id) => await dailyWorkTimeTargetStore.getById(id)
             );
             const awaited = result ? await Promise.all(result) : [];
             awaited.sort((a, b) => a!.dayOfWeek - b!.dayOfWeek);
@@ -41,7 +42,9 @@ const WorkTimeTarget: Component<TProps> = (props) => {
                     <Show when={dailyWorkTimeTargets.latest}>
                         <ForNumber each={7}>
                             {(day) =>
-                                dailyWorkTimeTargets.latest && <Daily day={day} dailies={dailyWorkTimeTargets.latest} />
+                                dailyWorkTimeTargets.latest && (
+                                    <Daily day={day} dailies={dailyWorkTimeTargets.latest} />
+                                )
                             }
                         </ForNumber>
                     </Show>
@@ -52,26 +55,33 @@ const WorkTimeTarget: Component<TProps> = (props) => {
 };
 export default WorkTimeTarget;
 
-const Daily: Component<{ day: number; dailies: (TDailyWorkTimeTarget | undefined | null)[] }> = (props) => {
+const Daily: Component<{ day: number; dailies: (TDailyWorkTimeTarget | undefined | null)[] }> = (
+    props
+) => {
     const { dailies } = props;
 
     const day = props.day + 1;
     const daily = dailies.filter((d) => d?.dayOfWeek === day);
 
-    const duration = (d: (TDailyWorkTimeTarget | undefined | null)[] | TDailyWorkTimeTarget | undefined | null) => {
-        if (Array.isArray(d)) return d.reduce((a, b) => a + parseTimeStringDuration(b?.duration).asMinutes(), 0);
+    const duration = (
+        d: (TDailyWorkTimeTarget | undefined | null)[] | TDailyWorkTimeTarget | undefined | null
+    ) => {
+        if (Array.isArray(d))
+            return d.reduce((a, b) => a + parseTimeStringDuration(b?.duration).asMinutes(), 0);
         return parseTimeStringDuration(d?.duration).asMinutes();
     };
 
     const longestDay = Math.max(
-        ...([0, 1, 2, 3, 4, 5, 6, 7].map((day) => duration(dailies.filter((d) => d?.dayOfWeek === day))) ?? [])
+        ...([0, 1, 2, 3, 4, 5, 6, 7].map((day) =>
+            duration(dailies.filter((d) => d?.dayOfWeek === day))
+        ) ?? [])
     );
     const height = (d: TDailyWorkTimeTarget) => scale(duration(d), longestDay, 0, 100, 0);
     const tooltip = (d: TDailyWorkTimeTarget) =>
         d.start && d.end
-            ? parseTimeString(d.start).format("HH:mm") +
-              ` - ${parseTimeString(d.end).format("HH:mm")}` +
-              `(${parseTimeString(d.duration).format("H:mm[h]")})`
+            ? `${parseTimeString(d.start).format("HH:mm")} - ${parseTimeString(d.end).format(
+                  "HH:mm"
+              )}(${parseTimeString(d.duration).format("H:mm[h]")})`
             : parseTimeString(d.duration).format("H:mm[h]");
 
     return (
@@ -87,14 +97,16 @@ const Daily: Component<{ day: number; dailies: (TDailyWorkTimeTarget | undefined
                                     height: `${height(d)}%`,
                                 }}
                             >
-                                <div class="bg-primary rounded h-full"></div>
+                                <div class="bg-primary rounded h-full" />
                             </div>
                         )
                     }
                 </For>
             </div>
             <span class="text-center">{dayjs().day(day).format("ddd")}</span>
-            <span class="text-center">{dayjs.duration(duration(daily), "minutes").format("H:mm")}h</span>
+            <span class="text-center">
+                {dayjs.duration(duration(daily), "minutes").format("H:mm")}h
+            </span>
         </div>
     );
 };

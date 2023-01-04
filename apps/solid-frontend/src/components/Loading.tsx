@@ -14,6 +14,6 @@ const Loading: Component<TProps> = (props) => {
         "btn-lg": size === "lg",
         "btn-xl": size === "xl",
     }));
-    return <div class="btn btn-ghost loading" classList={sizeClass()}></div>;
+    return <div class="btn btn-ghost loading" classList={sizeClass()} />;
 };
 export default Loading;

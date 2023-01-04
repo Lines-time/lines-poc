@@ -2,7 +2,10 @@ import dayjs from "dayjs";
 import { Component, createMemo, createResource } from "solid-js";
 import Stat from "~/Stat";
 
-import servers from "../../store/servers";
+import dailyWorkTimeTargetStore from "../../store/dailyWorkTimeTargetStore";
+import freeDayStore from "../../store/freeDayStore";
+import vacationStore from "../../store/vacationStore";
+import workUnitStore from "../../store/workUnitStore";
 import { parseTimeStringDuration, scale } from "../../utils/utils";
 
 type TProps = {
@@ -13,26 +16,16 @@ type TProps = {
 
 const createData = (start: dayjs.Dayjs, end: dayjs.Dayjs) => {
     const [data_value, data_resource] = createResource(
-        async () =>
-            await servers
-                .currentServer()
-                ?.workUnit.getForDateRangeAndUser(start.toDate(), end.toDate())
+        async () => await workUnitStore.getForDateRangeAndUser(start.toDate(), end.toDate())
     );
     const [target_value, target_resource] = createResource(
-        async () =>
-            await servers
-                .currentServer()
-                ?.dailyWorkTimeTarget.getForDateRange(start.toDate(), end.toDate())
+        async () => await dailyWorkTimeTargetStore.getForDateRange(start.toDate(), end.toDate())
     );
     const [free_value, free_resource] = createResource(
-        async () =>
-            await servers.currentServer()?.freeDay.getForDateRange(start.toDate(), end.toDate())
+        async () => await freeDayStore.getForDateRange(start.toDate(), end.toDate())
     );
     const [vacation_value, vacation_resource] = createResource(
-        async () =>
-            await servers
-                .currentServer()
-                ?.vacation.getForDateRangeAndUser(start.toDate(), end.toDate())
+        async () => await vacationStore.getForDateRangeAndUser(start.toDate(), end.toDate())
     );
 
     const workedTime = createMemo(() =>

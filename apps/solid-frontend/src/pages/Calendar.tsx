@@ -15,7 +15,9 @@ import VacationModal from "~/modals/VacationModal";
 import Navbar from "~/Navbar";
 import CalendarMonth from "~/specialized/CalendarMonth";
 
-import servers from "../store/servers";
+import dailyWorkTimeTargetStore from "../store/dailyWorkTimeTargetStore";
+import freeDayStore from "../store/freeDayStore";
+import vacationStore from "../store/vacationStore";
 import { parseTimeStringDuration } from "../utils/utils";
 
 const Calendar: Component = () => {
@@ -43,22 +45,15 @@ const Calendar: Component = () => {
 
     const [targetTime] = createResource(
         () => start(),
-        async () =>
-            (await servers
-                .currentServer()
-                ?.dailyWorkTimeTarget.getForDateRange(start().toDate(), end().toDate()))
+        async () => await dailyWorkTimeTargetStore.getForDateRange(start().toDate(), end().toDate())
     );
     const [freeDays] = createResource(
         () => now(),
-        async () =>
-            await servers.currentServer()?.freeDay.getForDateRange(start().toDate(), end().toDate())
+        async () => await freeDayStore.getForDateRange(start().toDate(), end().toDate())
     );
     const [vacations, vacationsResource] = createResource(
         () => now(),
-        async () =>
-            await servers
-                .currentServer()
-                ?.vacation.getForDateRangeAndUser(start().toDate(), end().toDate())
+        async () => await vacationStore.getForDateRangeAndUser(start().toDate(), end().toDate())
     );
 
     const events = createMemo(() => {
