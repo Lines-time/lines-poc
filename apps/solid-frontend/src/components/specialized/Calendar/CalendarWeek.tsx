@@ -69,7 +69,14 @@ const CalendarWeek: Component<TProps> = (props) => {
                 </div>
                 <ForNumber each={7}>
                     {(day) => (
-                        <div class="flex flex-row items-center justify-center p-2">
+                        <div
+                            class="flex flex-row items-center justify-center p-2"
+                            classList={{
+                                "text-primary": now()
+                                    .isoWeekday(day + 1)
+                                    .isToday(),
+                            }}
+                        >
                             {/* Weekday names above the columns */}
                             {now()
                                 .isoWeekday(day + 1)
@@ -95,6 +102,9 @@ const CalendarWeek: Component<TProps> = (props) => {
                 <ForNumber each={7}>
                     {(day) => (
                         <DayGrid
+                            showCurrentTime={now()
+                                .isoWeekday(day + 1)
+                                .isToday()}
                             steps={steps()}
                             events={dayEvents(day + 1)}
                             interval={interval()}

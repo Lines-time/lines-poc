@@ -69,7 +69,7 @@ const CalendarDay: Component<TProps> = (props) => {
                     )}
                 </ForNumber>
             </div>
-            <DayGrid steps={steps()} events={events()} interval={interval()} />
+            <DayGrid steps={steps()} events={events()} interval={interval()} showCurrentTime />
         </div>
     );
 };
