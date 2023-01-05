@@ -18,22 +18,26 @@ const Dashboard: Component = () => {
                 <main class="p-6 max-sm:p-3">
                     <h2 class="text-xl font-bold col-span-3">Your Activity</h2>
                     <div class="grid grid-cols-3 pt-4 gap-2">
-                        <div class="stats rounded-lg max-xl:stats-vertical col-span-3 bg-base-200 border-2 border-base-100">
-                            <DashboardStat start={dayjs()} end={dayjs()} title="Today" />
-                            <DashboardStat
-                                start={dayjs().isoWeekday(1)}
-                                end={dayjs().isoWeekday(7)}
-                                title="This week"
-                            />
-                            <DashboardStat
-                                start={dayjs().date(1)}
-                                end={dayjs().date(dayjs().daysInMonth())}
-                                title="This month"
-                            />
+                        <div class="col-span-3">
+                            <h3 class="text-lg">Worked time:</h3>
+                            <div class="stats rounded-lg max-xl:stats-vertical w-full bg-base-200 border-2 border-base-100">
+                                <DashboardStat start={dayjs()} end={dayjs()} title="Today" />
+                                <DashboardStat
+                                    start={dayjs().isoWeekday(1)}
+                                    end={dayjs().isoWeekday(7)}
+                                    title="This week"
+                                />
+                                <DashboardStat
+                                    start={dayjs().date(1)}
+                                    end={dayjs().date(dayjs().daysInMonth())}
+                                    title="This month"
+                                />
+                            </div>
                         </div>
                         <For each={currentWorkTimeTargets()}>
                             {(tt) => (
                                 <div class="max-xl:col-span-2 max-sm:col-span-3">
+                                    <h3 class="text-lg">Work time targets:</h3>
                                     <WorkTimeTarget id={tt.id} />
                                 </div>
                             )}
