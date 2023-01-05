@@ -20,7 +20,10 @@ const Modal: ParentComponent<IProps> = (props) => {
             <Show when={props.open}>
                 <div class="modal modal-bottom sm:modal-middle">
                     <div class="modal-box bg-base-200 !rounded-xl">
-                        <Button onClick={() => toggle(false)} class="btn-sm btn-circle absolute right-2 top-2">
+                        <Button
+                            onClick={() => toggle(false)}
+                            class="btn-sm btn-circle absolute right-2 top-2"
+                        >
                             <X />
                         </Button>
                         <h3>{props.title}</h3>
