@@ -83,7 +83,7 @@ const Day: Component = () => {
     );
 
     return (
-        <div class="grid grid-cols-3">
+        <div class="grid grid-cols-3 overflow-auto">
             <div class="p-6 grid col-span-2 grid-cols-2 gap-x-2 grid-rows-[min-content_1fr] w-full">
                 <h2 class="text-xl font-bold col-span-3">{dayjs().format("dddd, DD.MM.YYYY")}</h2>
                 <div class="pt-2">
@@ -110,6 +110,7 @@ const Day: Component = () => {
                             }
                         </For>
                         <Button
+                            class="sticky top-2"
                             onClick={() =>
                                 setSearchParams({
                                     edit: "new",

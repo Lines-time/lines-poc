@@ -83,6 +83,14 @@ const Day: Component<DayProps> = (props) => {
                         {currentTime().format("H:mm")}
                     </span>
                 </div>
+                <div
+                    id="now"
+                    class="absolute -mt-16"
+                    style={{
+                        "grid-row-start": currentTimeRow() + 1,
+                        "grid-row-end": "span 1",
+                    }}
+                />
             </Show>
         </div>
     );

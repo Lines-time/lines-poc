@@ -16,7 +16,7 @@ const Track: Component = () => {
         },
     ];
     return (
-        <div class="h-full grid grid-rows-[64px_1fr]">
+        <div class="h-screen grid grid-rows-[64px_1fr] overflow-hidden">
             <Navbar title="Track time" center={<Tabs tabs={tabs} />} />
             <Suspense fallback={<Loading />}>
                 <Outlet />

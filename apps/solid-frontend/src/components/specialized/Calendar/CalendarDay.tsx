@@ -19,10 +19,10 @@ const CalendarDay: Component<TProps> = (props) => {
     const { now, controls = true, interval = () => 30, events = () => [], onUpdateNow } = props;
     const steps = createMemo(() => 24 * (60 / interval()));
     return (
-        <div class="grid grid-cols-[max-content_1fr] grid-rows-[min-content_1fr] h-full w-full gap-1 overflow-y-auto">
+        <div class="grid grid-cols-[max-content_1fr] grid-rows-[min-content_1fr] h-full w-full gap-1">
             <div />
             <div
-                class="flex flex-row items-center gap-2 w-full"
+                class="flex flex-row items-center gap-2 w-full p-2 sticky top-0 z-10 bg-gradient-to-b from-base-300 to-transparent"
                 classList={{
                     "justify-between": controls,
                     "justify-center": !controls,

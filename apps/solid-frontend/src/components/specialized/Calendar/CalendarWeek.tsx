@@ -63,14 +63,14 @@ const CalendarWeek: Component<TProps> = (props) => {
                     />
                 )}
             </div>
-            <div class="grid grid-cols-[max-content_repeat(7,_1fr)] grid-rows-[min-content_1fr] grid-flow-row gap-1 h-full overflow-y-auto">
+            <div class="grid grid-cols-[max-content_repeat(7,_1fr)] grid-rows-[min-content_1fr] grid-flow-row gap-1 h-full">
                 <div>
                     {/* This element is above the time stamps on the left and left of the weekday names */}
                 </div>
                 <ForNumber each={7}>
                     {(day) => (
                         <div
-                            class="flex flex-row items-center justify-center p-2"
+                            class="flex flex-row items-center justify-center p-2 sticky top-0 z-10 bg-gradient-to-b from-base-300 to-transparent"
                             classList={{
                                 "text-primary": now()
                                     .isoWeekday(day + 1)

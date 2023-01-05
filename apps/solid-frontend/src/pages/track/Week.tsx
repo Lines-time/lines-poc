@@ -29,7 +29,7 @@ const Week: Component = () => {
             })) ?? []
     );
     return (
-        <div>
+        <div class="overflow-auto">
             <CalendarWeek now={now} controls={false} interval={trackingInterval} events={events} />
         </div>
     );
