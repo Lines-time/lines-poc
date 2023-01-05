@@ -26,7 +26,6 @@ const WorkUnit: Component<TProps> = (props) => {
         dayjs().hour(0).minute(0).second(0).millisecond(end().diff(start()))
     );
     return (
-        // rome-ignore lint/a11y/useKeyWithClickEvents:
         <div
             class="grid grid-cols-[max-content_1fr_1fr] p-2 gap-2 border-base-100 border-2 rounded-lg transition-colors"
             classList={{

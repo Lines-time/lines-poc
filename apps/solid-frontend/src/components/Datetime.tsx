@@ -81,7 +81,6 @@ const Datetime: Component<TProps> = (props) => {
                         </ForNumber>
                         <ForNumber each={value().daysInMonth()}>
                             {(day) => (
-                                // rome-ignore lint/a11y/useKeyWithClickEvents:
                                 <div
                                     class="btn btn-square btn-sm"
                                     classList={{
