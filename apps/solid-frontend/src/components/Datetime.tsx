@@ -12,11 +12,15 @@ type TProps = {
     location?: "bottom" | "top" | "right" | "left";
     align?: "end" | "start";
     onChange: (v: Date) => void;
+    minuteInterval?: number;
 };
 
 const Datetime: Component<TProps> = (props) => {
     const { align = "start", location = "bottom" } = props;
-    const value = createMemo(() => dayjs(props.value));
+    const minuteInterval = createMemo(() => props.minuteInterval ?? 30);
+    const value = createMemo(() =>
+        dayjs(props.value).subtract(dayjs(props.value).minute() % minuteInterval(), "minute")
+    );
 
     const setValue = (v: dayjs.Dayjs) => {
         props.onChange(v.second(0).toDate());
@@ -115,9 +119,11 @@ const Datetime: Component<TProps> = (props) => {
                             value={value().minute()}
                             onInput={(e) => setValue(value().minute(Number(e.currentTarget.value)))}
                         >
-                            <ForNumber each={60}>
+                            <ForNumber each={60 / minuteInterval()}>
                                 {(minute) => (
-                                    <option value={minute}>{formatTimeNumber(minute)}</option>
+                                    <option value={minute * minuteInterval()}>
+                                        {formatTimeNumber(minute * minuteInterval())}
+                                    </option>
                                 )}
                             </ForNumber>
                         </select>

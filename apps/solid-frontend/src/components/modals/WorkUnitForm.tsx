@@ -6,14 +6,17 @@ import {
     createResource,
     createSignal,
     For,
+    Suspense,
     untrack,
 } from "solid-js";
 import Button from "~/Button";
 import Datetime from "~/Datetime";
 import FormControl from "~/FormControl";
+import Loading from "~/Loading";
 
 import categoryStore from "../../store/categoryStore";
 import projectStore from "../../store/projectStore";
+import settingsStore from "../../store/settingsStore";
 import workUnitStore from "../../store/workUnitStore";
 
 import type { TWorkUnit } from "lines-types";
@@ -30,6 +33,7 @@ const WorkUnitForm: Component<TProps> = (props) => {
     const [categoryId, setCategoryId] = createSignal<string | null>(
         props.presetData?.category ?? null
     );
+    const [settings] = createResource(async () => await settingsStore.get());
     const [description, setDescription] = createSignal(props.presetData?.description ?? "");
     const [start, setStart] = createSignal(dayjs(props.presetData?.start ?? undefined).toDate());
     const [end, setEnd] = createSignal(dayjs(props.presetData?.end ?? undefined).toDate());
@@ -87,10 +91,23 @@ const WorkUnitForm: Component<TProps> = (props) => {
         <form onSubmit={formSubmit} class="flex flex-col gap-2">
             <div class="flex flex-row gap-2">
                 <FormControl label="Start">
-                    <Datetime time location="top" value={start()} onChange={setStart} />
+                    <Datetime
+                        time
+                        location="top"
+                        value={start()}
+                        onChange={setStart}
+                        minuteInterval={settings()?.tracking_increment}
+                    />
                 </FormControl>
                 <FormControl label="End">
-                    <Datetime time location="top" align="end" value={end()} onChange={setEnd} />
+                    <Datetime
+                        time
+                        location="top"
+                        align="end"
+                        value={end()}
+                        onChange={setEnd}
+                        minuteInterval={settings()?.tracking_increment}
+                    />
                 </FormControl>
             </div>
             <div class="flex flex-row gap-2">
@@ -118,9 +135,19 @@ const WorkUnitForm: Component<TProps> = (props) => {
                         <option value="null" disabled>
                             {!projectId() ? "Select project first" : "Select one"}
                         </option>
-                        <For each={categories()}>
-                            {(category) => <option value={category?.id}>{category?.name}</option>}
-                        </For>
+                        <Suspense
+                            fallback={
+                                <option disabled>
+                                    <Loading />
+                                </option>
+                            }
+                        >
+                            <For each={categories()}>
+                                {(category) => (
+                                    <option value={category?.id}>{category?.name}</option>
+                                )}
+                            </For>
+                        </Suspense>
                     </select>
                 </FormControl>
             </div>
