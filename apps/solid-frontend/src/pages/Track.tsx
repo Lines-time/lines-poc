@@ -8,11 +8,11 @@ const Track: Component = () => {
     const tabs: TTab[] = [
         {
             label: "Day",
-            href: "/track/day",
+            href: "/track/day#now",
         },
         {
             label: "Week",
-            href: "/track/week",
+            href: "/track/week#now",
         },
     ];
     return (
