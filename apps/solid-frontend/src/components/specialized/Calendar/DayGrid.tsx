@@ -51,7 +51,15 @@ const Day: Component<DayProps> = (props) => {
     return (
         <div class="grid h-full w-full border-2 border-base-100 rounded-lg relative">
             <ForNumber each={props.steps}>
-                {(step) => <div class="border-b border-dashed border-base-100" />}
+                {(step) => (
+                    <div
+                        class="border-b border-base-100"
+                        classList={{
+                            "border-solid": ((step + 1) * props.interval) % 60 === 0,
+                            "border-dashed": ((step + 1) * props.interval) % 60 !== 0,
+                        }}
+                    />
+                )}
             </ForNumber>
             <For each={props.events}>
                 {(e) => <CalendarEvent event={e} interval={props.interval} />}
@@ -71,7 +79,9 @@ const Day: Component<DayProps> = (props) => {
                         )}%`,
                     }}
                 >
-                    <span class="text-xs h-min bg-secondary text-secondary-content rounded-b px-1">{currentTime().format("H:mm")}</span>
+                    <span class="text-xs h-min bg-secondary text-secondary-content rounded-b px-1">
+                        {currentTime().format("H:mm")}
+                    </span>
                 </div>
             </Show>
         </div>
