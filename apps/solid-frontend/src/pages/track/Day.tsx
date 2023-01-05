@@ -1,8 +1,9 @@
-import { useSearchParams } from "@solidjs/router";
+import { useNavigate, useSearchParams } from "@solidjs/router";
 import dayjs from "dayjs";
 import { Plus, X } from "lucide-solid";
 import {
     Component,
+    createEffect,
     createMemo,
     createResource,
     createSignal,
@@ -24,17 +25,26 @@ import workUnitStore from "../../store/workUnitStore";
 import type { TWorkUnit } from "lines-types";
 const Day: Component = () => {
     const [searchParams, setSearchParams] = useSearchParams();
+    const navigate = useNavigate();
     const [now, setNow] = createSignal(dayjs());
 
     const [settings] = createResource(async () => await settingsStore.get());
     const trackingInterval = createMemo(() => settings()?.tracking_increment ?? 30);
 
-    onMount(() => {
+    const updateSearchParamsDay = () => {
         if (searchParams.d === undefined) {
             setSearchParams({
                 d: dayjs().format("YYYY-MM-DD"),
             });
         }
+    };
+
+    onMount(() => {
+        updateSearchParamsDay();
+    });
+
+    createEffect(() => {
+        updateSearchParamsDay();
     });
 
     const [workUnits, workUnitsResource] = createResource(async () => {
@@ -73,12 +83,18 @@ const Day: Component = () => {
         setSearchParams({ edit: undefined });
     };
 
+    const clickWorkUnit = (workUnit: TWorkUnit) => {
+        navigate(`?edit=${workUnit.id}#${workUnit.id}`, { replace: true });
+    };
+
     const events = createMemo(
         () =>
             workUnits()?.map((wu) => ({
                 start: dayjs(wu.start).toDate(),
                 end: dayjs(wu.end).toDate(),
-                display: () => <WorkUnitCalendarEvent workUnit={wu} />,
+                display: () => (
+                    <WorkUnitCalendarEvent workUnit={wu} onClick={() => clickWorkUnit(wu)} />
+                ),
             })) ?? []
     );
 
@@ -104,7 +120,7 @@ const Day: Component = () => {
                                     <WorkUnit
                                         unit={unit}
                                         active={searchParams.edit === unit.id}
-                                        onClick={() => setSearchParams({ edit: unit.id })}
+                                        onClick={() => clickWorkUnit(unit)}
                                     />
                                 )
                             }
