@@ -23,6 +23,11 @@ const WorkUnitCalendarEvent: Component<TProps> = (props) => {
             classList={{
                 "cursor-pointer": !!props.onClick,
             }}
+            style={{
+                "background-color": project()?.color,
+                "border-color": "rgba(0, 0, 0, 0.2)",
+                color: "rgba(0, 0, 0, 0.8)",
+            }}
             onClick={props.onClick}
         >
             <div id={props.workUnit.id} class="absolute -mt-16" />
@@ -33,7 +38,12 @@ const WorkUnitCalendarEvent: Component<TProps> = (props) => {
                 {dayjs(props.workUnit.end).format("H:mm")}
             </p>
             <Show when={props.workUnit.description}>
-                <hr class="border-primary-focus border-t-2" />
+                <hr
+                    class="border-primary-focus border-t-2"
+                    style={{
+                        "border-color": "rgba(0, 0, 0, 0.2)",
+                    }}
+                />
                 <label class="text-xs px-2">Description:</label>
                 <p class="px-2">{props.workUnit.description}</p>
             </Show>
