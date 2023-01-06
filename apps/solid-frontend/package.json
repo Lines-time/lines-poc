@@ -26,8 +26,6 @@
     },
     "dependencies": {
         "@directus/sdk": "^10.3.0",
-        "@fullcalendar/core": "^5.11.3",
-        "@fullcalendar/timegrid": "^5.11.3",
         "@solidjs/router": "^0.5.1",
         "dayjs": "^1.11.6",
         "lucide-solid": "^0.103.0",
