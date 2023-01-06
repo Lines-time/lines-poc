@@ -17,7 +17,7 @@ const Main: Component = () => {
                 <Route path="/" component={App}>
                     <Route path="/" component={Dashboard} />
                     <Route path="/track" component={Track}>
-                        <Route path="/" element={<Navigate href="day#now" />} />
+                        <Route path="/" element={<Navigate href="day" />} />
                         <Route path="/day" component={Day} />
                         <Route path="/week" component={Week} />
                     </Route>

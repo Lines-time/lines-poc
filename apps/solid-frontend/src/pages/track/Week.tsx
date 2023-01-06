@@ -37,7 +37,7 @@ const Week: Component = () => {
     };
 
     const clickWorkUnit = (workUnit: TWorkUnit) => {
-        navigate(`?edit=${workUnit.id}#${workUnit.id}`, { replace: true });
+        setSearchParams({ edit: workUnit.id });
     };
 
     const workUnitModalPresetData = createMemo(() => {

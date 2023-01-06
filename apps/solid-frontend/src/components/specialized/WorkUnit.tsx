@@ -14,10 +14,10 @@ type TProps = {
 
 const WorkUnit: Component<TProps> = (props) => {
     const { unit } = props;
-    const [project, projectResource] = createResource(
+    const [project] = createResource(
         async () => await projectStore.getById(unit.project)
     );
-    const [category, categoryResource] = createResource(
+    const [category] = createResource(
         async () => await categoryStore.getById(unit.category)
     );
     const start = createMemo(() => dayjs(unit?.start));
@@ -44,8 +44,8 @@ const WorkUnit: Component<TProps> = (props) => {
             <div class="flex flex-col pl-2 border-base-100 border-l-2">
                 <Suspense fallback={<Loading />}>
                     <span>
-                        <b>{project()?.title}</b>
-                        {` - ${category()?.name}`}
+                        <b>{project.latest?.title}</b>
+                        {` - ${category.latest?.name}`}
                     </span>
                 </Suspense>
                 <p>{unit?.description}</p>

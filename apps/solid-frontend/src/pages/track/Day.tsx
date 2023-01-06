@@ -57,7 +57,7 @@ const Day: Component = () => {
 
     const workUnitModalPresetData = createMemo(() => {
         if (searchParams.edit === "new") {
-            const units = workUnits();
+            const units = workUnits.latest;
             if (units) {
                 const lastUnit = units[units.length - 1];
                 if (lastUnit || (presetStart() && presetEnd())) {
@@ -68,7 +68,7 @@ const Day: Component = () => {
                 }
             }
         } else if (searchParams.edit) {
-            const _wu = workUnits()?.find((wu) => wu && wu.id === searchParams.edit);
+            const _wu = workUnits.latest?.find((wu) => wu && wu.id === searchParams.edit);
             if (_wu)
                 return {
                     id: _wu.id,
@@ -89,12 +89,12 @@ const Day: Component = () => {
     };
 
     const clickWorkUnit = (workUnit: TWorkUnit) => {
-        navigate(`?edit=${workUnit.id}#${workUnit.id}`, { replace: true });
+        setSearchParams({ edit: workUnit.id });
     };
 
     const events = createMemo(
         () =>
-            workUnits()?.map((wu) => ({
+            workUnits.latest?.map((wu) => ({
                 start: dayjs(wu.start).toDate(),
                 end: dayjs(wu.end).toDate(),
                 display: () => (
@@ -122,7 +122,7 @@ const Day: Component = () => {
                 </div>
                 <div class="flex flex-col gap-2 pt-2">
                     <Suspense fallback={<Loading />}>
-                        <For each={workUnits()}>
+                        <For each={workUnits.latest}>
                             {(unit) =>
                                 unit && (
                                     <WorkUnit

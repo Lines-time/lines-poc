@@ -11,7 +11,7 @@ type TProps = {
 };
 
 const WorkUnitCalendarEvent: Component<TProps> = (props) => {
-    const [project] = createResource(
+    const [project, projectResource] = createResource(
         async () => await projectStore.getById(props.workUnit.project)
     );
     const [category] = createResource(
@@ -19,12 +19,14 @@ const WorkUnitCalendarEvent: Component<TProps> = (props) => {
     );
     return (
         <div
-            class="w-full h-full bg-primary text-primary-content border-2 rounded border-primary-focus relative overflow-hidden"
+            class="w-full h-full border-2 rounded relative overflow-hidden"
             classList={{
                 "cursor-pointer": !!props.onClick,
+                "bg-primary": !project.loading,
+                "bg-base-100": project.loading,
             }}
             style={{
-                "background-color": project()?.color,
+                "background-color": project.latest?.color,
                 "border-color": "rgba(0, 0, 0, 0.2)",
                 color: "rgba(0, 0, 0, 0.8)",
             }}
@@ -32,7 +34,7 @@ const WorkUnitCalendarEvent: Component<TProps> = (props) => {
         >
             <div id={props.workUnit.id} class="absolute -mt-16" />
             <p class="p-1 px-2">
-                {project()?.title}: {category()?.name}
+                {project.latest?.title}: {category.latest?.name}
                 <br />
                 {dayjs(props.workUnit.start).format("H:mm")}-
                 {dayjs(props.workUnit.end).format("H:mm")}
