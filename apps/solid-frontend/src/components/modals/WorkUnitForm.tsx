@@ -87,6 +87,15 @@ const WorkUnitForm: Component<TProps> = (props) => {
         }
     };
 
+    const deleteWorkUnit = async (event: Event) => {
+        if (props.presetData?.id) {
+            event.preventDefault();
+            await workUnitStore.deleteOne(props.presetData.id);
+            props.onSave?.();
+            props.onClose();
+        }
+    };
+
     return (
         <form onSubmit={formSubmit} class="flex flex-col gap-2">
             <div class="flex flex-row gap-2">
@@ -159,6 +168,11 @@ const WorkUnitForm: Component<TProps> = (props) => {
                 />
             </FormControl>
             <div class="flex flex-row justify-end">
+                {props.presetData?.id && (
+                    <Button error onClick={deleteWorkUnit}>
+                        Delete
+                    </Button>
+                )}
                 <Button primary submit loading={loading()}>
                     Save
                 </Button>

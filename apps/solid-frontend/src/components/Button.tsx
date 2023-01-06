@@ -7,6 +7,7 @@ type TProps = Omit<ComponentProps<"button">, "disabled"> & {
     submit?: boolean;
     icon?: Component<LucideProps>;
     loading?: boolean;
+    error?: boolean;
     disabled?: Accessor<boolean>;
 };
 
@@ -14,6 +15,7 @@ const Button: Component<TProps> = (props) => {
     const {
         primary = false,
         submit = false,
+        error = false,
         icon,
         children,
         loading,
@@ -23,8 +25,9 @@ const Button: Component<TProps> = (props) => {
 
     const classes = createMemo(() => ({
         btn: true,
-        "btn-primary": primary,
-        "btn-ghost": !primary,
+        "btn-primary": primary && !error,
+        "btn-ghost": !(primary || error),
+        "btn-error": !primary && error,
         "gap-2": icon !== undefined,
         "btn-square": icon && !children,
         loading: loading,

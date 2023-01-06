@@ -62,5 +62,10 @@ const [workUnits] = createStore({
             return result;
         };
     },
+    get deleteOne() {
+        return async (id: string) => {
+            await directus.items("WorkUnit").deleteOne(id);
+        };
+    },
 });
 export default workUnits;
