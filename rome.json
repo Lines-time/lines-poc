@@ -1,0 +1,16 @@
+{
+    "linter": {
+        "rules": {
+            "recommended": true,
+            "a11y": {
+                "useKeyWithClickEvents": "off"
+            }
+        }
+    },
+    "files": {
+        "ignore": ["dist"]
+    },
+    "formatter": {
+        "enabled": false
+    }
+}

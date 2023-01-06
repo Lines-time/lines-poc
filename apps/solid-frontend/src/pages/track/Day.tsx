@@ -1,5 +1,5 @@
 import { useNavigate, useSearchParams } from "@solidjs/router";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { Plus, X } from "lucide-solid";
 import {
     Component,
@@ -28,6 +28,8 @@ const Day: Component = () => {
     const navigate = useNavigate();
     const [now, setNow] = createSignal(dayjs());
 
+    const [presetStart, setPresetStart] = createSignal<Dayjs | undefined>();
+    const [presetEnd, setPresetEnd] = createSignal<Dayjs | undefined>();
     const [settings] = createResource(async () => await settingsStore.get());
     const trackingInterval = createMemo(() => settings()?.tracking_increment ?? 30);
 
@@ -58,9 +60,10 @@ const Day: Component = () => {
             const units = workUnits();
             if (units) {
                 const lastUnit = units[units.length - 1];
-                if (lastUnit) {
+                if (lastUnit || (presetStart() && presetEnd())) {
                     return {
-                        start: lastUnit.end,
+                        start: presetStart()?.toString() ?? lastUnit.end,
+                        end: presetEnd()?.toString(),
                     };
                 }
             }
@@ -81,6 +84,8 @@ const Day: Component = () => {
 
     const closeEdit = () => {
         setSearchParams({ edit: undefined });
+        setPresetEnd(undefined);
+        setPresetStart(undefined);
     };
 
     const clickWorkUnit = (workUnit: TWorkUnit) => {
@@ -103,14 +108,17 @@ const Day: Component = () => {
             <div class="p-6 grid col-span-2 grid-cols-2 gap-x-2 grid-rows-[min-content_1fr] w-full">
                 <h2 class="text-xl font-bold col-span-3">{dayjs().format("dddd, DD.MM.YYYY")}</h2>
                 <div class="pt-2">
-                    <Suspense>
-                        <CalendarDay
-                            controls={false}
-                            interval={trackingInterval}
-                            now={now}
-                            events={events}
-                        />
-                    </Suspense>
+                    <CalendarDay
+                        now={now}
+                        controls={false}
+                        interval={trackingInterval}
+                        events={events}
+                        onCreateEvent={(start, end) => {
+                            setPresetStart(start);
+                            setPresetEnd(end);
+                            setSearchParams({ edit: "new" });
+                        }}
+                    />
                 </div>
                 <div class="flex flex-col gap-2 pt-2">
                     <Suspense fallback={<Loading />}>
@@ -139,8 +147,8 @@ const Day: Component = () => {
                 </div>
             </div>
             <Show when={searchParams.edit}>
-                <div class="h-full bg-base-300 border-l-2 border-base-100 border-solid w-full">
-                    <div class="sticky top-0">
+                <div class="fixed top-20 right-8 bg-base-300 rounded-lg border-solid border-base-100 border-2 z-10 w-1/4">
+                    <div class="">
                         <div class="flex flex-row p-2 pl-3 justify-between">
                             <h2 class="font-bold text-xl">
                                 {searchParams.edit === "new" ? "Create new" : "Edit"}

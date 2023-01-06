@@ -1,5 +1,6 @@
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import {
+    Accessor,
     Component,
     createEffect,
     createMemo,
@@ -20,6 +21,8 @@ type DayProps = {
     interval: number;
     events: TCalendarEvent[];
     showCurrentTime?: boolean;
+    now: Accessor<Dayjs>;
+    onCreateDuration?: (start: Dayjs, end: Dayjs) => void;
 };
 
 const Day: Component<DayProps> = (props) => {
@@ -48,6 +51,30 @@ const Day: Component<DayProps> = (props) => {
             currentTime().hour() * intervalsInHour() +
             Math.floor(currentTime().minute() / props.interval)
     );
+
+    const [selecting, setSelecting] = createSignal(false);
+    const [startStep, setStartStep] = createSignal<number>();
+    const [endStep, setEndStep] = createSignal<number>();
+
+    const createDurationFromSelection = () => {
+        let ss = startStep();
+        let es = endStep();
+        if (ss && es) {
+            let _ss = Math.min(ss, es);
+            let _es = Math.max(ss, es);
+            _ss -= 1;
+            const startMinutes = (_ss * props.interval) % 60;
+            const startHour = (_ss * props.interval - startMinutes) / 60;
+            const endMinutes = (_es * props.interval) % 60;
+            const endHour = (_es * props.interval - endMinutes) / 60;
+            const start = props.now().hour(startHour).minute(startMinutes).second(0);
+            const end = props.now().hour(endHour).minute(endMinutes).second(0);
+            props.onCreateDuration?.(start, end);
+            setStartStep();
+            setEndStep();
+        }
+    };
+
     return (
         <div class="grid h-full w-full border-2 border-base-100 rounded-lg relative">
             <ForNumber each={props.steps}>
@@ -57,6 +84,24 @@ const Day: Component<DayProps> = (props) => {
                         classList={{
                             "border-solid": ((step + 1) * props.interval) % 60 === 0,
                             "border-dashed": ((step + 1) * props.interval) % 60 !== 0,
+                            "bg-base-100": !!(
+                                startStep() &&
+                                endStep() &&
+                                Math.min(startStep()!, endStep()!) <= step + 1 &&
+                                Math.max(startStep()!, endStep()!) >= step + 1
+                            ),
+                        }}
+                        onMouseDown={() => {
+                            setSelecting(true);
+                            setStartStep(step + 1);
+                            setEndStep(step + 1);
+                        }}
+                        onMouseEnter={(e) => {
+                            if (selecting()) setEndStep(step + 1);
+                        }}
+                        onMouseUp={() => {
+                            setSelecting(false);
+                            createDurationFromSelection();
                         }}
                     />
                 )}
@@ -66,7 +111,7 @@ const Day: Component<DayProps> = (props) => {
             </For>
             <Show when={props.showCurrentTime}>
                 <div
-                    class="absolute border-t-2 border-secondary w-full flex justify-end"
+                    class="absolute border-t-2 border-secondary w-full flex justify-end pointer-events-none"
                     style={{
                         "grid-row-start": currentTimeRow() + 1,
                         "grid-row-end": "span 1",
@@ -85,7 +130,7 @@ const Day: Component<DayProps> = (props) => {
                 </div>
                 <div
                     id="now"
-                    class="absolute -mt-16"
+                    class="absolute -mt-16 pointer-events-none"
                     style={{
                         "grid-row-start": currentTimeRow() + 1,
                         "grid-row-end": "span 1",

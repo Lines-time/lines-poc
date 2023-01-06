@@ -1,5 +1,5 @@
 import { useNavigate, useSearchParams } from "@solidjs/router";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { X } from "lucide-solid";
 import { Component, createMemo, createResource, createSignal, Show } from "solid-js";
 import Button from "~/Button";
@@ -17,6 +17,8 @@ const Week: Component = () => {
     const navigate = useNavigate();
     const [now, setNow] = createSignal(dayjs());
 
+    const [presetStart, setPresetStart] = createSignal<Dayjs | undefined>();
+    const [presetEnd, setPresetEnd] = createSignal<Dayjs | undefined>();
     const [settings] = createResource(async () => await settingsStore.get());
     const trackingInterval = createMemo(() => settings()?.tracking_increment ?? 30);
 
@@ -30,6 +32,8 @@ const Week: Component = () => {
 
     const closeEdit = () => {
         setSearchParams({ edit: undefined });
+        setPresetEnd(undefined);
+        setPresetStart(undefined);
     };
 
     const clickWorkUnit = (workUnit: TWorkUnit) => {
@@ -43,7 +47,8 @@ const Week: Component = () => {
                 const lastUnit = units[units.length - 1];
                 if (lastUnit) {
                     return {
-                        start: lastUnit.end,
+                        start: presetStart()?.toString() ?? lastUnit.end,
+                        end: presetEnd()?.toString(),
                     };
                 }
             }
@@ -75,7 +80,17 @@ const Week: Component = () => {
 
     return (
         <div class="overflow-auto relative">
-            <CalendarWeek now={now} controls={false} interval={trackingInterval} events={events} />
+            <CalendarWeek
+                now={now}
+                controls={false}
+                interval={trackingInterval}
+                events={events}
+                onCreateEvent={(start, end) => {
+                    setPresetStart(start);
+                    setPresetEnd(end);
+                    setSearchParams({ edit: "new" });
+                }}
+            />
             <Show when={searchParams.edit}>
                 <div class="fixed top-20 right-8 bg-base-300 rounded-lg border-solid border-base-100 border-2 z-10 w-1/4">
                     <div class="">

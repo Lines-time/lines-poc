@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { ChevronLeft, ChevronRight } from "lucide-solid";
 import { Accessor, Component, createMemo, Show } from "solid-js";
 import Button from "~/Button";
@@ -13,6 +13,7 @@ type TProps = {
     controls?: boolean;
     interval?: Accessor<number>;
     events?: Accessor<TCalendarEvent[]>;
+    onCreateEvent?: (start: Dayjs, end: Dayjs) => void;
 };
 
 const CalendarWeek: Component<TProps> = (props) => {
@@ -102,6 +103,8 @@ const CalendarWeek: Component<TProps> = (props) => {
                 <ForNumber each={7}>
                     {(day) => (
                         <DayGrid
+                            now={() => now().isoWeekday(day + 1)}
+                            onCreateDuration={props.onCreateEvent}
                             showCurrentTime={now()
                                 .isoWeekday(day + 1)
                                 .isToday()}

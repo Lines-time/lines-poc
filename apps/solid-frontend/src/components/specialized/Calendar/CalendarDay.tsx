@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { ChevronLeft, ChevronRight } from "lucide-solid";
 import { Accessor, Component, createMemo, Show } from "solid-js";
 import Button from "~/Button";
@@ -13,6 +13,7 @@ type TProps = {
     controls?: boolean;
     interval?: Accessor<number>;
     events?: Accessor<TCalendarEvent[]>;
+    onCreateEvent?: (start: Dayjs, end: Dayjs) => void;
 };
 
 const CalendarDay: Component<TProps> = (props) => {
@@ -69,7 +70,14 @@ const CalendarDay: Component<TProps> = (props) => {
                     )}
                 </ForNumber>
             </div>
-            <DayGrid steps={steps()} events={events()} interval={interval()} showCurrentTime />
+            <DayGrid
+                now={now}
+                steps={steps()}
+                events={events()}
+                interval={interval()}
+                onCreateDuration={props.onCreateEvent}
+                showCurrentTime
+            />
         </div>
     );
 };

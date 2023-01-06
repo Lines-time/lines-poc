@@ -19,7 +19,7 @@ const WorkUnitCalendarEvent: Component<TProps> = (props) => {
     );
     return (
         <div
-            class="w-full h-full bg-primary text-primary-content border-2 rounded border-primary-focus relative"
+            class="w-full h-full bg-primary text-primary-content border-2 rounded border-primary-focus relative overflow-hidden"
             classList={{
                 "cursor-pointer": !!props.onClick,
             }}
