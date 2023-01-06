@@ -17,6 +17,7 @@ import CalendarMonth from "~/specialized/Calendar/CalendarMonth";
 
 import dailyWorkTimeTargetStore from "../store/dailyWorkTimeTargetStore";
 import freeDayStore from "../store/freeDayStore";
+import sickDayStore from "../store/sickDayStore";
 import vacationStore from "../store/vacationStore";
 import { parseTimeStringDuration } from "../utils/utils";
 
@@ -55,13 +56,22 @@ const Calendar: Component = () => {
         () => now(),
         async () => await vacationStore.getForDateRangeAndUser(start().toDate(), end().toDate())
     );
+    const [sickDays, sickDaysResource] = createResource(
+        () => now(),
+        async () => await sickDayStore.getForDateRangeAndUser(start().toDate(), end().toDate())
+    );
 
     const events = createMemo(() => {
         return (
             targetTime()
                 ?.filter((tt) => {
-                    return !vacations()?.some((v) =>
-                        dayjs(tt!.date).isBetween(v!.start, v!.end, "day", "[]")
+                    return !(
+                        vacations()?.some((v) =>
+                            dayjs(tt!.date).isBetween(v!.start, v!.end, "day", "[]")
+                        ) ||
+                        sickDays()?.some((sd) =>
+                            dayjs(tt!.date).isBetween(sd!.start_date, sd!.end_date, "day", "[]")
+                        )
                     );
                 })
                 .map((tt) => ({
@@ -124,6 +134,15 @@ const Calendar: Component = () => {
                         <p>Start: {dayjs(v!.start).format("LL")}</p>
                         <p>End: {dayjs(v!.end).format("LL")}</p>
                     </Dropdown>
+                ),
+            })) ?? [],
+            sickDays()?.map((sd) => ({
+                start: sd!.start_date,
+                end: sd!.end_date,
+                render: () => (
+                    <div class="border-2 border-[rgba(0,0,0,0.2)] bg-error rounded px-1 text-error-content">
+                        {sd?.description}
+                    </div>
                 ),
             })) ?? []
         );
