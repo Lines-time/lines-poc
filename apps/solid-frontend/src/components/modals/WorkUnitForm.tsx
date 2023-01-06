@@ -167,7 +167,7 @@ const WorkUnitForm: Component<TProps> = (props) => {
                     onInput={(e) => setDescription(e.currentTarget.value)}
                 />
             </FormControl>
-            <div class="flex flex-row justify-end">
+            <div class="flex flex-row justify-end gap-2">
                 {props.presetData?.id && (
                     <Button error onClick={deleteWorkUnit}>
                         Delete
