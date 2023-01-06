@@ -16,7 +16,6 @@ const Week: Component = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const navigate = useNavigate();
     const [now, setNow] = createSignal(dayjs());
-
     const [presetStart, setPresetStart] = createSignal<Dayjs | undefined>();
     const [presetEnd, setPresetEnd] = createSignal<Dayjs | undefined>();
     const [settings] = createResource(async () => await settingsStore.get());

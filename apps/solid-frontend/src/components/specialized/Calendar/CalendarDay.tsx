@@ -19,6 +19,7 @@ type TProps = {
 const CalendarDay: Component<TProps> = (props) => {
     const { now, controls = true, interval = () => 30, events = () => [], onUpdateNow } = props;
     const steps = createMemo(() => 24 * (60 / interval()));
+
     return (
         <div class="grid grid-cols-[max-content_1fr] grid-rows-[min-content_1fr] h-full w-full gap-1">
             <div />
