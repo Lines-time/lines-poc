@@ -3,10 +3,10 @@ import Loading from "~/Loading";
 import Navbar from "~/Navbar";
 import WorkTimeTarget from "~/specialized/WorkTimeTarget";
 
-import auth from "../store/authStore";
+import authStore from "../store/authStore";
 
 const Personal: Component = () => {
-    const [currentUser, currentUserResource] = createResource(async () => await auth.currentUser);
+    const [currentUser] = createResource(async () => await authStore.currentUser);
 
     return (
         <div class="h-full grid grid-rows-[64px_1fr]">

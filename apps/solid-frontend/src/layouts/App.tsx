@@ -2,7 +2,6 @@ import { A, Outlet } from "@solidjs/router";
 import { BarChart3, Calendar, LayoutDashboard, Settings, Timer } from "lucide-solid";
 import { Component, createMemo, createResource, createSignal, Show, Suspense } from "solid-js";
 import Avatar from "~/Avatar";
-import Button from "~/Button";
 import Loading from "~/Loading";
 import LoginModal from "~/modals/LoginModal";
 
@@ -83,7 +82,11 @@ const App: Component = () => {
                                     <Avatar id={currentUser()?.avatar} />
                                 </Suspense>
                             </Show>
-                            <A class="flex-1" href="/personal" activeClass="text-primary">
+                            <A
+                                class="flex-1 p-2 rounded-lg"
+                                href="/personal"
+                                activeClass="text-primary bg-base-100"
+                            >
                                 <Suspense fallback={<Loading size="md" />}>
                                     <Show
                                         when={currentUser()?.first_name && currentUser()?.last_name}
@@ -92,7 +95,13 @@ const App: Component = () => {
                                     </Show>
                                 </Suspense>
                             </A>
-                            <Button class="btn-circle" icon={Settings} />
+                            <A
+                                class="btn btn-circle btn-ghost"
+                                href="/settings"
+                                activeClass="text-primary bg-base-100"
+                            >
+                                <Settings size={20} />
+                            </A>
                         </div>
                     </div>
                 </div>
