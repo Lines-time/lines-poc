@@ -1,4 +1,5 @@
 import dayjs, { Dayjs } from "dayjs";
+import { Plus } from "lucide-solid";
 import {
     Accessor,
     Component,
@@ -80,7 +81,7 @@ const Day: Component<DayProps> = (props) => {
             <ForNumber each={props.steps}>
                 {(step) => (
                     <div
-                        class="border-b border-base-100"
+                        class="border-b border-base-100 group relative"
                         classList={{
                             "border-solid": ((step + 1) * props.interval) % 60 === 0,
                             "border-dashed": ((step + 1) * props.interval) % 60 !== 0,
@@ -103,7 +104,12 @@ const Day: Component<DayProps> = (props) => {
                             setSelecting(false);
                             createDurationFromSelection();
                         }}
-                    />
+                    >
+                        <span class="flex flex-row items-center justify-center w-full h-full text-xs absolute group-hover:opacity-50 opacity-0 cursor-default select-none">
+                            <Plus size={14} />
+                            Create
+                        </span>
+                    </div>
                 )}
             </ForNumber>
             <For each={props.events}>
