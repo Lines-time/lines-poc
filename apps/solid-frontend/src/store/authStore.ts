@@ -2,6 +2,8 @@ import { createStore } from "solid-js/store";
 
 import { directus } from "../utils/directus";
 
+import type { TUser } from "lines-types";
+
 const [auth] = createStore({
     get login() {
         return async (email: string, password: string) => {
@@ -27,6 +29,12 @@ const [auth] = createStore({
     },
     get authToken() {
         return directus.auth.token;
+    },
+    get update() {
+        return async (user: Partial<TUser>) => {
+            const result = await directus.users.me.update(user);
+            return result;
+        };
     },
 });
 
