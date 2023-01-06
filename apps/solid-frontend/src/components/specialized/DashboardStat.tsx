@@ -4,6 +4,7 @@ import Stat from "~/Stat";
 
 import dailyWorkTimeTargetStore from "../../store/dailyWorkTimeTargetStore";
 import freeDayStore from "../../store/freeDayStore";
+import sickDayStore from "../../store/sickDayStore";
 import vacationStore from "../../store/vacationStore";
 import workUnitStore from "../../store/workUnitStore";
 import { parseTimeStringDuration, scale } from "../../utils/utils";
@@ -27,6 +28,9 @@ const createData = (start: dayjs.Dayjs, end: dayjs.Dayjs) => {
     const [vacation_value, vacation_resource] = createResource(
         async () => await vacationStore.getForDateRangeAndUser(start.toDate(), end.toDate())
     );
+    const [sick_value] = createResource(
+        async () => await sickDayStore.getForDateRangeAndUser(start.toDate(), end.toDate())
+    );
 
     const workedTime = createMemo(() =>
         data_value.latest?.reduce((a, b) => a + dayjs(b?.end).diff(b?.start), 0)
@@ -34,8 +38,13 @@ const createData = (start: dayjs.Dayjs, end: dayjs.Dayjs) => {
     const targetTime = createMemo(() =>
         target_value.latest
             ?.filter((tt) => {
-                return !vacation_value()?.some((v) =>
-                    dayjs(tt!.date).isBetween(v!.start, v!.end, "day", "[]")
+                return !(
+                    vacation_value()?.some((v) =>
+                        dayjs(tt!.date).isBetween(v!.start, v!.end, "day", "[]")
+                    ) ||
+                    sick_value()?.some((sd) =>
+                        dayjs(tt!.date).isBetween(sd!.start_date, sd!.end_date, "day", "[]")
+                    )
                 );
             })
             .reduce(
