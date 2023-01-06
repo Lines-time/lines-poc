@@ -89,6 +89,13 @@ export type TVacation = TDirectusCollectionProperties & {
     approved: boolean;
 };
 
+export type TSickday = TDirectusCollectionProperties & {
+    start_date: Date;
+    end_date: Date;
+    worker: string;
+    description?: string;
+};
+
 export type TSettings = {
     tracking_increment: number;
 };

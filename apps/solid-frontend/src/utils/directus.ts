@@ -12,6 +12,7 @@ import type {
     TVacation,
     TSettings,
     TUser,
+    TSickday,
 } from "lines-types";
 
 export const directus = new Directus<TDirectus>("/api", {});
@@ -27,5 +28,6 @@ type TDirectus = {
     FreeDay: TFreeDay;
     Vacation: TVacation;
     Settings: TSettings;
+    Sickday: TSickday;
     directus_users: TUser;
 };
