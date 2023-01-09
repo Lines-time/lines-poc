@@ -10,6 +10,7 @@ const Calendar = lazy(() => import("@/Calendar"));
 const ReportsOverview = lazy(() => import("@/reports/Overview"));
 const Personal = lazy(() => import("@/Personal"));
 const Settings = lazy(() => import("@/Settings"));
+const Login = lazy(() => import("@/Login"));
 
 const Main: Component = () => {
     return (
@@ -29,6 +30,7 @@ const Main: Component = () => {
                     <Route path="/personal" component={Personal} />
                     <Route path="/settings" component={Settings} />
                 </Route>
+                <Route path="/login" component={Login} />
             </Routes>
         </>
     );

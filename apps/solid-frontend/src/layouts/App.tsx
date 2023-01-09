@@ -1,30 +1,26 @@
-import { A, Outlet } from "@solidjs/router";
+import { A, Outlet, useNavigate } from "@solidjs/router";
 import { BarChart3, Calendar, LayoutDashboard, Settings, Timer } from "lucide-solid";
-import { Component, createMemo, createResource, createSignal, Show, Suspense } from "solid-js";
+import { Component, createResource, createSignal, onMount, Show, Suspense } from "solid-js";
 import Avatar from "~/Avatar";
 import Loading from "~/Loading";
-import LoginModal from "~/modals/LoginModal";
 
 import authStore from "../store/authStore";
 
 const App: Component = () => {
     const [drawerOpen, setDrawerOpen] = createSignal(false);
-    const [isAuthenticated, authResource] = createResource(
-        async () => await authStore.isAuthenticated
-    );
+    const navigate = useNavigate();
+
+    onMount(async () => {
+        const authed = await authStore.isAuthenticated;
+        if (!authed) {
+            // navigate("/login"); // somehow doesnt work
+            window.location.href = "/login";
+        }
+    });
+
     const [currentUser, currentUserResource] = createResource(
         async () => await authStore.currentUser
     );
-
-    const loginModalOpen = createMemo(() => !(isAuthenticated.loading || isAuthenticated()));
-
-    const login = async (email: string, password: string) => {
-        await authStore.login?.(email, password);
-        authResource.refetch();
-    };
-    const closeLoginModal = async () => {
-        await authResource.refetch();
-    };
     return (
         <>
             <div class="drawer drawer-mobile">
@@ -106,12 +102,6 @@ const App: Component = () => {
                     </div>
                 </div>
             </div>
-            <LoginModal
-                open={loginModalOpen()}
-                onClose={closeLoginModal}
-                onSave={login}
-                loading={isAuthenticated.loading}
-            />
         </>
     );
 };
