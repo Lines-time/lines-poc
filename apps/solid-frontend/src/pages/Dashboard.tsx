@@ -42,6 +42,15 @@ const Dashboard: Component = () => {
                                 </div>
                             )}
                         </For>
+                        {/* <div class="max-xl:col-span-2 max-sm:col-span-3">
+                            <h3 class="text-lg">Stats:</h3>
+                            <div class="bg-base-200 border-base-100 border-2 rounded-lg grid grid-cols-2 grid-rows-2">
+                                <Stat title="Vacation days" description="Remaining" value="10/30" />
+                                <Stat title="Vacation days" description="Remaining" value="10/30" />
+                                <Stat title="Vacation days" description="Remaining" value="10/30" />
+                                <Stat title="Vacation days" description="Remaining" value="10/30" />
+                            </div>
+                        </div> */}
                     </div>
                 </main>
             </Suspense>
