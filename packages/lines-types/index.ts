@@ -53,6 +53,7 @@ export type TUser = TDirectusCollectionProperties & {
     first_name: string;
     last_name: string;
     email: string;
+    theme: "auto" | "dark" | "light";
     avatar: string;
     use_project_colors: boolean;
     workTimeTargetBlocks: (string | undefined)[];

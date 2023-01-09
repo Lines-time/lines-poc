@@ -12,7 +12,7 @@ const Login: Component = () => {
     const login = async (e: Event) => {
         e.preventDefault();
         await authStore.login?.(email(), password());
-        navigate("/");
+        window.location.href = "/";
     };
     return (
         <div class="w-screen h-[90vh] flex flex-col items-center justify-center gap-3">

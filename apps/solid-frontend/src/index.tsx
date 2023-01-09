@@ -17,7 +17,7 @@ dayjs.extend(duration);
 dayjs.extend(CustomParseFormat);
 dayjs.extend(isBetween);
 dayjs.extend(isoWeek);
-dayjs.extend(localizedFormat)
+dayjs.extend(localizedFormat);
 
 render(
     () => (

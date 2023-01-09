@@ -54,6 +54,23 @@ const Settings: Component = () => {
                                 }
                             />
                         </FormControl>
+                        <FormControl label="Theme" altLabels={["Requires reload after saving"]}>
+                            <select
+                                class="select select-bordered"
+                                name="theme"
+                                value={user()?.theme || "auto"}
+                                onInput={(e) =>
+                                    updateProperty(
+                                        "theme",
+                                        e.currentTarget.value as "light" | "dark" | "auto"
+                                    )
+                                }
+                            >
+                                <option value="auto">Auto</option>
+                                <option value="dark">Dark</option>
+                                <option value="light">Light</option>
+                            </select>
+                        </FormControl>
                     </form>
                 </div>
             </Suspense>

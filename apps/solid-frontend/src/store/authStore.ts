@@ -25,7 +25,7 @@ const [auth] = createStore({
             .then((me) => !!me);
     },
     get currentUser() {
-        return directus.users.me.read();
+        return directus.users.me.read().catch(() => undefined);
     },
     get authToken() {
         return directus.auth.token;

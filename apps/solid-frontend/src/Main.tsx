@@ -1,5 +1,7 @@
 import { Navigate, Route, Routes } from "@solidjs/router";
-import { Component, lazy } from "solid-js";
+import { Component, createEffect, createResource, lazy } from "solid-js";
+
+import authStore from "./store/authStore";
 
 const App = lazy(() => import("./layouts/App"));
 const Track = lazy(() => import("@/Track"));
@@ -13,6 +15,24 @@ const Settings = lazy(() => import("@/Settings"));
 const Login = lazy(() => import("@/Login"));
 
 const Main: Component = () => {
+    const [user] = createResource(async () => await authStore.currentUser);
+    createEffect(() => {
+        switch (user()?.theme ?? "auto") {
+            case "dark":
+                document.documentElement.dataset.theme = "lines-dark";
+                break;
+            case "light":
+                document.documentElement.dataset.theme = "lines-light";
+                break;
+            default:
+                const darkThemeQuery = window.matchMedia("(prefers-color-scheme: dark)");
+                if (darkThemeQuery.matches) {
+                    document.documentElement.dataset.theme = "lines-dark";
+                } else {
+                    document.documentElement.dataset.theme = "lines-light";
+                }
+        }
+    });
     return (
         <>
             <Routes>
