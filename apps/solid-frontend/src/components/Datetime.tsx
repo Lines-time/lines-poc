@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { ChevronLeft, ChevronRight, CircleDot, Clock } from "lucide-solid";
-import { Component, createMemo, Show } from "solid-js";
+import { Component, createMemo, onMount, Show } from "solid-js";
 
 import Button from "./Button";
 import ForNumber from "./ForNumber";
@@ -25,6 +25,10 @@ const Datetime: Component<TProps> = (props) => {
     const setValue = (v: dayjs.Dayjs) => {
         props.onChange(v.second(0).toDate());
     };
+
+    onMount(() => {
+        setValue(value());
+    });
 
     const currentLang = () => window.navigator.languages[0];
     const formatTimeNumber = (v: number) =>

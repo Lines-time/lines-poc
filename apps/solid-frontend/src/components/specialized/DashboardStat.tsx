@@ -7,7 +7,7 @@ import freeDayStore from "../../store/freeDayStore";
 import sickDayStore from "../../store/sickDayStore";
 import vacationStore from "../../store/vacationStore";
 import workUnitStore from "../../store/workUnitStore";
-import { parseTimeStringDuration, scale } from "../../utils/utils";
+import { formatDuration, parseTimeStringDuration, scale } from "../../utils/utils";
 
 type TProps = {
     start: dayjs.Dayjs;
@@ -78,7 +78,7 @@ const DashboardStat: Component<TProps> = (props) => {
     return (
         <Stat
             title={props.title}
-            value={dayjs.duration(data.workedTime() ?? 0).format("H:mm[h]")}
+            value={formatDuration(dayjs.duration(data.workedTime() ?? 0))}
             description={
                 <span
                     classList={{
@@ -87,7 +87,7 @@ const DashboardStat: Component<TProps> = (props) => {
                     }}
                 >
                     {!data.targetReached() ? "-" : "+"}
-                    {`${missingDuration().asHours()}h`}
+                    {`${formatDuration(missingDuration())}h`}
                 </span>
             }
             figure={

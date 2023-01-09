@@ -1,5 +1,7 @@
 import dayjs from "dayjs";
 
+import type { Duration } from "dayjs/plugin/duration";
+
 export const scale = (
     value: number,
     maxIn: number,
@@ -18,6 +20,10 @@ export const parseTimeStringDuration = (time?: string) =>
         minutes: parseTimeString(time).minute(),
         seconds: parseTimeString(time).second(),
     });
+
+export const formatDuration = (duration: Duration) => {
+    return `${(duration.asHours() * 60 - duration.minutes()) / 60}:${duration.format("mm")}`;
+};
 
 export function groupArray<T, K extends keyof T>(array: Array<T>, key: K) {
     return array.reduce(

@@ -46,6 +46,16 @@ const [workUnits] = createStore({
             return result.data;
         };
     },
+    get getForProject() {
+        return async (projectId: string) => {
+            const result = await directus.items("WorkUnit").readByQuery({
+                filter: {
+                    project: projectId,
+                },
+            });
+            return result.data;
+        };
+    },
     get createOne() {
         return async (data: Partial<TWorkUnit>) => {
             const me = await directus.users.me.read();

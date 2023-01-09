@@ -3,6 +3,7 @@ import {
     batch,
     Component,
     createEffect,
+    createMemo,
     createResource,
     createSignal,
     For,
@@ -17,7 +18,9 @@ import Loading from "~/Loading";
 import categoryStore from "../../store/categoryStore";
 import projectStore from "../../store/projectStore";
 import settingsStore from "../../store/settingsStore";
+import timeBudgetStore from "../../store/timeBudgetStore";
 import workUnitStore from "../../store/workUnitStore";
+import { formatDuration } from "../../utils/utils";
 
 import type { TWorkUnit } from "lines-types";
 type TProps = {
@@ -38,12 +41,45 @@ const WorkUnitForm: Component<TProps> = (props) => {
     const [start, setStart] = createSignal(dayjs(props.presetData?.start ?? undefined).toDate());
     const [end, setEnd] = createSignal(dayjs(props.presetData?.end ?? undefined).toDate());
     const [loading, setLoading] = createSignal(false);
-    const [projects, projectsResource] = createResource(async () => await projectStore.getAll());
-    const [categories, categoriesResource] = createResource(projectId, async () => {
+    const [projects] = createResource(async () => await projectStore.getAll());
+    const [categories] = createResource(projectId, async () => {
         if (projectId()) {
-            return await categoryStore.getForProject(projectId() ?? projects()?.[0]?.id ?? "");
+            return await categoryStore.getForProject(projectId()!);
         }
     });
+    const [timebudgets] = createResource(projectId, async () => {
+        if (projectId()) {
+            return await timeBudgetStore.getForProject(projectId()!);
+        }
+    });
+    const [projectWorkUnits] = createResource(projectId, async () => {
+        if (projectId()) {
+            return await workUnitStore.getForProject(projectId()!);
+        }
+    });
+
+    const projectBudgetUsed = createMemo(() =>
+        dayjs.duration(
+            projectWorkUnits()
+                ?.filter((wu) => wu.id !== props.presetData?.id)
+                .reduce((total, wu) => total + dayjs(wu.end).diff(wu.start), 0) ?? 0
+        )
+    );
+    const projectBudgetTotal = createMemo(() =>
+        dayjs.duration(
+            timebudgets()?.reduce(
+                (total, tb) =>
+                    total +
+                    dayjs
+                        .duration({ hours: tb.budget_hours, minutes: tb.budget_minutes })
+                        .asMilliseconds(),
+                0
+            ) ?? 0
+        )
+    );
+    const duration = createMemo(() =>
+        dayjs.duration(dayjs(end()).diff(start(), "minute"), "minute")
+    );
 
     createEffect(() => {
         const data = props.presetData;
@@ -119,6 +155,7 @@ const WorkUnitForm: Component<TProps> = (props) => {
                     />
                 </FormControl>
             </div>
+            <p>Duration: {duration().format("H:mm[h]")}</p>
             <div class="flex flex-row gap-2">
                 <FormControl label="Project">
                     <select
@@ -160,6 +197,22 @@ const WorkUnitForm: Component<TProps> = (props) => {
                     </select>
                 </FormControl>
             </div>
+            <p>
+                Time budget:{" "}
+                <span
+                    classList={{
+                        "text-error":
+                            projectBudgetUsed().asMilliseconds() + duration().asMilliseconds() >
+                            projectBudgetTotal().asMilliseconds(),
+                        "text-success":
+                            projectBudgetUsed().asMilliseconds() + duration().asMilliseconds() <=
+                            projectBudgetTotal().asMilliseconds(),
+                    }}
+                >
+                    {formatDuration(projectBudgetUsed())}h + {duration().format("H:mm[h]")}/
+                    {formatDuration(projectBudgetTotal())}h
+                </span>
+            </p>
             <FormControl label="Description" class="max-w-full">
                 <textarea
                     class="textarea textarea-bordered h-full bg-base-300"
