@@ -1,4 +1,3 @@
-import { useNavigate } from "@solidjs/router";
 import { Component, createSignal } from "solid-js";
 import Button from "~/Button";
 import TextInput from "~/TextInput";
@@ -8,7 +7,6 @@ import authStore from "../store/authStore";
 const Login: Component = () => {
     const [email, setEmail] = createSignal("");
     const [password, setPassword] = createSignal("");
-    const navigate = useNavigate();
     const login = async (e: Event) => {
         e.preventDefault();
         await authStore.login?.(email(), password());
