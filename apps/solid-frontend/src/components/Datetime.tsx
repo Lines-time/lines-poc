@@ -23,7 +23,12 @@ const Datetime: Component<TProps> = (props) => {
     );
 
     const setValue = (v: dayjs.Dayjs) => {
-        props.onChange(v.second(0).toDate());
+        props.onChange(
+            v
+                .second(0)
+                .subtract(v.minute() % minuteInterval(), "minute")
+                .toDate()
+        );
     };
 
     onMount(() => {
