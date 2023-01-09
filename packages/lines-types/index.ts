@@ -13,6 +13,7 @@ export type TProject = TDirectusCollectionProperties & {
     workers: unknown[];
     categories: unknown[];
     color: string;
+    time_budgets: string[];
 };
 
 export type TClient = TDirectusCollectionProperties & {
@@ -99,4 +100,13 @@ export type TSickday = TDirectusCollectionProperties & {
 
 export type TSettings = {
     tracking_increment: number;
+};
+
+export type TTimeBudget = TDirectusCollectionProperties & {
+    project: string; // uuid of the project this belongs to
+    start_date: Date;
+    end_date: Date;
+    budget_hours: number;
+    budget_minutes: number;
+    description?: string;
 };

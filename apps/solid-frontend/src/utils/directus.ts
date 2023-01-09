@@ -13,6 +13,7 @@ import type {
     TSettings,
     TUser,
     TSickday,
+    TTimeBudget,
 } from "lines-types";
 
 export const directus = new Directus<TDirectus>("/api", {});
@@ -26,6 +27,7 @@ type TDirectus = {
     WorkTimeTargetBlock: TWorkTimeTargetBlock;
     DailyWorkTimeTarget: TDailyWorkTimeTarget;
     FreeDay: TFreeDay;
+    TimeBudget: TTimeBudget;
     Vacation: TVacation;
     Settings: TSettings;
     Sickday: TSickday;

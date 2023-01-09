@@ -239,6 +239,35 @@ collections:
         `end_date` date NULL, `worker` char(36) NULL, `description` text null,
         PRIMARY KEY (`id`), CONSTRAINT `sickday_worker_foreign` FOREIGN KEY
         (`worker`) REFERENCES `directus_users` (`id`) ON DELETE SET NULL)
+  - collection: TimeBudget
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      collapse: open
+      collection: TimeBudget
+      color: null
+      display_template: null
+      group: Project
+      hidden: true
+      icon: access_time
+      item_duplication_fields: null
+      note: null
+      singleton: false
+      sort: 1
+      sort_field: null
+      translations: null
+      unarchive_value: null
+    schema:
+      name: TimeBudget
+      sql: >-
+        CREATE TABLE "TimeBudget" (`id` char(36) NOT NULL, `start_date` date
+        NULL, `end_date` date NULL, `description` text NULL, `budget_hours`
+        integer NULL DEFAULT '0', `budget_minutes` integer NULL DEFAULT '0',
+        `project` char(36) NULL, PRIMARY KEY (`id`), CONSTRAINT
+        `timebudget_project_foreign` FOREIGN KEY (`project`) REFERENCES
+        `Project` (`id`) ON DELETE CASCADE)
   - collection: Vacation
     meta:
       accountability: all
@@ -1260,7 +1289,7 @@ fields:
         template: '{{WorkCategory_id.name}}'
       readonly: false
       required: false
-      sort: 9
+      sort: 4
       special:
         - m2m
       translations: null
@@ -1286,7 +1315,7 @@ fields:
         template: '{{companyname}}'
       readonly: false
       required: true
-      sort: 10
+      sort: 5
       special:
         - m2o
       translations: null
@@ -1325,7 +1354,7 @@ fields:
       options: null
       readonly: false
       required: false
-      sort: null
+      sort: 9
       special: null
       translations: null
       validation: null
@@ -1364,7 +1393,7 @@ fields:
         title: Settings
       readonly: false
       required: false
-      sort: null
+      sort: 7
       special:
         - alias
         - no-data
@@ -1414,6 +1443,40 @@ fields:
       table: Project
     type: uuid
   - collection: Project
+    field: time_budgets
+    meta:
+      collection: Project
+      conditions: null
+      display: related-values
+      display_options:
+        template: '{{budget_hours}}:{{budget_minutes}}'
+      field: time_budgets
+      group: null
+      hidden: false
+      interface: list-o2m
+      note: null
+      options:
+        enableSelect: false
+        fields:
+          - budget_hours
+          - budget_minutes
+          - description
+          - end_date
+          - start_date
+        layout: table
+        tableSpacing: compact
+      readonly: false
+      required: false
+      sort: 6
+      special:
+        - o2m
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema: null
+    type: alias
+  - collection: Project
     field: title
     meta:
       collection: Project
@@ -1429,7 +1492,7 @@ fields:
         iconLeft: title
       readonly: false
       required: true
-      sort: 7
+      sort: 2
       special: null
       translations: null
       validation: null
@@ -1470,7 +1533,7 @@ fields:
         min: 0
       readonly: false
       required: false
-      sort: null
+      sort: 8
       special: null
       translations: null
       validation: null
@@ -1511,7 +1574,7 @@ fields:
         template: "{{directus_users_id.first_name}}\_{{directus_users_id.last_name}}"
       readonly: false
       required: false
-      sort: 8
+      sort: 3
       special:
         - m2m
       translations: null
@@ -1907,6 +1970,276 @@ fields:
       numeric_scale: null
       table: Sickday
     type: string
+  - collection: TimeBudget
+    field: budget_hours
+    meta:
+      collection: TimeBudget
+      conditions: null
+      display: null
+      display_options: null
+      field: budget_hours
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options:
+        min: 0
+      readonly: false
+      required: true
+      sort: 6
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      data_type: integer
+      default_value: 0
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: null
+      name: budget_hours
+      numeric_precision: null
+      numeric_scale: null
+      table: TimeBudget
+    type: integer
+  - collection: TimeBudget
+    field: budget_minutes
+    meta:
+      collection: TimeBudget
+      conditions: null
+      display: null
+      display_options: null
+      field: budget_minutes
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options:
+        min: 0
+      readonly: false
+      required: true
+      sort: 7
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      data_type: integer
+      default_value: 0
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: null
+      name: budget_minutes
+      numeric_precision: null
+      numeric_scale: null
+      table: TimeBudget
+    type: integer
+  - collection: TimeBudget
+    field: description
+    meta:
+      collection: TimeBudget
+      conditions: null
+      display: null
+      display_options: null
+      field: description
+      group: null
+      hidden: false
+      interface: input-multiline
+      note: null
+      options:
+        trim: true
+      readonly: false
+      required: false
+      sort: 5
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      data_type: text
+      default_value: null
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: null
+      name: description
+      numeric_precision: null
+      numeric_scale: null
+      table: TimeBudget
+    type: text
+  - collection: TimeBudget
+    field: end_date
+    meta:
+      collection: TimeBudget
+      conditions: null
+      display: null
+      display_options: null
+      field: end_date
+      group: null
+      hidden: false
+      interface: datetime
+      note: null
+      options: null
+      readonly: false
+      required: true
+      sort: 4
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      data_type: date
+      default_value: null
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: null
+      name: end_date
+      numeric_precision: null
+      numeric_scale: null
+      table: TimeBudget
+    type: date
+  - collection: TimeBudget
+    field: id
+    meta:
+      collection: TimeBudget
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: 1
+      special:
+        - uuid
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      data_type: char
+      default_value: null
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: false
+      is_primary_key: true
+      is_unique: true
+      max_length: 36
+      name: id
+      numeric_precision: null
+      numeric_scale: null
+      table: TimeBudget
+    type: uuid
+  - collection: TimeBudget
+    field: project
+    meta:
+      collection: TimeBudget
+      conditions: null
+      display: null
+      display_options: null
+      field: project
+      group: null
+      hidden: true
+      interface: select-dropdown-m2o
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: 2
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      data_type: char
+      default_value: null
+      foreign_key_column: id
+      foreign_key_table: Project
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: 36
+      name: project
+      numeric_precision: null
+      numeric_scale: null
+      table: TimeBudget
+    type: string
+  - collection: TimeBudget
+    field: start_date
+    meta:
+      collection: TimeBudget
+      conditions: null
+      display: null
+      display_options: null
+      field: start_date
+      group: null
+      hidden: false
+      interface: datetime
+      note: null
+      options: null
+      readonly: false
+      required: true
+      sort: 3
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      data_type: date
+      default_value: null
+      foreign_key_column: null
+      foreign_key_table: null
+      generation_expression: null
+      has_auto_increment: false
+      is_generated: false
+      is_nullable: true
+      is_primary_key: false
+      is_unique: false
+      max_length: null
+      name: start_date
+      numeric_precision: null
+      numeric_scale: null
+      table: TimeBudget
+    type: date
   - collection: Vacation
     field: approved
     meta:
@@ -3223,6 +3556,27 @@ relations:
       on_delete: SET NULL
       on_update: NO ACTION
       table: Sickday
+  - collection: TimeBudget
+    field: project
+    meta:
+      junction_field: null
+      many_collection: TimeBudget
+      many_field: project
+      one_allowed_collections: null
+      one_collection: Project
+      one_collection_field: null
+      one_deselect_action: delete
+      one_field: time_budgets
+      sort_field: null
+    related_collection: Project
+    schema:
+      column: project
+      constraint_name: null
+      foreign_key_column: id
+      foreign_key_table: Project
+      on_delete: CASCADE
+      on_update: NO ACTION
+      table: TimeBudget
   - collection: Vacation
     field: category
     meta:
