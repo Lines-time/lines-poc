@@ -10,7 +10,7 @@ const Login: Component = () => {
     const login = async (e: Event) => {
         e.preventDefault();
         await authStore.login?.(email(), password());
-        window.location.href = "/";
+        window.location.href = "/"; // we want a full reload to update themeing
     };
     return (
         <div class="w-screen h-[90vh] flex flex-col items-center justify-center gap-3">
