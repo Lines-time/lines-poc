@@ -13,7 +13,7 @@ import {
 } from "solid-js";
 import ForNumber from "~/ForNumber";
 
-import { scale } from "../../../utils/utils";
+import { parseTimeFromStep, scale } from "../../../utils/utils";
 import CalendarEvent from "./CalendarEvent";
 
 import type { TCalendarEvent } from "../../../types";
@@ -24,6 +24,7 @@ type DayProps = {
     showCurrentTime?: boolean;
     now: Accessor<Dayjs>;
     onCreateDuration?: (start: Dayjs, end: Dayjs) => void;
+    onStepMouseEnter?: (e: Event, interval: number) => boolean;
 };
 
 const Day: Component<DayProps> = (props) => {
@@ -63,13 +64,10 @@ const Day: Component<DayProps> = (props) => {
         if (ss && es) {
             let _ss = Math.min(ss, es);
             let _es = Math.max(ss, es);
-            _ss -= 1;
-            const startMinutes = (_ss * props.interval) % 60;
-            const startHour = (_ss * props.interval - startMinutes) / 60;
-            const endMinutes = (_es * props.interval) % 60;
-            const endHour = (_es * props.interval - endMinutes) / 60;
-            const start = props.now().hour(startHour).minute(startMinutes).second(0);
-            const end = props.now().hour(endHour).minute(endMinutes).second(0);
+            const startTime = parseTimeFromStep(_ss, props.interval, true);
+            const endTime = parseTimeFromStep(_es, props.interval, false);
+            const start = props.now().hour(startTime.hours).minute(startTime.minutes).second(0);
+            const end = props.now().hour(endTime.hours).minute(endTime.minutes).second(0);
             props.onCreateDuration?.(start, end);
             setStartStep();
             setEndStep();
@@ -98,11 +96,14 @@ const Day: Component<DayProps> = (props) => {
                             setEndStep(step + 1);
                         }}
                         onMouseEnter={(e) => {
-                            if (selecting()) setEndStep(step + 1);
+                            const cont = props.onStepMouseEnter?.(e, step + 1);
+                            if (cont ?? true) if (selecting()) setEndStep(step + 1);
                         }}
                         onMouseUp={() => {
-                            setSelecting(false);
-                            createDurationFromSelection();
+                            if (selecting()) {
+                                setSelecting(false);
+                                createDurationFromSelection();
+                            }
                         }}
                     >
                         <span class="flex flex-row items-center justify-center w-full h-full text-xs absolute group-hover:opacity-50 opacity-0 cursor-default select-none">

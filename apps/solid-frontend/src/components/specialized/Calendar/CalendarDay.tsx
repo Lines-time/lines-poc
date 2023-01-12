@@ -14,6 +14,7 @@ type TProps = {
     interval?: Accessor<number>;
     events?: Accessor<TCalendarEvent[]>;
     onCreateEvent?: (start: Dayjs, end: Dayjs) => void;
+    onStepMouseEnter?: (e: Event, interval: number) => boolean;
 };
 
 const CalendarDay: Component<TProps> = (props) => {
@@ -76,6 +77,7 @@ const CalendarDay: Component<TProps> = (props) => {
                 steps={steps()}
                 events={events()}
                 interval={interval()}
+                onStepMouseEnter={props.onStepMouseEnter}
                 onCreateDuration={props.onCreateEvent}
                 showCurrentTime
             />

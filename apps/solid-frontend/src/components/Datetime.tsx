@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { ChevronLeft, ChevronRight, CircleDot, Clock } from "lucide-solid";
-import { Component, createMemo, onMount, Show } from "solid-js";
+import { Component, createMemo, Show } from "solid-js";
 
 import Button from "./Button";
 import ForNumber from "./ForNumber";
@@ -18,9 +18,7 @@ type TProps = {
 const Datetime: Component<TProps> = (props) => {
     const { align = "start", location = "bottom" } = props;
     const minuteInterval = createMemo(() => props.minuteInterval ?? 30);
-    const value = createMemo(() =>
-        dayjs(props.value).subtract(dayjs(props.value).minute() % minuteInterval(), "minute")
-    );
+    const value = createMemo(() => dayjs(props.value));
 
     const setValue = (v: dayjs.Dayjs) => {
         props.onChange(
@@ -30,10 +28,6 @@ const Datetime: Component<TProps> = (props) => {
                 .toDate()
         );
     };
-
-    onMount(() => {
-        setValue(value());
-    });
 
     const currentLang = () => window.navigator.languages[0];
     const formatTimeNumber = (v: number) =>

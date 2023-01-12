@@ -9,6 +9,8 @@ import type { TWorkUnit } from "lines-types";
 type TProps = {
     workUnit: TWorkUnit;
     onClick?: (event: Event) => void;
+    onModifyStartMouseDown?: (event: Event) => void;
+    onModifyEndMouseDown?: (event: Event) => void;
 };
 
 const WorkUnitCalendarEvent: Component<TProps> = (props) => {
@@ -34,6 +36,20 @@ const WorkUnitCalendarEvent: Component<TProps> = (props) => {
             }}
             onClick={props.onClick}
         >
+            {/* <div class="group min-h-[4px] top-0 absolute flex flex-row justify-center w-full">
+                <div
+                    class="group-hover:visible invisible px-3 cursor-n-resize rounded-b-md"
+                    style={{
+                        "background-color": "rgba(0, 0, 0, 0.2)",
+                    }}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                    }}
+                    onMouseDown={props.onModifyStartMouseDown}
+                >
+                    <GripHorizontal size={12} />
+                </div>
+            </div> */}
             <div id={props.workUnit.id} class="absolute -mt-16" />
             <p class="p-1 px-2">
                 {project.latest?.title}: {category.latest?.name}
@@ -51,6 +67,20 @@ const WorkUnitCalendarEvent: Component<TProps> = (props) => {
                 <label class="text-xs px-2">Description:</label>
                 <p class="px-2">{props.workUnit.description}</p>
             </Show>
+            {/* <div class="group min-h-[4px] bottom-0 absolute flex flex-row justify-center w-full">
+                <div
+                    class="group-hover:visible invisible px-3 cursor-n-resize rounded-t-md"
+                    style={{
+                        "background-color": "rgba(0, 0, 0, 0.2)",
+                    }}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                    }}
+                    onMouseDown={props.onModifyEndMouseDown}
+                >
+                    <GripHorizontal size={12} />
+                </div>
+            </div> */}
         </div>
     );
 };

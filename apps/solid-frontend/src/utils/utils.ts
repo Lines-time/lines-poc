@@ -31,3 +31,13 @@ export function groupArray<T, K extends keyof T>(array: Array<T>, key: K) {
         new Map<T[K], T[]>()
     );
 }
+
+export function parseTimeFromStep(step: number, interval: number, start: boolean) {
+    const _step = start ? step - 1 : step;
+    const minutes = (_step * interval) % 60;
+    const hours = (_step * interval - minutes) / 60;
+    return {
+        hours,
+        minutes,
+    };
+}
