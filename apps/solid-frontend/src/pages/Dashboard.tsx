@@ -2,15 +2,18 @@ import dayjs from "dayjs";
 import { Component, createResource, For, Suspense } from "solid-js";
 import Loading from "~/Loading";
 import Navbar from "~/Navbar";
+import DashboardProjectItem from "~/specialized/DashboardProjectItem";
 import DashboardStat from "~/specialized/DashboardStat";
 import WorkTimeTarget from "~/specialized/WorkTimeTarget";
 
+import projectStore from "../store/projectStore";
 import workTimeTargetBlockStore from "../store/workTimeTargetBlockStore";
 
 const Dashboard: Component = () => {
     const [currentWorkTimeTargets] = createResource(
         async () => await workTimeTargetBlockStore.getCurrent()
     );
+    const [usersProjects] = createResource(async () => await projectStore.getForUser());
     return (
         <div class="h-full grid grid-rows-[64px_1fr]">
             <Navbar title="Dashboard" />
@@ -51,6 +54,14 @@ const Dashboard: Component = () => {
                                 <Stat title="Vacation days" description="Remaining" value="10/30" />
                             </div>
                         </div> */}
+                        <div class="">
+                            <h3 class="text-lg">Your Projects:</h3>
+                            <div class="bg-base-200 border-base-100 border-2 rounded-lg">
+                                <For each={usersProjects()}>
+                                    {(project) => <DashboardProjectItem project={project} />}
+                                </For>
+                            </div>
+                        </div>
                     </div>
                 </main>
             </Suspense>

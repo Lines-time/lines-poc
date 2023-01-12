@@ -9,6 +9,20 @@ const [projects] = createStore({
             return result.data;
         };
     },
+    get getForUser() {
+        return async (userId = "$CURRENT_USER") => {
+            const result = await directus.items("Project").readByQuery({
+                filter: {
+                    workers: {
+                        directus_users_id: {
+                            _eq: userId,
+                        },
+                    },
+                },
+            });
+            return result.data;
+        };
+    },
     get getById() {
         return async (id: string) => {
             const result = await directus.items("Project").readOne(id);
