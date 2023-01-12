@@ -23,7 +23,7 @@ const Dashboard: Component = () => {
                     <div class="grid grid-cols-3 pt-4 gap-2">
                         <div class="col-span-3">
                             <h3 class="text-lg">Worked time:</h3>
-                            <div class="stats rounded-lg max-xl:stats-vertical w-full bg-base-200 border-2 border-base-100">
+                            <div class="stats rounded-lg max-xl:stats-vertical w-full bg-base-200 border-2 border-base-100 grid grid-cols-3">
                                 <DashboardStat start={dayjs()} end={dayjs()} title="Today" />
                                 <DashboardStat
                                     start={dayjs().isoWeekday(1)}
