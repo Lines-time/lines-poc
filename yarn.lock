@@ -6995,7 +6995,6 @@ __metadata:
     lines-types: "workspace:*"
     lucide-solid: ^0.103.0
     postcss: ^8.4.18
-    rome: ^11.0.0
     sass: ^1.56.1
     solid-js: ^1.6.2
     tailwindcss: ^3.2.1
@@ -7013,6 +7012,7 @@ __metadata:
   dependencies:
     eslint-config-custom: "*"
     prettier: latest
+    rome: ^11.0.0
     turbo: latest
   languageName: unknown
   linkType: soft
