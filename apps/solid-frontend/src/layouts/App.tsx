@@ -13,11 +13,8 @@ const App: Component = () => {
     onMount(async () => {
         const authed = await authStore.isAuthenticated;
         if (!authed) {
-            const refreshed = await authStore.refresh();
-            if (!refreshed) {
-                // navigate("/login"); // somehow doesnt work
-                window.location.href = "/login";
-            }
+            // navigate("/login"); // somehow doesnt work
+            window.location.href = "/login";
         }
     });
 
