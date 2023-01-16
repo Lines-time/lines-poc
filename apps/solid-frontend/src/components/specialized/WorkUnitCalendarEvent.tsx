@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { GripHorizontal } from "lucide-solid";
-import { Component, createResource, Show } from "solid-js";
+import { Component, createMemo, createResource, Show } from "solid-js";
 
 import authStore from "../../store/authStore";
 import categoryStore from "../../store/categoryStore";
@@ -12,9 +12,11 @@ type TProps = {
     onClick?: (event: Event) => void;
     onModifyStartMouseDown?: (event: Event) => void;
     onModifyEndMouseDown?: (event: Event) => void;
+    pointerEvents?: boolean;
 };
 
 const WorkUnitCalendarEvent: Component<TProps> = (props) => {
+    const pointerEvents = createMemo(() => props.pointerEvents ?? true);
     const [project, projectResource] = createResource(
         async () => await projectStore.getById(props.workUnit.project),
     );
@@ -29,6 +31,8 @@ const WorkUnitCalendarEvent: Component<TProps> = (props) => {
                 "cursor-pointer": !!props.onClick,
                 "bg-primary": !(project.loading || me.loading),
                 "bg-base-100": project.loading || me.loading,
+                "pointer-events-none": !pointerEvents(),
+                "select-none": !pointerEvents(),
             }}
             style={{
                 "background-color": me()?.use_project_colors

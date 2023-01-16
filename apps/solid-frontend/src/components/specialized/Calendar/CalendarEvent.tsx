@@ -13,16 +13,19 @@ const Event: Component<EventProps> = (props) => {
     const startRow = createMemo(
         () =>
             dayjs(props.event.start).hour() * intervalsInHour() +
-            dayjs(props.event.start).minute() / props.interval
+            dayjs(props.event.start).minute() / props.interval,
     );
     const endRow = createMemo(
         () =>
             dayjs(props.event.end).hour() * intervalsInHour() +
-            dayjs(props.event.end).minute() / props.interval
+            dayjs(props.event.end).minute() / props.interval,
     );
     return (
         <div
             class="absolute h-full w-full"
+            classList={{
+                "pointer-events-none": !props.event.pointerEvents,
+            }}
             style={{
                 "grid-row-start": startRow() + 1,
                 "grid-row-end": `${endRow() + 1}`,

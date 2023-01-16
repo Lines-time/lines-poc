@@ -79,7 +79,7 @@ const Day: Component<DayProps> = (props) => {
             <ForNumber each={props.steps}>
                 {(step) => (
                     <div
-                        class="border-b border-base-100 group relative"
+                        class="border-b border-base-100 group relative pointer-events-[all]"
                         classList={{
                             "border-solid": ((step + 1) * props.interval) % 60 === 0,
                             "border-dashed": ((step + 1) * props.interval) % 60 !== 0,

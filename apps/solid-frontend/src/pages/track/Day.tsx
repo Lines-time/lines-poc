@@ -33,9 +33,6 @@ const Day: Component = () => {
     const [editingEnd, setEditingEnd] = createSignal<string>();
     const [presetStart, setPresetStart] = createSignal<Dayjs | undefined>();
     const [presetEnd, setPresetEnd] = createSignal<Dayjs | undefined>();
-    const [stopEditingStartListener, setStopEditingStartListener] =
-        createSignal();
-    const [stopEditingEndListener, setStopEditingEndListener] = createSignal();
     const [settings] = createResource(async () => await settingsStore.get());
     const trackingInterval = createMemo(
         () => settings()?.tracking_increment ?? 30,
@@ -134,6 +131,7 @@ const Day: Component = () => {
             workUnits.latest?.map((wu) => ({
                 start: dayjs(wu.start).toDate(),
                 end: dayjs(wu.end).toDate(),
+                pointerEvents: !(editingStart() || editingEnd()),
                 display: () => (
                     <WorkUnitCalendarEvent
                         workUnit={wu}
@@ -144,6 +142,7 @@ const Day: Component = () => {
                         onModifyEndMouseDown={() => {
                             setEditingEnd(wu.id);
                         }}
+                        pointerEvents={!(editingStart() || editingEnd())}
                     />
                 ),
             })) ?? [],

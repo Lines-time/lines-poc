@@ -6,5 +6,6 @@ type TParentComponent<P = {}> = Component<TParentProps<P>>;
 type TCalendarEvent = {
     start: Date;
     end: Date;
+    pointerEvents: boolean;
     display: Component;
 };
