@@ -14,10 +14,17 @@ type TProps = {
     interval?: Accessor<number>;
     events?: Accessor<TCalendarEvent[]>;
     onCreateEvent?: (start: Dayjs, end: Dayjs) => void;
+    onStepMouseEnter?: (e: Event, interval: number) => boolean;
 };
 
 const CalendarWeek: Component<TProps> = (props) => {
-    const { now, onUpdateNow, controls = true, interval = () => 30, events = () => [] } = props;
+    const {
+        now,
+        onUpdateNow,
+        controls = true,
+        interval = () => 30,
+        events = () => [],
+    } = props;
     const steps = createMemo(() => 24 * (60 / interval()));
 
     const dayEvents = (day: number) => {
@@ -49,7 +56,10 @@ const CalendarWeek: Component<TProps> = (props) => {
                         {now().isoWeekday(7).format("dddd, LL")}
                     </span>
                     {controls && now().isoWeek() !== dayjs().isoWeek() ? (
-                        <Button class="btn-sm" onClick={() => onUpdateNow?.(dayjs())}>
+                        <Button
+                            class="btn-sm"
+                            onClick={() => onUpdateNow?.(dayjs())}
+                        >
                             Today
                         </Button>
                     ) : (
@@ -105,6 +115,7 @@ const CalendarWeek: Component<TProps> = (props) => {
                         <DayGrid
                             now={() => now().isoWeekday(day + 1)}
                             onCreateDuration={props.onCreateEvent}
+                            onStepMouseEnter={props.onStepMouseEnter}
                             showCurrentTime={now()
                                 .isoWeekday(day + 1)
                                 .isToday()}
