@@ -17,8 +17,7 @@
         "eslint-config-custom": "*",
         "prettier": "latest",
         "rome": "^11.0.0",
-        "turbo": "latest",
-        "lint": "rome check ."
+        "turbo": "latest"
     },
     "engines": {
         "node": ">=14.0.0"
