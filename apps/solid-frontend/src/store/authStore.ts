@@ -30,6 +30,9 @@ const [auth] = createStore({
     get authToken() {
         return directus.auth.token;
     },
+    get refresh() {
+        return directus.auth.refresh;
+    },
     get update() {
         return async (user: Partial<TUser>) => {
             const result = await directus.users.me.update(user);

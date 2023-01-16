@@ -116,9 +116,9 @@ const Calendar: Component = () => {
                                     "bg-primary": v!.approved,
                                     "text-primary-content": v!.approved,
                                     // if not approved
-                                    "border-error": !v!.approved,
-                                    "bg-error": !v!.approved,
-                                    "text-error-content": !v!.approved,
+                                    "border-base-100": !v!.approved,
+                                    "bg-base-200": !v!.approved,
+                                    "text-base-content": !v!.approved,
                                 }}
                             >
                                 {v!.description}

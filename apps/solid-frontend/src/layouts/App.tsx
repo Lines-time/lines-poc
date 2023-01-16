@@ -13,13 +13,16 @@ const App: Component = () => {
     onMount(async () => {
         const authed = await authStore.isAuthenticated;
         if (!authed) {
-            // navigate("/login"); // somehow doesnt work
-            window.location.href = "/login";
+            const refreshed = await authStore.refresh();
+            if (!refreshed) {
+                // navigate("/login"); // somehow doesnt work
+                window.location.href = "/login";
+            }
         }
     });
 
     const [currentUser, currentUserResource] = createResource(
-        async () => await authStore.currentUser
+        async () => await authStore.currentUser,
     );
     return (
         <>
@@ -44,19 +47,30 @@ const App: Component = () => {
                         </div>
                         <ul class="menu menu-compact w-full p-2 rounded-box gap-2">
                             <li>
-                                <A href="/" end activeClass="text-primary bg-base-100">
+                                <A
+                                    href="/"
+                                    end
+                                    activeClass="text-primary bg-base-100"
+                                >
                                     <LayoutDashboard />
                                     Dashboard
                                 </A>
                             </li>
                             <li>
-                                <A href="/track" activeClass="text-primary bg-base-100">
+                                <A
+                                    href="/track"
+                                    activeClass="text-primary bg-base-100"
+                                >
                                     <Timer />
                                     Track time
                                 </A>
                             </li>
                             <li>
-                                <A href="/calendar" end activeClass="text-primary bg-base-100">
+                                <A
+                                    href="/calendar"
+                                    end
+                                    activeClass="text-primary bg-base-100"
+                                >
                                     <Calendar />
                                     Calendar
                                 </A>
@@ -65,7 +79,11 @@ const App: Component = () => {
                                 <span>Reports</span>
                             </li>
                             <li>
-                                <A href="/reports" end activeClass="text-primary bg-base-100">
+                                <A
+                                    href="/reports"
+                                    end
+                                    activeClass="text-primary bg-base-100"
+                                >
                                     <BarChart3 />
                                     Overview
                                 </A>
@@ -85,9 +103,14 @@ const App: Component = () => {
                             >
                                 <Suspense fallback={<Loading size="md" />}>
                                     <Show
-                                        when={currentUser()?.first_name && currentUser()?.last_name}
+                                        when={
+                                            currentUser()?.first_name &&
+                                            currentUser()?.last_name
+                                        }
                                     >
-                                        {`${currentUser()!.first_name} ${currentUser()!.last_name}`}
+                                        {`${currentUser()!.first_name} ${
+                                            currentUser()!.last_name
+                                        }`}
                                     </Show>
                                 </Suspense>
                             </A>

@@ -34,5 +34,23 @@ const [vacations] = createStore({
             return response;
         };
     },
+    get getCurrentBudgetForUser() {
+        return async (userId = "$CURRENT_USER") => {
+            const result = await directus.items("VacationBudget").readByQuery({
+                filter: {
+                    worker: {
+                        _eq: userId,
+                    },
+                    start_date: {
+                        _lt: dayjs().startOf("day").toDate(),
+                    },
+                    end_date: {
+                        _gt: dayjs().endOf("day").toDate(),
+                    },
+                },
+            });
+            return result.data;
+        };
+    },
 });
 export default vacations;

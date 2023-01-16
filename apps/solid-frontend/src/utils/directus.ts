@@ -14,6 +14,7 @@ import type {
     TUser,
     TSickday,
     TTimeBudget,
+    TVacationBudget,
 } from "lines-types";
 
 export const directus = new Directus<TDirectus>("/api", {});
@@ -31,5 +32,6 @@ type TDirectus = {
     Vacation: TVacation;
     Settings: TSettings;
     Sickday: TSickday;
+    VacationBudget: TVacationBudget;
     directus_users: TUser;
 };
