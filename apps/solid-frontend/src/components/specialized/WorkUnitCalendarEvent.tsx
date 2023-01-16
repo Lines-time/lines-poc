@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import { GripHorizontal } from "lucide-solid";
 import { Component, createResource, Show } from "solid-js";
 
 import authStore from "../../store/authStore";
@@ -15,10 +16,10 @@ type TProps = {
 
 const WorkUnitCalendarEvent: Component<TProps> = (props) => {
     const [project, projectResource] = createResource(
-        async () => await projectStore.getById(props.workUnit.project)
+        async () => await projectStore.getById(props.workUnit.project),
     );
     const [category] = createResource(
-        async () => await categoryStore.getById(props.workUnit.category)
+        async () => await categoryStore.getById(props.workUnit.category),
     );
     const [me] = createResource(async () => await authStore.currentUser);
     return (
@@ -30,13 +31,15 @@ const WorkUnitCalendarEvent: Component<TProps> = (props) => {
                 "bg-base-100": project.loading || me.loading,
             }}
             style={{
-                "background-color": me()?.use_project_colors ? project.latest?.color : undefined,
+                "background-color": me()?.use_project_colors
+                    ? project.latest?.color
+                    : undefined,
                 "border-color": "rgba(0, 0, 0, 0.2)",
                 color: "rgba(0, 0, 0, 0.8)",
             }}
             onClick={props.onClick}
         >
-            {/* <div class="group min-h-[4px] top-0 absolute flex flex-row justify-center w-full">
+            <div class="group min-h-[4px] top-0 absolute flex flex-row justify-center w-full select-none">
                 <div
                     class="group-hover:visible invisible px-3 cursor-n-resize rounded-b-md"
                     style={{
@@ -49,7 +52,7 @@ const WorkUnitCalendarEvent: Component<TProps> = (props) => {
                 >
                     <GripHorizontal size={12} />
                 </div>
-            </div> */}
+            </div>
             <div id={props.workUnit.id} class="absolute -mt-16" />
             <p class="p-1 px-2">
                 {project.latest?.title}: {category.latest?.name}
@@ -67,7 +70,7 @@ const WorkUnitCalendarEvent: Component<TProps> = (props) => {
                 <label class="text-xs px-2">Description:</label>
                 <p class="px-2">{props.workUnit.description}</p>
             </Show>
-            {/* <div class="group min-h-[4px] bottom-0 absolute flex flex-row justify-center w-full">
+            <div class="group min-h-[4px] bottom-0 absolute flex flex-row justify-center w-full select-none">
                 <div
                     class="group-hover:visible invisible px-3 cursor-n-resize rounded-t-md"
                     style={{
@@ -80,7 +83,7 @@ const WorkUnitCalendarEvent: Component<TProps> = (props) => {
                 >
                     <GripHorizontal size={12} />
                 </div>
-            </div> */}
+            </div>
         </div>
     );
 };
