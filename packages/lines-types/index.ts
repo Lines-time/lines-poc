@@ -58,6 +58,14 @@ export type TUser = TDirectusCollectionProperties & {
     avatar: string;
     use_project_colors: boolean;
     workTimeTargetBlocks: (string | undefined)[];
+    VacationBudgets: string[];
+};
+
+export type TVacationBudget = TDirectusCollectionProperties & {
+    worker: string;
+    start_date: Date;
+    end_date: Date;
+    days: number;
 };
 
 export type TWorkTimeTargetBlock = TDirectusCollectionProperties & {
