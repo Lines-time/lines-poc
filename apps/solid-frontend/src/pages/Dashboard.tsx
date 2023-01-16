@@ -110,7 +110,7 @@ const Dashboard: Component = () => {
                             <div class="bg-base-200 border-base-100 border-2 rounded-lg grid grid-cols-2">
                                 <Stat
                                     title="Vacation days"
-                                    description="Used"
+                                    description="Used/Available"
                                     value={`${usedVacationDays()}/${vacationBudget()}`}
                                 />
                             </div>
