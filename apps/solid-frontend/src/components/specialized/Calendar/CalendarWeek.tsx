@@ -89,7 +89,7 @@ const CalendarWeek: Component<TProps> = (props) => {
                     {/* Timestamps on the left */}
                     <ForNumber each={steps()}>
                         {(step) => (
-                            <div class="px-1 h-5 text-sm">
+                            <div class="px-1 h-5 text-sm -translate-y-2.5">
                                 <Show when={(step * interval()) % 60 === 0}>
                                     {now()
                                         .hour(0)
