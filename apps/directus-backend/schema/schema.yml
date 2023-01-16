@@ -228,7 +228,7 @@ collections:
       item_duplication_fields: null
       note: null
       singleton: false
-      sort: 3
+      sort: 4
       sort_field: null
       translations: null
       unarchive_value: null
@@ -283,7 +283,7 @@ collections:
       item_duplication_fields: null
       note: null
       singleton: false
-      sort: 2
+      sort: 3
       sort_field: null
       translations: null
       unarchive_value: null
@@ -307,13 +307,13 @@ collections:
       collection: VacationBudget
       color: null
       display_template: null
-      group: null
+      group: No_work
       hidden: false
-      icon: null
+      icon: airplane_ticket
       item_duplication_fields: null
       note: null
       singleton: false
-      sort: null
+      sort: 2
       sort_field: null
       translations: null
       unarchive_value: null
