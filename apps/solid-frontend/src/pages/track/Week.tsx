@@ -84,12 +84,10 @@ const Week: Component = () => {
             const units = workUnits();
             if (units) {
                 const lastUnit = units[units.length - 1];
-                if (lastUnit) {
-                    return {
-                        start: presetStart()?.toString() ?? lastUnit.end,
-                        end: presetEnd()?.toString(),
-                    };
-                }
+                return {
+                    start: presetStart()?.toString() ?? lastUnit?.end ?? dayjs().toString(),
+                    end: presetEnd()?.toString() ?? dayjs().toString(),
+                };
             }
         } else if (searchParams.edit) {
             const _wu = workUnits()?.find(
