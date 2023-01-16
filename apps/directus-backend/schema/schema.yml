@@ -24,8 +24,9 @@ collections:
     schema:
       name: Client
       sql: >-
-        CREATE TABLE "Client" (`id` char(36) NOT NULL, `companyname`
-        varchar(255) NULL, `address` text NULL, PRIMARY KEY (`id`))
+        CREATE TABLE `Client` (`address` text null default null, `companyname`
+        varchar(255) null default null, `id` char(36) not null default null,
+        primary key (`id`))
   - collection: DailyWorkTimeTarget
     meta:
       accountability: all
@@ -49,11 +50,12 @@ collections:
     schema:
       name: DailyWorkTimeTarget
       sql: >-
-        CREATE TABLE "DailyWorkTimeTarget" (`id` char(36) NOT NULL, `dayOfWeek`
-        integer NULL, `start` time NULL, `end` time NULL, `duration` time NULL,
-        `blockId` char(36) NULL, PRIMARY KEY (`id`), CONSTRAINT
-        `dailyworktimetarget_blockid_foreign` FOREIGN KEY (`blockId`) REFERENCES
-        `WorkTimeTargetBlock` (`id`) ON DELETE SET NULL)
+        CREATE TABLE "DailyWorkTimeTarget" (`blockId` char(36) NULL DEFAULT
+        null, `dayOfWeek` integer NULL DEFAULT null, `duration` time NULL
+        DEFAULT null, `end` time NULL DEFAULT null, `id` char(36) NOT NULL
+        DEFAULT null, `start` time NULL DEFAULT null, PRIMARY KEY (`id`),
+        CONSTRAINT `dailyworktimetarget_blockid_foreign` FOREIGN KEY (`blockId`)
+        REFERENCES `WorkTimeTargetBlock` (`id`) ON DELETE SET NULL)
   - collection: FreeDay
     meta:
       accountability: all
@@ -77,9 +79,9 @@ collections:
     schema:
       name: FreeDay
       sql: >-
-        CREATE TABLE "FreeDay" (`id` char(36) NOT NULL, `date` date NULL,
-        `description` text NULL, `percentage` float NULL DEFAULT '1', PRIMARY
-        KEY (`id`))
+        CREATE TABLE `FreeDay` (`date` date null default null, `description`
+        text null default null, `id` char(36) not null default null,
+        `percentage` float null default '1', primary key (`id`))
   - collection: No_work
     meta:
       accountability: all
@@ -124,9 +126,10 @@ collections:
     schema:
       name: Person
       sql: >-
-        CREATE TABLE "Person" (`id` char(36) NOT NULL, `firstname` varchar(255)
-        NULL, `lastname` varchar(255) NULL, `email` varchar(255) NULL,
-        `telephone` varchar(255) NULL, `client` char(36) NULL, PRIMARY KEY
+        CREATE TABLE "Person" (`client` char(36) NULL DEFAULT null, `email`
+        varchar(255) NULL DEFAULT null, `firstname` varchar(255) NULL DEFAULT
+        null, `id` char(36) NOT NULL DEFAULT null, `lastname` varchar(255) NULL
+        DEFAULT null, `telephone` varchar(255) NULL DEFAULT null, PRIMARY KEY
         (`id`), CONSTRAINT `person_client_foreign` FOREIGN KEY (`client`)
         REFERENCES `Client` (`id`) ON DELETE CASCADE)
   - collection: Project
@@ -152,9 +155,10 @@ collections:
     schema:
       name: Project
       sql: >-
-        CREATE TABLE "Project" (`id` char(36) NOT NULL, `title` varchar(255)
-        NULL, `client` char(36) NULL, `tracking_increment` integer NULL DEFAULT
-        '0', `color` varchar(255) null, PRIMARY KEY (`id`), CONSTRAINT
+        CREATE TABLE "Project" (`client` char(36) NULL DEFAULT null, `color`
+        varchar(255) NULL DEFAULT null, `id` char(36) NOT NULL DEFAULT null,
+        `title` varchar(255) NULL DEFAULT null, `tracking_increment` integer
+        NULL DEFAULT '0', PRIMARY KEY (`id`), CONSTRAINT
         `project_client_foreign` FOREIGN KEY (`client`) REFERENCES `Client`
         (`id`) ON DELETE SET NULL)
   - collection: Project_directus_users
@@ -180,13 +184,14 @@ collections:
     schema:
       name: Project_directus_users
       sql: >-
-        CREATE TABLE "Project_directus_users" (`id` integer PRIMARY KEY
-        AUTOINCREMENT NOT NULL, `Project_id` char(36) NULL, `directus_users_id`
-        char(36) NULL, CONSTRAINT `project_directus_users_project_id_foreign`
-        FOREIGN KEY (`Project_id`) REFERENCES `Project` (`id`) ON DELETE SET
-        NULL, CONSTRAINT `project_directus_users_directus_users_id_foreign`
-        FOREIGN KEY (`directus_users_id`) REFERENCES `directus_users` (`id`) ON
-        DELETE SET NULL)
+        CREATE TABLE "Project_directus_users" (`Project_id` char(36) NULL
+        DEFAULT null, `directus_users_id` char(36) NULL DEFAULT null, `id`
+        integer PRIMARY KEY AUTOINCREMENT NOT NULL, CONSTRAINT
+        `project_directus_users_project_id_foreign` FOREIGN KEY (`Project_id`)
+        REFERENCES `Project` (`id`) ON DELETE SET NULL, CONSTRAINT
+        `project_directus_users_directus_users_id_foreign` FOREIGN KEY
+        (`directus_users_id`) REFERENCES `directus_users` (`id`) ON DELETE SET
+        NULL)
   - collection: Settings
     meta:
       accountability: all
@@ -235,10 +240,11 @@ collections:
     schema:
       name: Sickday
       sql: >-
-        CREATE TABLE "Sickday" (`id` char(36) NOT NULL, `start_date` date NULL,
-        `end_date` date NULL, `worker` char(36) NULL, `description` text null,
-        PRIMARY KEY (`id`), CONSTRAINT `sickday_worker_foreign` FOREIGN KEY
-        (`worker`) REFERENCES `directus_users` (`id`) ON DELETE SET NULL)
+        CREATE TABLE "Sickday" (`description` text NULL DEFAULT null, `end_date`
+        date NULL DEFAULT null, `id` char(36) NOT NULL DEFAULT null,
+        `start_date` date NULL DEFAULT null, `worker` char(36) NULL DEFAULT
+        null, PRIMARY KEY (`id`), CONSTRAINT `sickday_worker_foreign` FOREIGN
+        KEY (`worker`) REFERENCES `directus_users` (`id`) ON DELETE SET NULL)
   - collection: TimeBudget
     meta:
       accountability: all
@@ -262,11 +268,12 @@ collections:
     schema:
       name: TimeBudget
       sql: >-
-        CREATE TABLE "TimeBudget" (`id` char(36) NOT NULL, `description` text
-        NULL, `budget_hours` integer NULL DEFAULT '0', `budget_minutes` integer
-        NULL DEFAULT '0', `project` char(36) NULL, PRIMARY KEY (`id`),
-        CONSTRAINT `timebudget_project_foreign` FOREIGN KEY (`project`)
-        REFERENCES `Project` (`id`) ON DELETE CASCADE)
+        CREATE TABLE "TimeBudget" (`budget_hours` integer NULL DEFAULT '0',
+        `budget_minutes` integer NULL DEFAULT '0', `description` text NULL
+        DEFAULT null, `id` char(36) NOT NULL DEFAULT null, `project` char(36)
+        NULL DEFAULT null, PRIMARY KEY (`id`), CONSTRAINT
+        `timebudget_project_foreign` FOREIGN KEY (`project`) REFERENCES
+        `Project` (`id`) ON DELETE CASCADE)
   - collection: Vacation
     meta:
       accountability: all
@@ -290,11 +297,12 @@ collections:
     schema:
       name: Vacation
       sql: >-
-        CREATE TABLE "Vacation" (`id` char(36) NOT NULL, `start` date NULL,
-        `end` date NULL, `category` char(36) NULL, `worker` varchar(36) NOT NULL
-        DEFAULT null, `description` text NULL, `approved` boolean NULL DEFAULT
-        '0', PRIMARY KEY (`id`), CONSTRAINT `vacation_category_foreign` FOREIGN
-        KEY (`category`) REFERENCES `VacationType` (`id`) ON DELETE SET NULL,
+        CREATE TABLE "Vacation" (`approved` boolean NULL DEFAULT '0', `category`
+        char(36) NULL DEFAULT null, `description` text NULL DEFAULT null, `end`
+        date NULL DEFAULT null, `id` char(36) NOT NULL DEFAULT null, `start`
+        date NULL DEFAULT null, `worker` varchar(36) NOT NULL DEFAULT null,
+        PRIMARY KEY (`id`), CONSTRAINT `vacation_category_foreign` FOREIGN KEY
+        (`category`) REFERENCES `VacationType` (`id`) ON DELETE SET NULL,
         CONSTRAINT `vacation_worker_foreign` FOREIGN KEY (`worker`) REFERENCES
         `directus_users` (`id`) ON DELETE NO ACTION)
   - collection: VacationBudget
@@ -320,11 +328,12 @@ collections:
     schema:
       name: VacationBudget
       sql: >-
-        CREATE TABLE "VacationBudget" (`id` char(36) NOT NULL, `worker`
-        varchar(36) NOT NULL DEFAULT null, `start_date` date null, `end_date`
-        date null, `days` integer null default '0', PRIMARY KEY (`id`),
-        CONSTRAINT `vacationbudget_worker_foreign` FOREIGN KEY (`worker`)
-        REFERENCES `directus_users` (`id`) ON DELETE NO ACTION)
+        CREATE TABLE "VacationBudget" (`days` integer NULL DEFAULT '0',
+        `end_date` date NULL DEFAULT null, `id` char(36) NOT NULL DEFAULT null,
+        `start_date` date NULL DEFAULT null, `worker` varchar(36) NOT NULL
+        DEFAULT null, PRIMARY KEY (`id`), CONSTRAINT
+        `vacationbudget_worker_foreign` FOREIGN KEY (`worker`) REFERENCES
+        `directus_users` (`id`) ON DELETE NO ACTION)
   - collection: VacationType
     meta:
       accountability: all
@@ -348,8 +357,8 @@ collections:
     schema:
       name: VacationType
       sql: >-
-        CREATE TABLE `VacationType` (`id` char(36) not null, `name` varchar(255)
-        null, primary key (`id`))
+        CREATE TABLE `VacationType` (`id` char(36) not null default null, `name`
+        varchar(255) null default null, primary key (`id`))
   - collection: WorkCategory
     meta:
       accountability: all
@@ -373,8 +382,8 @@ collections:
     schema:
       name: WorkCategory
       sql: >-
-        CREATE TABLE "WorkCategory" (`id` char(36) NOT NULL, `name` varchar(255)
-        NULL, PRIMARY KEY (`id`))
+        CREATE TABLE `WorkCategory` (`id` char(36) not null default null, `name`
+        varchar(255) null default null, primary key (`id`))
   - collection: WorkCategory_Project
     meta:
       accountability: all
@@ -398,13 +407,13 @@ collections:
     schema:
       name: WorkCategory_Project
       sql: >-
-        CREATE TABLE "WorkCategory_Project" (`id` integer PRIMARY KEY
-        AUTOINCREMENT NOT NULL, `WorkCategory_id` char(36) NULL, `Project_id`
-        char(36) NULL, CONSTRAINT `workcategory_project_project_id_foreign`
-        FOREIGN KEY (`Project_id`) REFERENCES `Project` (`id`) ON DELETE SET
-        NULL, CONSTRAINT `workcategory_project_workcategory_id_foreign` FOREIGN
-        KEY (`WorkCategory_id`) REFERENCES `WorkCategory` (`id`) ON DELETE SET
-        NULL)
+        CREATE TABLE "WorkCategory_Project" (`Project_id` char(36) NULL DEFAULT
+        null, `WorkCategory_id` char(36) NULL DEFAULT null, `id` integer PRIMARY
+        KEY AUTOINCREMENT NOT NULL, CONSTRAINT
+        `workcategory_project_project_id_foreign` FOREIGN KEY (`Project_id`)
+        REFERENCES `Project` (`id`) ON DELETE SET NULL, CONSTRAINT
+        `workcategory_project_workcategory_id_foreign` FOREIGN KEY
+        (`WorkCategory_id`) REFERENCES `WorkCategory` (`id`) ON DELETE SET NULL)
   - collection: WorkTimeTargetBlock
     meta:
       accountability: all
@@ -428,11 +437,12 @@ collections:
     schema:
       name: WorkTimeTargetBlock
       sql: >-
-        CREATE TABLE "WorkTimeTargetBlock" (`id` char(36) NOT NULL, `start` date
-        NULL, `end` date NULL, `note` text NULL, `workerId` varchar(36) NOT NULL
-        DEFAULT null, PRIMARY KEY (`id`), CONSTRAINT
-        `worktimetargetblock_workerid_foreign` FOREIGN KEY (`workerId`)
-        REFERENCES `directus_users` (`id`) ON DELETE SET NULL)
+        CREATE TABLE "WorkTimeTargetBlock" (`end` date NULL DEFAULT null, `id`
+        char(36) NOT NULL DEFAULT null, `note` text NULL DEFAULT null, `start`
+        date NULL DEFAULT null, `workerId` varchar(36) NOT NULL DEFAULT null,
+        PRIMARY KEY (`id`), CONSTRAINT `worktimetargetblock_workerid_foreign`
+        FOREIGN KEY (`workerId`) REFERENCES `directus_users` (`id`) ON DELETE
+        SET NULL)
   - collection: WorkUnit
     meta:
       accountability: all
@@ -456,15 +466,16 @@ collections:
     schema:
       name: WorkUnit
       sql: >-
-        CREATE TABLE "WorkUnit" (`id` char(36) NOT NULL, `start` datetime NULL,
-        `end` datetime NULL, `worker` char(36) NULL, `project` char(36) NULL,
-        `category` char(36) NULL, `description` text NULL, PRIMARY KEY (`id`),
-        CONSTRAINT `workunit_worker_foreign` FOREIGN KEY (`worker`) REFERENCES
-        `directus_users` (`id`) ON DELETE SET NULL, CONSTRAINT
-        `workunit_project_foreign` FOREIGN KEY (`project`) REFERENCES `Project`
-        (`id`) ON DELETE SET NULL, CONSTRAINT `workunit_category_foreign`
-        FOREIGN KEY (`category`) REFERENCES `WorkCategory` (`id`) ON DELETE SET
-        NULL)
+        CREATE TABLE "WorkUnit" (`category` char(36) NULL DEFAULT null,
+        `description` text NULL DEFAULT null, `end` datetime NULL DEFAULT null,
+        `id` char(36) NOT NULL DEFAULT null, `project` char(36) NULL DEFAULT
+        null, `start` datetime NULL DEFAULT null, `worker` char(36) NULL DEFAULT
+        null, PRIMARY KEY (`id`), CONSTRAINT `workunit_category_foreign` FOREIGN
+        KEY (`category`) REFERENCES `WorkCategory` (`id`) ON DELETE SET NULL,
+        CONSTRAINT `workunit_project_foreign` FOREIGN KEY (`project`) REFERENCES
+        `Project` (`id`) ON DELETE SET NULL, CONSTRAINT
+        `workunit_worker_foreign` FOREIGN KEY (`worker`) REFERENCES
+        `directus_users` (`id`) ON DELETE SET NULL)
 fields:
   - collection: Client
     field: address
@@ -481,7 +492,7 @@ fields:
       options: null
       readonly: false
       required: false
-      sort: null
+      sort: 3
       special: null
       translations: null
       validation: null
@@ -520,7 +531,7 @@ fields:
         iconLeft: business
       readonly: false
       required: false
-      sort: null
+      sort: 2
       special: null
       translations: null
       validation: null
@@ -560,7 +571,7 @@ fields:
         template: "{{firstname}}\_{{lastname}}"
       readonly: false
       required: false
-      sort: null
+      sort: 4
       special:
         - o2m
       translations: null
@@ -584,7 +595,7 @@ fields:
       options: null
       readonly: true
       required: false
-      sort: null
+      sort: 1
       special:
         - uuid
       translations: null
@@ -625,7 +636,7 @@ fields:
         template: '{{title}}'
       readonly: false
       required: false
-      sort: null
+      sort: 5
       special:
         - o2m
       translations: null
@@ -651,7 +662,7 @@ fields:
         template: "{{start}} -\_{{end}} -\_{{workerId.first_name}}\_{{workerId.last_name}}"
       readonly: false
       required: true
-      sort: null
+      sort: 6
       special:
         - m2o
       translations: null
@@ -730,7 +741,7 @@ fields:
             value: 7
       readonly: false
       required: true
-      sort: null
+      sort: 2
       special: null
       translations: null
       validation: null
@@ -769,7 +780,7 @@ fields:
       options: null
       readonly: false
       required: true
-      sort: null
+      sort: 3
       special: null
       translations: null
       validation: null
@@ -808,7 +819,7 @@ fields:
       options: null
       readonly: false
       required: false
-      sort: null
+      sort: 5
       special: null
       translations: null
       validation: null
@@ -846,7 +857,7 @@ fields:
       options: null
       readonly: true
       required: false
-      sort: null
+      sort: 1
       special:
         - uuid
       translations: null
@@ -886,7 +897,7 @@ fields:
       options: null
       readonly: false
       required: false
-      sort: null
+      sort: 4
       special: null
       translations: null
       validation: null
@@ -1082,7 +1093,7 @@ fields:
         template: '{{companyname}}'
       readonly: false
       required: false
-      sort: null
+      sort: 6
       special:
         - m2o
       translations: null
@@ -1122,7 +1133,7 @@ fields:
         iconLeft: alternate_email
       readonly: false
       required: false
-      sort: null
+      sort: 4
       special: null
       translations: null
       validation: null
@@ -1160,7 +1171,7 @@ fields:
       options: null
       readonly: false
       required: false
-      sort: null
+      sort: 2
       special: null
       translations: null
       validation: null
@@ -1198,7 +1209,7 @@ fields:
       options: null
       readonly: true
       required: false
-      sort: null
+      sort: 1
       special:
         - uuid
       translations: null
@@ -1237,7 +1248,7 @@ fields:
       options: null
       readonly: false
       required: false
-      sort: null
+      sort: 3
       special: null
       translations: null
       validation: null
@@ -1276,7 +1287,7 @@ fields:
         iconLeft: phone
       readonly: false
       required: false
-      sort: null
+      sort: 5
       special: null
       translations: null
       validation: null
@@ -1818,7 +1829,7 @@ fields:
         trim: true
       readonly: false
       required: false
-      sort: null
+      sort: 5
       special: null
       translations: null
       validation: null
@@ -1856,7 +1867,7 @@ fields:
       options: null
       readonly: false
       required: true
-      sort: null
+      sort: 3
       special: null
       translations: null
       validation: null
@@ -1894,7 +1905,7 @@ fields:
       options: null
       readonly: true
       required: false
-      sort: null
+      sort: 1
       special:
         - uuid
       translations: null
@@ -1933,7 +1944,7 @@ fields:
       options: null
       readonly: false
       required: true
-      sort: null
+      sort: 2
       special: null
       translations: null
       validation: null
@@ -1973,7 +1984,7 @@ fields:
         template: '{{email}}'
       readonly: false
       required: true
-      sort: null
+      sort: 4
       special:
         - m2o
       translations: null
@@ -2206,7 +2217,7 @@ fields:
       options: null
       readonly: false
       required: true
-      sort: null
+      sort: 2
       special:
         - cast-boolean
       translations: null
@@ -2247,7 +2258,7 @@ fields:
         template: '{{name}}'
       readonly: false
       required: false
-      sort: null
+      sort: 6
       special:
         - m2o
       translations: null
@@ -2287,7 +2298,7 @@ fields:
         trim: true
       readonly: false
       required: false
-      sort: null
+      sort: 7
       special: null
       translations: null
       validation: null
@@ -2325,7 +2336,7 @@ fields:
       options: null
       readonly: false
       required: true
-      sort: null
+      sort: 5
       special: null
       translations: null
       validation: null
@@ -2363,7 +2374,7 @@ fields:
       options: null
       readonly: true
       required: false
-      sort: null
+      sort: 1
       special:
         - uuid
       translations: null
@@ -2402,7 +2413,7 @@ fields:
       options: null
       readonly: false
       required: true
-      sort: null
+      sort: 4
       special: null
       translations: null
       validation: null
@@ -2443,7 +2454,7 @@ fields:
         template: '{{email}}'
       readonly: false
       required: true
-      sort: null
+      sort: 3
       special:
         - m2o
       translations: null
@@ -2483,7 +2494,7 @@ fields:
         min: 0
       readonly: false
       required: false
-      sort: null
+      sort: 5
       special: null
       translations: null
       validation: null
@@ -2521,7 +2532,7 @@ fields:
       options: null
       readonly: false
       required: true
-      sort: null
+      sort: 4
       special: null
       translations: null
       validation: null
@@ -2559,7 +2570,7 @@ fields:
       options: null
       readonly: true
       required: false
-      sort: null
+      sort: 1
       special:
         - uuid
       translations: null
@@ -2598,7 +2609,7 @@ fields:
       options: null
       readonly: false
       required: true
-      sort: null
+      sort: 3
       special: null
       translations: null
       validation: null
@@ -2636,7 +2647,7 @@ fields:
       options: null
       readonly: false
       required: true
-      sort: null
+      sort: 2
       special:
         - m2o
       translations: null
@@ -2971,7 +2982,7 @@ fields:
         template: '{{dayOfWeek}}: {{duration}}h'
       readonly: false
       required: false
-      sort: null
+      sort: 5
       special:
         - o2m
       translations: null
@@ -2996,7 +3007,7 @@ fields:
       options: null
       readonly: false
       required: false
-      sort: null
+      sort: 4
       special: null
       translations: null
       validation: null
@@ -3034,7 +3045,7 @@ fields:
       options: null
       readonly: true
       required: false
-      sort: null
+      sort: 1
       special:
         - uuid
       translations: null
@@ -3075,7 +3086,7 @@ fields:
         trim: true
       readonly: false
       required: false
-      sort: null
+      sort: 6
       special: null
       translations: null
       validation: null
@@ -3114,7 +3125,7 @@ fields:
       options: null
       readonly: false
       required: true
-      sort: null
+      sort: 3
       special: null
       translations: null
       validation: null
@@ -3155,7 +3166,7 @@ fields:
         template: "{{first_name}}\_{{last_name}}"
       readonly: false
       required: true
-      sort: null
+      sort: 2
       special:
         - m2o
       translations: null
@@ -3196,7 +3207,7 @@ fields:
         template: '{{name}}'
       readonly: false
       required: true
-      sort: null
+      sort: 6
       special:
         - m2o
       translations: null
@@ -3235,7 +3246,7 @@ fields:
       options: null
       readonly: false
       required: false
-      sort: null
+      sort: 2
       special: null
       translations: null
       validation: null
@@ -3273,7 +3284,7 @@ fields:
       options: null
       readonly: false
       required: true
-      sort: null
+      sort: 4
       special: null
       translations: null
       validation: null
@@ -3311,7 +3322,7 @@ fields:
       options: null
       readonly: true
       required: false
-      sort: null
+      sort: 1
       special:
         - uuid
       translations: null
@@ -3353,7 +3364,7 @@ fields:
         template: '{{title}}'
       readonly: false
       required: true
-      sort: null
+      sort: 5
       special:
         - m2o
       translations: null
@@ -3392,7 +3403,7 @@ fields:
       options: null
       readonly: false
       required: true
-      sort: null
+      sort: 3
       special: null
       translations: null
       validation: null
@@ -3433,7 +3444,7 @@ fields:
         template: "{{first_name}}\_{{last_name}}"
       readonly: false
       required: true
-      sort: null
+      sort: 7
       special:
         - m2o
       translations: null
