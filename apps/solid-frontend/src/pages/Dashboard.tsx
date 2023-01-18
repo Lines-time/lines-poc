@@ -81,17 +81,17 @@ const Dashboard: Component = () => {
                             <h3 class="text-lg">Worked time:</h3>
                             <div class="stats rounded-lg max-xl:stats-vertical w-full bg-base-200 border-2 border-base-100 grid grid-cols-3">
                                 <DashboardStat
-                                    start={dayjs()}
-                                    end={dayjs()}
+                                    start={dayjs().startOf("day")}
+                                    end={dayjs().endOf("day")}
                                     title="Today"
                                 />
                                 <DashboardStat
-                                    start={dayjs().isoWeekday(1)}
-                                    end={dayjs().isoWeekday(7)}
+                                    start={dayjs().isoWeekday(1).startOf("day")}
+                                    end={dayjs().isoWeekday(7).endOf("day")}
                                     title="This week"
                                 />
                                 <DashboardStat
-                                    start={dayjs().date(1)}
+                                    start={dayjs().date(1).startOf("day")}
                                     end={dayjs().date(dayjs().daysInMonth())}
                                     title="This month"
                                 />

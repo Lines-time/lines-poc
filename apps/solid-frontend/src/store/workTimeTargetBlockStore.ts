@@ -18,9 +18,7 @@ const [workTimeTargetBlocks] = createStore({
                 .readByQuery({
                     filter: {
                         workerId: {
-                            id: {
-                                _eq: userId,
-                            },
+                            _eq: userId,
                         },
                     },
                 });
@@ -34,9 +32,7 @@ const [workTimeTargetBlocks] = createStore({
                 .readByQuery({
                     filter: {
                         workerId: {
-                            id: {
-                                _eq: "$CURRENT_USER",
-                            },
+                            _eq: "$CURRENT_USER",
                         },
                         start: {
                             _lte: new Date(),
