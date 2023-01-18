@@ -1,5 +1,5 @@
 import { A, Outlet, useNavigate } from "@solidjs/router";
-import { BarChart3, Calendar, LayoutDashboard, Settings, Timer } from "lucide-solid";
+import { Calendar, LayoutDashboard, Settings, Timer } from "lucide-solid";
 import { Component, createResource, createSignal, onMount, Show, Suspense } from "solid-js";
 import Avatar from "~/Avatar";
 import Loading from "~/Loading";
@@ -72,7 +72,7 @@ const App: Component = () => {
                                     Calendar
                                 </A>
                             </li>
-                            <li class="menu-title">
+                            {/* <li class="menu-title">
                                 <span>Reports</span>
                             </li>
                             <li>
@@ -84,7 +84,7 @@ const App: Component = () => {
                                     <BarChart3 />
                                     Overview
                                 </A>
-                            </li>
+                            </li> */}
                         </ul>
                         <div class="flex-1" />
                         <div class="bg-base-300 border-t-2 border-base-100 p-2 pl-4 gap-2 flex flex-row items-center">
