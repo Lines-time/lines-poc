@@ -119,7 +119,6 @@ const [dailyWorkTimeTargets] = createStore({
                     },
                 });
             const dayRange = dayjs(end).diff(start, "day");
-            console.log(dayRange, start, end);
             let result: (TDailyWorkTimeTarget & { date: Date })[] = [];
             for (let day = 0; day <= dayRange; day++) {
                 const block = blocks.data?.find((b) =>
@@ -132,7 +131,6 @@ const [dailyWorkTimeTargets] = createStore({
                             "[]",
                         ),
                 );
-                console.log(block, start, end)
                 if (block) {
                     const daily = dailies.data
                         ?.filter((d) =>
