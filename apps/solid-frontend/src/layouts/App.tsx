@@ -1,7 +1,8 @@
 import { A, Outlet, useNavigate } from "@solidjs/router";
-import { Calendar, LayoutDashboard, Settings, Timer } from "lucide-solid";
+import { Calendar, LayoutDashboard, LogOut, Settings, Timer } from "lucide-solid";
 import { Component, createResource, createSignal, onMount, Show, Suspense } from "solid-js";
 import Avatar from "~/Avatar";
+import Button from "~/Button";
 import Loading from "~/Loading";
 
 import authStore from "../store/authStore";
@@ -111,6 +112,14 @@ const App: Component = () => {
                                     </Show>
                                 </Suspense>
                             </A>
+                            <Button
+                                icon={LogOut}
+                                class="btn-sm"
+                                onClick={() => {
+                                    authStore.logout;
+                                    window.location.href = "/";
+                                }}
+                            />
                             <A
                                 class="btn btn-circle btn-ghost"
                                 href="/settings"
