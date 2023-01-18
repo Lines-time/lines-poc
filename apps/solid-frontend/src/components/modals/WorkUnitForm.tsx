@@ -31,15 +31,21 @@ type TProps = {
 
 const WorkUnitForm: Component<TProps> = (props) => {
     const [projectId, setProjectId] = createSignal<string | null>(
-        props.presetData?.project ?? null
+        props.presetData?.project ?? null,
     );
     const [categoryId, setCategoryId] = createSignal<string | null>(
-        props.presetData?.category ?? null
+        props.presetData?.category ?? null,
     );
     const [settings] = createResource(async () => await settingsStore.get());
-    const [description, setDescription] = createSignal(props.presetData?.description ?? "");
-    const [start, setStart] = createSignal(dayjs(props.presetData?.start ?? undefined).toDate());
-    const [end, setEnd] = createSignal(dayjs(props.presetData?.end ?? undefined).toDate());
+    const [description, setDescription] = createSignal(
+        props.presetData?.description ?? "",
+    );
+    const [start, setStart] = createSignal(
+        dayjs(props.presetData?.start ?? undefined).toDate(),
+    );
+    const [end, setEnd] = createSignal(
+        dayjs(props.presetData?.end ?? undefined).toDate(),
+    );
     const [loading, setLoading] = createSignal(false);
     const [projects] = createResource(async () => await projectStore.getAll());
     const [categories] = createResource(projectId, async () => {
@@ -62,8 +68,11 @@ const WorkUnitForm: Component<TProps> = (props) => {
         dayjs.duration(
             projectWorkUnits()
                 ?.filter((wu) => wu.id !== props.presetData?.id)
-                .reduce((total, wu) => total + dayjs(wu.end).diff(wu.start), 0) ?? 0
-        )
+                .reduce(
+                    (total, wu) => total + dayjs(wu.end).diff(wu.start),
+                    0,
+                ) ?? 0,
+        ),
     );
     const projectBudgetTotal = createMemo(() =>
         dayjs.duration(
@@ -71,14 +80,17 @@ const WorkUnitForm: Component<TProps> = (props) => {
                 (total, tb) =>
                     total +
                     dayjs
-                        .duration({ hours: tb.budget_hours, minutes: tb.budget_minutes })
+                        .duration({
+                            hours: tb.budget_hours,
+                            minutes: tb.budget_minutes,
+                        })
                         .asMilliseconds(),
-                0
-            ) ?? 0
-        )
+                0,
+            ) ?? 0,
+        ),
     );
     const duration = createMemo(() =>
-        dayjs.duration(dayjs(end()).diff(start(), "minute"), "minute")
+        dayjs.duration(dayjs(end()).diff(start(), "minute"), "minute"),
     );
 
     createEffect(() => {
@@ -158,43 +170,53 @@ const WorkUnitForm: Component<TProps> = (props) => {
             <p>Duration: {duration().format("H:mm[h]")}</p>
             <div class="flex flex-row gap-2">
                 <FormControl label="Project">
-                    <select
-                        class="select select-bordered bg-base-300"
-                        value={projectId() ?? "null"}
-                        onChange={(e) => setProjectId(e.currentTarget.value)}
-                    >
-                        <option value="null" disabled>
-                            Select one
-                        </option>
-                        <For each={projects()}>
-                            {(project) => <option value={project?.id}>{project?.title}</option>}
-                        </For>
-                    </select>
-                </FormControl>
-                <FormControl label="Service">
-                    <select
-                        class="select select-bordered bg-base-300"
-                        value={categoryId() ?? "null"}
-                        disabled={!projectId()}
-                        onChange={(e) => setCategoryId(e.currentTarget.value)}
-                    >
-                        <option value="null" disabled>
-                            {!projectId() ? "Select project first" : "Select one"}
-                        </option>
-                        <Suspense
-                            fallback={
-                                <option disabled>
-                                    <Loading />
-                                </option>
+                    <Suspense fallback={<Loading />}>
+                        <select
+                            class="select select-bordered bg-base-300"
+                            value={projectId() ?? "null"}
+                            onChange={(e) =>
+                                setProjectId(e.currentTarget.value)
                             }
                         >
-                            <For each={categories()}>
-                                {(category) => (
-                                    <option value={category?.id}>{category?.name}</option>
+                            <option value="null" disabled>
+                                Select one
+                            </option>
+                            <For each={projects()}>
+                                {(project) => (
+                                    <option value={project?.id}>
+                                        {project?.title}
+                                    </option>
                                 )}
                             </For>
-                        </Suspense>
-                    </select>
+                        </select>
+                    </Suspense>
+                </FormControl>
+                <FormControl label="Service">
+                    <Suspense fallback={<Loading />}>
+                        <select
+                            class="select select-bordered bg-base-300"
+                            value={
+                                categories() ? categoryId() ?? "null" : "null"
+                            }
+                            disabled={!projectId()}
+                            onChange={(e) =>
+                                setCategoryId(e.currentTarget.value)
+                            }
+                        >
+                            <option value="null" disabled>
+                                {!projectId()
+                                    ? "Select project first"
+                                    : "Select one"}
+                            </option>
+                            <For each={categories()}>
+                                {(category) => (
+                                    <option value={category?.id}>
+                                        {category?.name}
+                                    </option>
+                                )}
+                            </For>
+                        </select>
+                    </Suspense>
                 </FormControl>
             </div>
             <p>
@@ -202,14 +224,17 @@ const WorkUnitForm: Component<TProps> = (props) => {
                 <span
                     classList={{
                         "text-error":
-                            projectBudgetUsed().asMilliseconds() + duration().asMilliseconds() >
+                            projectBudgetUsed().asMilliseconds() +
+                                duration().asMilliseconds() >
                             projectBudgetTotal().asMilliseconds(),
                         "text-success":
-                            projectBudgetUsed().asMilliseconds() + duration().asMilliseconds() <=
+                            projectBudgetUsed().asMilliseconds() +
+                                duration().asMilliseconds() <=
                             projectBudgetTotal().asMilliseconds(),
                     }}
                 >
-                    {formatDuration(projectBudgetUsed())}h + {duration().format("H:mm[h]")}/
+                    {formatDuration(projectBudgetUsed())}h +{" "}
+                    {duration().format("H:mm[h]")}/
                     {formatDuration(projectBudgetTotal())}h
                 </span>
             </p>
