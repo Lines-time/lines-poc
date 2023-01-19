@@ -51,12 +51,48 @@ const Day: Component<DayProps> = (props) => {
     const currentTimeRow = createMemo(
         () =>
             currentTime().hour() * intervalsInHour() +
-            Math.floor(currentTime().minute() / props.interval)
+            Math.floor(currentTime().minute() / props.interval),
     );
 
     const [selecting, setSelecting] = createSignal(false);
     const [startStep, setStartStep] = createSignal<number>();
     const [endStep, setEndStep] = createSignal<number>();
+    const smallStep = createMemo(() => {
+        const ss = startStep();
+        const es = endStep();
+        if (ss && es) {
+            return Math.min(ss, es);
+        }
+        return undefined;
+    });
+    const largeStep = createMemo(() => {
+        const ss = startStep();
+        const es = endStep();
+        if (ss && es) {
+            return Math.max(ss, es);
+        }
+        return undefined;
+    });
+    const displayDuration = createMemo(() => {
+        const ss = smallStep();
+        const es = largeStep();
+        if (ss && es) {
+            const parsedStart = parseTimeFromStep(ss, props.interval, true);
+            const parsedEnd = parseTimeFromStep(es, props.interval, false);
+            const start = props
+                .now()
+                .hour(parsedStart.hours)
+                .minute(parsedStart.minutes)
+                .second(0);
+            const end = props
+                .now()
+                .hour(parsedEnd.hours)
+                .minute(parsedEnd.minutes)
+                .second(0);
+            return `${start.format("H:mm")} - ${end.format("H:mm")}`;
+        }
+        return undefined;
+    });
 
     const createDurationFromSelection = () => {
         let ss = startStep();
@@ -66,12 +102,36 @@ const Day: Component<DayProps> = (props) => {
             let _es = Math.max(ss, es);
             const startTime = parseTimeFromStep(_ss, props.interval, true);
             const endTime = parseTimeFromStep(_es, props.interval, false);
-            const start = props.now().hour(startTime.hours).minute(startTime.minutes).second(0);
-            const end = props.now().hour(endTime.hours).minute(endTime.minutes).second(0);
+            const start = props
+                .now()
+                .hour(startTime.hours)
+                .minute(startTime.minutes)
+                .second(0);
+            const end = props
+                .now()
+                .hour(endTime.hours)
+                .minute(endTime.minutes)
+                .second(0);
             props.onCreateDuration?.(start, end);
             setStartStep();
             setEndStep();
         }
+    };
+
+    const calculateHoverTime = (step: number) => {
+        const parsedStart = parseTimeFromStep(step, props.interval, true);
+        const parsedEnd = parseTimeFromStep(step, props.interval, false);
+        const start = props
+            .now()
+            .hour(parsedStart.hours)
+            .minute(parsedStart.minutes)
+            .second(0);
+        const end = props
+            .now()
+            .hour(parsedEnd.hours)
+            .minute(parsedEnd.minutes)
+            .second(0);
+        return `${start.format("HH:mm")} - ${end.format("HH:mm")}`;
     };
 
     return (
@@ -81,12 +141,15 @@ const Day: Component<DayProps> = (props) => {
                     <div
                         class="border-b border-base-100 group relative pointer-events-[all]"
                         classList={{
-                            "border-solid": ((step + 1) * props.interval) % 60 === 0,
-                            "border-dashed": ((step + 1) * props.interval) % 60 !== 0,
+                            "border-solid":
+                                ((step + 1) * props.interval) % 60 === 0,
+                            "border-dashed":
+                                ((step + 1) * props.interval) % 60 !== 0,
                             "bg-base-100": !!(
                                 startStep() &&
                                 endStep() &&
-                                Math.min(startStep()!, endStep()!) <= step + 1 &&
+                                Math.min(startStep()!, endStep()!) <=
+                                    step + 1 &&
                                 Math.max(startStep()!, endStep()!) >= step + 1
                             ),
                         }}
@@ -97,7 +160,8 @@ const Day: Component<DayProps> = (props) => {
                         }}
                         onMouseEnter={(e) => {
                             const cont = props.onStepMouseEnter?.(e, step + 1);
-                            if (cont ?? true) if (selecting()) setEndStep(step + 1);
+                            if (cont ?? true)
+                                if (selecting()) setEndStep(step + 1);
                         }}
                         onMouseUp={() => {
                             if (selecting()) {
@@ -108,7 +172,8 @@ const Day: Component<DayProps> = (props) => {
                     >
                         <span class="flex flex-row items-center justify-center w-full h-full text-xs absolute group-hover:opacity-50 opacity-0 cursor-default select-none">
                             <Plus size={14} />
-                            Create
+                            Create{" "}
+                            {displayDuration() ?? calculateHoverTime(step + 1)}
                         </span>
                     </div>
                 )}
@@ -127,7 +192,7 @@ const Day: Component<DayProps> = (props) => {
                             props.interval,
                             0,
                             100,
-                            0
+                            0,
                         )}%`,
                     }}
                 >
