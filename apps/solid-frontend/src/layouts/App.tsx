@@ -1,5 +1,5 @@
-import { A, Outlet, useNavigate } from "@solidjs/router";
-import { Calendar, LayoutDashboard, LogOut, Settings, Timer } from "lucide-solid";
+import { A, Outlet, useLocation, useSearchParams } from "@solidjs/router";
+import { Calendar, LayoutDashboard, LogOut, Plus, Settings, Timer } from "lucide-solid";
 import { Component, createResource, createSignal, onMount, Show, Suspense } from "solid-js";
 import Avatar from "~/Avatar";
 import Button from "~/Button";
@@ -9,7 +9,8 @@ import authStore from "../store/authStore";
 
 const App: Component = () => {
     const [drawerOpen, setDrawerOpen] = createSignal(false);
-    const navigate = useNavigate();
+    const location = useLocation();
+    const [searchParams, setSearchParams] = useSearchParams();
 
     onMount(async () => {
         const authed = await authStore.isAuthenticated;
@@ -63,15 +64,28 @@ const App: Component = () => {
                                     Track time
                                 </A>
                             </li>
-                            <li>
+                            <li class="gap-2">
                                 <A
                                     href="/calendar"
                                     end
-                                    activeClass="text-primary bg-base-100"
+                                    activeClass="text-primary bg-base-100 peer"
                                 >
                                     <Calendar />
                                     Calendar
                                 </A>
+                                <Show when={location.pathname === "/calendar"}>
+                                    <button
+                                        type="button"
+                                        class="ml-4"
+                                        onClick={() =>
+                                            setSearchParams({
+                                                vacation: "new",
+                                            })
+                                        }
+                                    >
+                                        <Plus /> Vacation
+                                    </button>
+                                </Show>
                             </li>
                             {/* <li class="menu-title">
                                 <span>Reports</span>

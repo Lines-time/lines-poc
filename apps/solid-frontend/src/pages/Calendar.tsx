@@ -27,7 +27,7 @@ const Calendar: Component = () => {
     const [now, setNow] = createSignal(
         searchParams.d ? dayjs(searchParams.d) : dayjs(),
     );
-    const [vacationModalOpen, setVacationModalOpen] = createSignal(false);
+    const vacationModalOpen = createMemo(() => searchParams.vacation === "new");
     const start = createMemo(() => now().date(1));
     const end = createMemo(() => now().date(now().daysInMonth()));
 
@@ -209,7 +209,11 @@ const Calendar: Component = () => {
                 right={
                     <Button
                         icon={Plus}
-                        onClick={() => setVacationModalOpen(true)}
+                        onClick={() =>
+                            setSearchParams({
+                                vacation: "new",
+                            })
+                        }
                     >
                         Vacation
                     </Button>
@@ -221,7 +225,10 @@ const Calendar: Component = () => {
             <VacationModal
                 open={vacationModalOpen()}
                 onClose={() => (
-                    setVacationModalOpen(false), vacationsResource.refetch()
+                    setSearchParams({
+                        vacation: undefined,
+                    }),
+                    vacationsResource.refetch()
                 )}
             />
         </div>
