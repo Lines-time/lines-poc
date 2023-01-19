@@ -15,7 +15,7 @@ const Stat: Component<TProps> = (props) => {
             </Show>
             <div class="stat-title">{props.title}</div>
             <div class="stat-value">{props.value}</div>
-            <div class="stat-desc">{props.description}</div>
+            <div class="stat-desc opacity-100">{props.description}</div>
         </div>
     );
 };

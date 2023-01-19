@@ -109,13 +109,31 @@ const DashboardStat: Component<TProps> = (props) => {
     const workedPercent = createMemo(() =>
         scale(data.workedTime() ?? 0, data.targetTime() ?? 0, 0, 100, 0),
     );
+    const targetDuration = createMemo(() =>
+        dayjs.duration(data.targetTime() ?? 0),
+    );
 
     return (
         <Stat
             title={props.title}
-            value={formatDuration(dayjs.duration(data.workedTime() ?? 0))}
+            value={
+                <>
+                    <span
+                        classList={{
+                            "text-error": !data.targetReached(),
+                            "text-success": data.targetReached(),
+                        }}
+                    >
+                        {formatDuration(dayjs.duration(data.workedTime() ?? 0))}
+                    </span>
+                    <span class="font-normal opacity-60">
+                        /{formatDuration(targetDuration())}
+                    </span>
+                </>
+            }
             description={
                 <span
+                    class="text-lg"
                     classList={{
                         "text-error": !data.targetReached(),
                         "text-success": data.targetReached(),
