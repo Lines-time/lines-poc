@@ -251,9 +251,22 @@ const WorkUnitForm: Component<TProps> = (props) => {
                         Delete
                     </Button>
                 )}
-                <Button primary submit loading={loading()}>
-                    Save
-                </Button>
+                <span
+                    class="tooltip-left tooltip-error tooltip-open"
+                    classList={{
+                        tooltip: categoryId() === null,
+                    }}
+                    data-tip="You must select a project and service"
+                >
+                    <Button
+                        primary
+                        submit
+                        loading={loading()}
+                        disabled={() => categoryId() === null}
+                    >
+                        Save
+                    </Button>
+                </span>
             </div>
         </form>
     );
