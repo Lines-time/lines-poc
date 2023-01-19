@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { ChevronLeft, ChevronRight, CircleDot, Clock } from "lucide-solid";
+import { ChevronDown, ChevronLeft, ChevronRight, Clock } from "lucide-solid";
 import { Component, createMemo, Show } from "solid-js";
 
 import Button from "./Button";
@@ -25,7 +25,7 @@ const Datetime: Component<TProps> = (props) => {
             v
                 .second(0)
                 .subtract(v.minute() % minuteInterval(), "minute")
-                .toDate()
+                .toDate(),
         );
     };
 
@@ -46,16 +46,22 @@ const Datetime: Component<TProps> = (props) => {
         >
             <div
                 tabindex={0}
-                class="input input-bordered bg-transparent flex flex-row items-center justify-between group"
+                class="input input-bordered bg-transparent flex flex-row items-center justify-between group pr-2"
             >
-                <Show when={props.date}>{value().format("dddd, DD.MM.YYYY")}</Show>
+                <Show when={props.date}>
+                    {value().format("dddd, DD.MM.YYYY")}
+                </Show>
                 <Show when={props.date && props.time}>{" - "}</Show>
                 <Show when={props.time}>{value().format("HH:mm[h]")}</Show>
-                <Button
-                    class="btn-sm hidden group-hover:flex"
-                    icon={CircleDot}
-                    onClick={() => setValue(dayjs().second(0))}
-                />
+                <span class="flex flex-row">
+                    <Button
+                        class="btn-sm hidden group-hover:flex"
+                        onClick={() => setValue(dayjs().second(0))}
+                    >
+                        {props.time ? "Now" : "Today"}
+                    </Button>
+                    <Button class="btn-sm" icon={ChevronDown} />
+                </span>
             </div>
             <div
                 tabindex={0}
@@ -66,18 +72,24 @@ const Datetime: Component<TProps> = (props) => {
                         <Button
                             class="btn-sm"
                             icon={ChevronLeft}
-                            onClick={() => setValue(value().month(value().month() - 1))}
+                            onClick={() =>
+                                setValue(value().month(value().month() - 1))
+                            }
                         />
                         <span>{value().format("MMMM YYYY")}</span>
                         <Button
                             class="btn-sm"
                             icon={ChevronRight}
-                            onClick={() => setValue(value().month(value().month() + 1))}
+                            onClick={() =>
+                                setValue(value().month(value().month() + 1))
+                            }
                         />
                     </div>
                     <div class="grid grid-cols-7 gap-1">
                         <ForNumber each={7}>
-                            {(day) => <div class="flex flex-row items-center justify-center" />}
+                            {(day) => (
+                                <div class="flex flex-row items-center justify-center" />
+                            )}
                         </ForNumber>
                         <ForNumber each={value().date(0).isoWeekday()}>
                             {(day) => <div />}
@@ -87,7 +99,8 @@ const Datetime: Component<TProps> = (props) => {
                                 <div
                                     class="btn btn-square btn-sm"
                                     classList={{
-                                        "btn-primary": day + 1 === value().date(),
+                                        "btn-primary":
+                                            day + 1 === value().date(),
                                         "btn-ghost": day + 1 !== value().date(),
                                         "text-primary":
                                             day + 1 !== value().date() &&
@@ -95,7 +108,9 @@ const Datetime: Component<TProps> = (props) => {
                                                 .date(day + 1)
                                                 .isToday(),
                                     }}
-                                    onClick={() => setValue(value().date(day + 1))}
+                                    onClick={() =>
+                                        setValue(value().date(day + 1))
+                                    }
                                 >
                                     {day + 1}
                                 </div>
@@ -109,22 +124,38 @@ const Datetime: Component<TProps> = (props) => {
                         <select
                             class="select select-bordered select-sm"
                             value={value().hour()}
-                            onInput={(e) => setValue(value().hour(Number(e.currentTarget.value)))}
+                            onInput={(e) =>
+                                setValue(
+                                    value().hour(Number(e.currentTarget.value)),
+                                )
+                            }
                         >
                             <ForNumber each={24}>
-                                {(hour) => <option value={hour}>{formatTimeNumber(hour)}</option>}
+                                {(hour) => (
+                                    <option value={hour}>
+                                        {formatTimeNumber(hour)}
+                                    </option>
+                                )}
                             </ForNumber>
                         </select>
                         h
                         <select
                             class="select select-bordered select-sm"
                             value={value().minute()}
-                            onInput={(e) => setValue(value().minute(Number(e.currentTarget.value)))}
+                            onInput={(e) =>
+                                setValue(
+                                    value().minute(
+                                        Number(e.currentTarget.value),
+                                    ),
+                                )
+                            }
                         >
                             <ForNumber each={60 / minuteInterval()}>
                                 {(minute) => (
                                     <option value={minute * minuteInterval()}>
-                                        {formatTimeNumber(minute * minuteInterval())}
+                                        {formatTimeNumber(
+                                            minute * minuteInterval(),
+                                        )}
                                     </option>
                                 )}
                             </ForNumber>
