@@ -13,6 +13,7 @@ type TProps = {
     align?: "end" | "start";
     onChange: (v: Date) => void;
     minuteInterval?: number;
+    ref?: HTMLDivElement;
 };
 
 const Datetime: Component<TProps> = (props) => {
@@ -47,6 +48,7 @@ const Datetime: Component<TProps> = (props) => {
             <div
                 tabindex={0}
                 class="input input-bordered bg-transparent flex flex-row items-center justify-between group pr-2"
+                ref={props.ref}
             >
                 <Show when={props.date}>
                     {value().format("dddd, DD.MM.YYYY")}

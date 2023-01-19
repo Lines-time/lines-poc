@@ -13,6 +13,7 @@ const VacationModal: Component<TProps> = (props) => {
     const [start, setStart] = createSignal(dayjs().toDate());
     const [end, setEnd] = createSignal(dayjs().toDate());
     const [description, setDescription] = createSignal("");
+    let endRef: HTMLDivElement | undefined;
 
     const isValidRange = createMemo(() => !dayjs(start()).isAfter(end()));
     const errorMessage = createMemo(() => !isValidRange() && "End date can't be before start date");
@@ -25,14 +26,19 @@ const VacationModal: Component<TProps> = (props) => {
         }
     };
 
+    const selectStart = (value: Date) => {
+        setStart(value);
+        endRef?.focus();
+    }
+
     return (
         <Modal open={props.open} onClose={props.onClose} title="Vacation">
             <form onSubmit={save} class="w-full">
                 <FormControl label="Start" error={errorMessage}>
-                    <Datetime date value={start()} onChange={setStart} />
+                    <Datetime date value={start()} onChange={selectStart} />
                 </FormControl>
                 <FormControl label="End" error={errorMessage}>
-                    <Datetime date value={end()} onChange={setEnd} />
+                    <Datetime date value={end()} onChange={setEnd} ref={endRef} />
                 </FormControl>
                 <FormControl label="Description">
                     <textarea
