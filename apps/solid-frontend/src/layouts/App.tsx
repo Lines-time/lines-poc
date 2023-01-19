@@ -43,7 +43,7 @@ const App: Component = () => {
                                 <p>Lines-time</p>
                             </div>
                         </div>
-                        <ul class="menu menu-compact w-full p-2 rounded-box gap-2">
+                        <ul class="menu w-full p-2 rounded-box gap-2">
                             <li>
                                 <A
                                     href="/"
