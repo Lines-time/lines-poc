@@ -121,7 +121,7 @@ const App: Component = () => {
                                 }}
                             />
                             <A
-                                class="btn btn-circle btn-ghost"
+                                class="btn btn-sm btn-square btn-ghost"
                                 href="/settings"
                                 activeClass="text-primary bg-base-100"
                             >
