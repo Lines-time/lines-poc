@@ -1,6 +1,6 @@
 import { useSearchParams } from "@solidjs/router";
 import dayjs from "dayjs";
-import { Plus } from "lucide-solid";
+import { Plus, X } from "lucide-solid";
 import {
     Component,
     createEffect,
@@ -8,6 +8,7 @@ import {
     createResource,
     createSignal,
     onMount,
+    Show,
 } from "solid-js";
 import Button from "~/Button";
 import Dropdown from "~/Dropdown";
@@ -23,7 +24,9 @@ import { parseTimeStringDuration } from "../utils/utils";
 
 const Calendar: Component = () => {
     const [searchParams, setSearchParams] = useSearchParams();
-    const [now, setNow] = createSignal(searchParams.d ? dayjs(searchParams.d) : dayjs());
+    const [now, setNow] = createSignal(
+        searchParams.d ? dayjs(searchParams.d) : dayjs(),
+    );
     const [vacationModalOpen, setVacationModalOpen] = createSignal(false);
     const start = createMemo(() => now().date(1));
     const end = createMemo(() => now().date(now().daysInMonth()));
@@ -46,20 +49,41 @@ const Calendar: Component = () => {
 
     const [targetTime] = createResource(
         () => start(),
-        async () => await dailyWorkTimeTargetStore.getForDateRange(start().toDate(), end().toDate())
+        async () =>
+            await dailyWorkTimeTargetStore.getForDateRange(
+                start().toDate(),
+                end().toDate(),
+            ),
     );
     const [freeDays] = createResource(
         () => now(),
-        async () => await freeDayStore.getForDateRange(start().toDate(), end().toDate())
+        async () =>
+            await freeDayStore.getForDateRange(
+                start().toDate(),
+                end().toDate(),
+            ),
     );
     const [vacations, vacationsResource] = createResource(
         () => now(),
-        async () => await vacationStore.getForDateRangeAndUser(start().toDate(), end().toDate())
+        async () =>
+            await vacationStore.getForDateRangeAndUser(
+                start().toDate(),
+                end().toDate(),
+            ),
     );
     const [sickDays, sickDaysResource] = createResource(
         () => now(),
-        async () => await sickDayStore.getForDateRangeAndUser(start().toDate(), end().toDate())
+        async () =>
+            await sickDayStore.getForDateRangeAndUser(
+                start().toDate(),
+                end().toDate(),
+            ),
     );
+
+    const cancelVacationRequest = async (vacationId: string) => {
+        await vacationStore.cancelVacationRequest(vacationId);
+        vacationsResource.refetch();
+    };
 
     const events = createMemo(() => {
         return (
@@ -67,10 +91,20 @@ const Calendar: Component = () => {
                 ?.filter((tt) => {
                     return !(
                         vacations()?.some((v) =>
-                            dayjs(tt!.date).isBetween(v!.start, v!.end, "day", "[]")
+                            dayjs(tt!.date).isBetween(
+                                v!.start,
+                                v!.end,
+                                "day",
+                                "[]",
+                            ),
                         ) ||
                         sickDays()?.some((sd) =>
-                            dayjs(tt!.date).isBetween(sd!.start_date, sd!.end_date, "day", "[]")
+                            dayjs(tt!.date).isBetween(
+                                sd!.start_date,
+                                sd!.end_date,
+                                "day",
+                                "[]",
+                            ),
                         )
                     );
                 })
@@ -81,11 +115,16 @@ const Calendar: Component = () => {
                         <div>
                             {dayjs
                                 .duration(
-                                    parseTimeStringDuration(tt?.duration).asMilliseconds() *
+                                    parseTimeStringDuration(
+                                        tt?.duration,
+                                    ).asMilliseconds() *
                                         (1 -
                                             (freeDays()?.find((fd) =>
-                                                dayjs(tt?.date).isSame(fd?.date, "day")
-                                            )?.percentage ?? 0))
+                                                dayjs(tt?.date).isSame(
+                                                    fd?.date,
+                                                    "day",
+                                                ),
+                                            )?.percentage ?? 0)),
                                 )
                                 .format("H:mm[h]")}
                         </div>
@@ -104,37 +143,52 @@ const Calendar: Component = () => {
             vacations()?.map((v) => ({
                 start: v!.start,
                 end: v!.end,
-                render: () => (
-                    <Dropdown
-                        class="w-full"
-                        labelClass="w-full cursor-pointer"
-                        label={
-                            <div
-                                class="border-2 rounded px-1"
-                                classList={{
-                                    "border-primary-focus": v!.approved,
-                                    "bg-primary": v!.approved,
-                                    "text-primary-content": v!.approved,
-                                    // if not approved
-                                    "border-base-100": !v!.approved,
-                                    "bg-base-200": !v!.approved,
-                                    "text-base-content": !v!.approved,
-                                }}
-                            >
-                                {v!.description}
-                            </div>
-                        }
-                    >
-                        <h3>{v!.description}</h3>
-                        {!v!.approved ? (
-                            <div class="text-error">This vacation has not yet been approved</div>
-                        ) : (
-                            <div class="text-success">This vacation has been approved</div>
-                        )}
-                        <p>Start: {dayjs(v!.start).format("LL")}</p>
-                        <p>End: {dayjs(v!.end).format("LL")}</p>
-                    </Dropdown>
-                ),
+                render: () =>
+                    v && (
+                        <Dropdown
+                            class="w-full"
+                            labelClass="w-full cursor-pointer"
+                            label={
+                                <div
+                                    class="border-2 rounded px-1"
+                                    classList={{
+                                        "border-primary-focus": v.approved,
+                                        "bg-primary": v.approved,
+                                        "text-primary-content": v.approved,
+                                        // if not approved
+                                        "border-base-100": !v.approved,
+                                        "bg-base-200": !v.approved,
+                                        "text-base-content": !v.approved,
+                                    }}
+                                >
+                                    Vacation: {v.description}
+                                </div>
+                            }
+                        >
+                            <h3>Vacation: {v.description}</h3>
+                            {!v.approved ? (
+                                <div class="text-error">
+                                    This vacation has not yet been approved
+                                </div>
+                            ) : (
+                                <div class="text-success">
+                                    This vacation has been approved
+                                </div>
+                            )}
+                            <p>Start: {dayjs(v.start).format("LL")}</p>
+                            <p>End: {dayjs(v.end).format("LL")}</p>
+                            <Show when={!v.approved}>
+                                <Button
+                                    class="btn-sm"
+                                    error
+                                    icon={X}
+                                    onClick={() => cancelVacationRequest(v.id)}
+                                >
+                                    Cancel
+                                </Button>
+                            </Show>
+                        </Dropdown>
+                    ),
             })) ?? [],
             sickDays()?.map((sd) => ({
                 start: sd!.start_date,
@@ -144,7 +198,7 @@ const Calendar: Component = () => {
                         {sd?.description}
                     </div>
                 ),
-            })) ?? []
+            })) ?? [],
         );
     });
 
@@ -153,7 +207,10 @@ const Calendar: Component = () => {
             <Navbar
                 title="Calendar"
                 right={
-                    <Button icon={Plus} onClick={() => setVacationModalOpen(true)}>
+                    <Button
+                        icon={Plus}
+                        onClick={() => setVacationModalOpen(true)}
+                    >
                         Vacation
                     </Button>
                 }
@@ -163,7 +220,9 @@ const Calendar: Component = () => {
             </div>
             <VacationModal
                 open={vacationModalOpen()}
-                onClose={() => (setVacationModalOpen(false), vacationsResource.refetch())}
+                onClose={() => (
+                    setVacationModalOpen(false), vacationsResource.refetch()
+                )}
             />
         </div>
     );

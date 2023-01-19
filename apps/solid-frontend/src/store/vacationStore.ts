@@ -30,8 +30,14 @@ const [vacations] = createStore({
                 end,
                 description,
                 worker: me.id,
+                approved: false,
             });
             return response;
+        };
+    },
+    get cancelVacationRequest() {
+        return async (id: string) => {
+            await directus.items("Vacation").deleteOne(id);
         };
     },
     get getCurrentBudgetForUser() {
