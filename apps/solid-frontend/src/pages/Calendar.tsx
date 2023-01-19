@@ -152,9 +152,9 @@ const Calendar: Component = () => {
                                 <div
                                     class="border-2 rounded px-1"
                                     classList={{
-                                        "border-primary-focus": v.approved,
-                                        "bg-primary": v.approved,
-                                        "text-primary-content": v.approved,
+                                        "border-[rgba(0,0,0,0.3)]": v.approved,
+                                        "bg-success": v.approved,
+                                        "text-success-content": v.approved,
                                         // if not approved
                                         "border-base-100": !v.approved,
                                         "bg-base-200": !v.approved,
