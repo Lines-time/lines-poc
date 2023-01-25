@@ -55,7 +55,7 @@ const Track: Component = () => {
                             </span>
                         </span>
                         <progress
-                            class="progress progress-primary bg-base-100"
+                            class="progress progress-primary bg-base-100 w-40"
                             max={100}
                             value={progress().workedPercent()}
                         />
