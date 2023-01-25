@@ -131,7 +131,7 @@ const Day: Component<DayProps> = (props) => {
             .hour(parsedEnd.hours)
             .minute(parsedEnd.minutes)
             .second(0);
-        return `${start.format("HH:mm")} - ${end.format("HH:mm")}`;
+        return `${start.format("H:mm")} - ${end.format("H:mm")}`;
     };
 
     return (
