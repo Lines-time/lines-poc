@@ -6,6 +6,15 @@ import Tabs, { TTab } from "~/Tabs";
 
 import { createProgressData, formatDuration } from "../utils/utils";
 
+export const dayProgress = createProgressData(
+    dayjs().startOf("day"),
+    dayjs().endOf("day"),
+);
+export const weekProgress = createProgressData(
+    dayjs().startOf("week"),
+    dayjs().endOf("week"),
+);
+
 const Track: Component = () => {
     const tabs: TTab[] = [
         {
@@ -18,14 +27,7 @@ const Track: Component = () => {
         },
     ];
     const location = useLocation();
-    const dayProgress = createProgressData(
-        dayjs().startOf("day"),
-        dayjs().endOf("day"),
-    );
-    const weekProgress = createProgressData(
-        dayjs().startOf("week"),
-        dayjs().endOf("week"),
-    );
+    
     const progress = createMemo(() =>
         location.pathname === "/track/day" ? dayProgress : weekProgress,
     );

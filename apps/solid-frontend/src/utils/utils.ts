@@ -83,7 +83,7 @@ export const createProgressData = (start: dayjs.Dayjs, end: dayjs.Dayjs) => {
                 end.toDate(),
             ),
     );
-    const [sick_value] = createResource(
+    const [sick_value, sick_resource] = createResource(
         async () =>
             await sickDayStore.getForDateRangeAndUser(
                 start.toDate(),
@@ -97,6 +97,13 @@ export const createProgressData = (start: dayjs.Dayjs, end: dayjs.Dayjs) => {
             0,
         ),
     );
+    const refetch = () => {
+        data_resource.refetch();
+        target_resource.refetch();
+        free_resource.refetch();
+        vacation_resource.refetch();
+        sick_resource.refetch();
+    };
     const targetTime = createMemo(() =>
         target_value()
             ?.filter((tt) => {
@@ -154,5 +161,6 @@ export const createProgressData = (start: dayjs.Dayjs, end: dayjs.Dayjs) => {
         workedPercent,
         missingDuration,
         targetDuration,
+        refetch,
     };
 };

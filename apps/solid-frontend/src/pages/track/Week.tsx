@@ -1,4 +1,5 @@
-import { useNavigate, useSearchParams } from "@solidjs/router";
+import { weekProgress } from "@/Track";
+import { useSearchParams } from "@solidjs/router";
 import dayjs, { Dayjs } from "dayjs";
 import { X } from "lucide-solid";
 import {
@@ -22,7 +23,6 @@ import { parseTimeFromStep } from "../../utils/utils";
 import type { TWorkUnit } from "lines-types";
 const Week: Component = () => {
     const [searchParams, setSearchParams] = useSearchParams();
-    const navigate = useNavigate();
     const [now, setNow] = createSignal(dayjs());
     const [editingStart, setEditingStart] = createSignal<string>();
     const [editingEnd, setEditingEnd] = createSignal<string>();
@@ -85,7 +85,10 @@ const Week: Component = () => {
             if (units) {
                 const lastUnit = units[units.length - 1];
                 return {
-                    start: presetStart()?.toString() ?? lastUnit?.end ?? dayjs().toString(),
+                    start:
+                        presetStart()?.toString() ??
+                        lastUnit?.end ??
+                        dayjs().toString(),
                     end: presetEnd()?.toString() ?? dayjs().toString(),
                 };
             }
@@ -199,7 +202,10 @@ const Week: Component = () => {
                             <WorkUnitForm
                                 presetData={workUnitModalPresetData()}
                                 onClose={() => closeEdit()}
-                                onSave={() => workUnitsResource.refetch()}
+                                onSave={() => {
+                                    workUnitsResource.refetch();
+                                    weekProgress.refetch();
+                                }}
                             />
                         </div>
                     </div>

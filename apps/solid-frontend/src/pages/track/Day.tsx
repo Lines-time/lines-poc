@@ -1,4 +1,5 @@
-import { useNavigate, useSearchParams } from "@solidjs/router";
+import { dayProgress } from "@/Track";
+import { useSearchParams } from "@solidjs/router";
 import dayjs, { Dayjs } from "dayjs";
 import { Plus, X } from "lucide-solid";
 import {
@@ -27,7 +28,6 @@ import { parseTimeFromStep } from "../../utils/utils";
 import type { TWorkUnit } from "lines-types";
 const Day: Component = () => {
     const [searchParams, setSearchParams] = useSearchParams();
-    const navigate = useNavigate();
     const [now, setNow] = createSignal(dayjs());
     const [editingStart, setEditingStart] = createSignal<string>();
     const [editingEnd, setEditingEnd] = createSignal<string>();
@@ -251,7 +251,10 @@ const Day: Component = () => {
                             <WorkUnitForm
                                 presetData={workUnitModalPresetData()}
                                 onClose={() => closeEdit()}
-                                onSave={() => workUnitsResource.refetch()}
+                                onSave={() => {
+                                    workUnitsResource.refetch();
+                                    dayProgress.refetch();
+                                }}
                             />
                         </div>
                     </div>
