@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
-import { Component, createMemo, createResource, For, Suspense } from "solid-js";
+import { Check, X } from "lucide-solid";
+import { Component, createMemo, createResource, For, Show, Suspense } from "solid-js";
 import Loading from "~/Loading";
 import Navbar from "~/Navbar";
 import DashboardProjectItem from "~/specialized/DashboardProjectItem";
@@ -107,12 +108,63 @@ const Dashboard: Component = () => {
                         </For>
                         <div class="max-xl:col-span-2 max-sm:col-span-3">
                             <h3 class="text-lg">Vacation:</h3>
-                            <div class="bg-base-200 border-base-100 border-2 rounded-lg grid grid-cols-2">
+                            <div class="bg-base-200 border-base-100 border-2 rounded-lg grid grid-cols-1">
                                 <Stat
                                     title="Vacation days"
                                     description="Used/Available"
                                     value={`${usedVacationDays()}/${vacationBudget()}`}
                                 />
+                                <div class="flex flex-col p-2">
+                                    <For each={vacations()}>
+                                        {(vacation) => (
+                                            <div class="flex flex-row justify-between">
+                                                <span class="flex flex-row items-center gap-2">
+                                                    <span
+                                                        class="tooltip tooltip-top"
+                                                        classList={{
+                                                            "text-success":
+                                                                vacation.approved,
+                                                            "text-error":
+                                                                !vacation.approved,
+                                                        }}
+                                                        data-tip={
+                                                            vacation.approved
+                                                                ? "This vacation has been approved"
+                                                                : "This vacation has not been approved"
+                                                        }
+                                                    >
+                                                        <Show
+                                                            when={
+                                                                vacation.approved
+                                                            }
+                                                        >
+                                                            <Check />
+                                                        </Show>
+                                                        <Show
+                                                            when={
+                                                                !vacation.approved
+                                                            }
+                                                        >
+                                                            <X />
+                                                        </Show>
+                                                    </span>
+                                                    <span>
+                                                        {vacation.description}
+                                                    </span>
+                                                </span>
+                                                <span>
+                                                    {dayjs(
+                                                        vacation.start,
+                                                    ).format("LL")}
+                                                    {" - "}
+                                                    {dayjs(vacation.end).format(
+                                                        "LL",
+                                                    )}
+                                                </span>
+                                            </div>
+                                        )}
+                                    </For>
+                                </div>
                             </div>
                         </div>
                         <div class="">
