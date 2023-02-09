@@ -1,7 +1,9 @@
-import { Component, createResource } from "solid-js";
+import { createResource } from "solid-js";
 
 import { BACKEND_URL } from "../config";
 import authStore from "../store/authStore";
+
+import type { Component } from "solid-js";
 
 type TProps = {
     id?: string;

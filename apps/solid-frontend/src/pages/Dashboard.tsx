@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { Check, X } from "lucide-solid";
-import { Component, createMemo, createResource, For, Show, Suspense } from "solid-js";
+import { createMemo, createResource, For, Show, Suspense } from "solid-js";
 import Loading from "~/Loading";
 import Navbar from "~/Navbar";
 import DashboardProjectItem from "~/specialized/DashboardProjectItem";
@@ -12,13 +12,12 @@ import projectStore from "../store/projectStore";
 import vacationStore from "../store/vacationStore";
 import workTimeTargetBlockStore from "../store/workTimeTargetBlockStore";
 
+import type { Component } from "solid-js";
 const Dashboard: Component = () => {
     const [currentWorkTimeTargets] = createResource(
         async () => await workTimeTargetBlockStore.getCurrent(),
     );
-    const [usersProjects] = createResource(
-        async () => await projectStore.getForUser(),
-    );
+    const [usersProjects] = createResource(async () => await projectStore.getForUser());
     const [vacationBudgets] = createResource(
         async () => await vacationStore.getCurrentBudgetForUser(),
     );
@@ -53,10 +52,7 @@ const Dashboard: Component = () => {
                                   .endOf("day")
                                   .diff(
                                       dayjs
-                                          .max(
-                                              dayjs(v?.start),
-                                              dayjs(v?.budget.start_date),
-                                          )
+                                          .max(dayjs(v?.start), dayjs(v?.budget.start_date))
                                           .startOf("day"),
                                   ) /
                                   1000 /
@@ -122,10 +118,8 @@ const Dashboard: Component = () => {
                                                     <span
                                                         class="tooltip tooltip-top"
                                                         classList={{
-                                                            "text-success":
-                                                                vacation.approved,
-                                                            "text-error":
-                                                                !vacation.approved,
+                                                            "text-success": vacation.approved,
+                                                            "text-error": !vacation.approved,
                                                         }}
                                                         data-tip={
                                                             vacation.approved
@@ -133,33 +127,19 @@ const Dashboard: Component = () => {
                                                                 : "This vacation has not been approved"
                                                         }
                                                     >
-                                                        <Show
-                                                            when={
-                                                                vacation.approved
-                                                            }
-                                                        >
+                                                        <Show when={vacation.approved}>
                                                             <Check />
                                                         </Show>
-                                                        <Show
-                                                            when={
-                                                                !vacation.approved
-                                                            }
-                                                        >
+                                                        <Show when={!vacation.approved}>
                                                             <X />
                                                         </Show>
                                                     </span>
-                                                    <span>
-                                                        {vacation.description}
-                                                    </span>
+                                                    <span>{vacation.description}</span>
                                                 </span>
                                                 <span>
-                                                    {dayjs(
-                                                        vacation.start,
-                                                    ).format("LL")}
+                                                    {dayjs(vacation.start).format("LL")}
                                                     {" - "}
-                                                    {dayjs(vacation.end).format(
-                                                        "LL",
-                                                    )}
+                                                    {dayjs(vacation.end).format("LL")}
                                                 </span>
                                             </div>
                                         )}
@@ -171,11 +151,7 @@ const Dashboard: Component = () => {
                             <h3 class="text-lg">Your Projects:</h3>
                             <div class="bg-base-200 border-base-100 border-2 rounded-lg">
                                 <For each={usersProjects()}>
-                                    {(project) => (
-                                        <DashboardProjectItem
-                                            project={project}
-                                        />
-                                    )}
+                                    {(project) => <DashboardProjectItem project={project} />}
                                 </For>
                             </div>
                         </div>

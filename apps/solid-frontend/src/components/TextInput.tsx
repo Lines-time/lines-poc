@@ -1,6 +1,8 @@
+import { createMemo } from "solid-js";
+
 import FormControl from "./FormControl";
 
-import type { Component, ComponentProps } from "solid-js";
+import type { ComponentProps, Component } from "solid-js";
 
 type TProps = Omit<ComponentProps<typeof FormControl>, "children"> & {
     placeholder?: string;
@@ -11,16 +13,17 @@ type TProps = Omit<ComponentProps<typeof FormControl>, "children"> & {
 };
 
 const TextInput: Component<TProps> = (props) => {
-    const { placeholder, setValue, value, type = "text", required = false, ...formControlProps } = props;
+    const _type = createMemo(() => props.type ?? "text");
+    const required = createMemo(() => props.required ?? false);
     return (
-        <FormControl {...formControlProps}>
+        <FormControl {...props}>
             <input
                 class="input input-bordered w-full max-w-xs bg-transparent"
-                type={type}
-                required={required}
-                placeholder={placeholder}
-                value={value}
-                onInput={(e) => setValue(e.currentTarget.value)}
+                type={_type()}
+                required={required()}
+                placeholder={props.placeholder}
+                value={props.value}
+                onInput={(e) => props.setValue(e.currentTarget.value)}
             />
         </FormControl>
     );

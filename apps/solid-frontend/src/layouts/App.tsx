@@ -46,30 +46,19 @@ const App: Component = () => {
                         </div>
                         <ul class="menu w-full p-2 rounded-box gap-2">
                             <li>
-                                <A
-                                    href="/"
-                                    end
-                                    activeClass="text-primary bg-base-100"
-                                >
+                                <A href="/" end activeClass="text-primary bg-base-100">
                                     <LayoutDashboard />
                                     Dashboard
                                 </A>
                             </li>
                             <li>
-                                <A
-                                    href="/track"
-                                    activeClass="text-primary bg-base-100"
-                                >
+                                <A href="/track" activeClass="text-primary bg-base-100">
                                     <Timer />
                                     Track time
                                 </A>
                             </li>
                             <li class="gap-2">
-                                <A
-                                    href="/calendar"
-                                    end
-                                    activeClass="text-primary bg-base-100 peer"
-                                >
+                                <A href="/calendar" end activeClass="text-primary bg-base-100 peer">
                                     <Calendar />
                                     Calendar
                                 </A>
@@ -115,14 +104,9 @@ const App: Component = () => {
                             >
                                 <Suspense fallback={<Loading size="md" />}>
                                     <Show
-                                        when={
-                                            currentUser()?.first_name &&
-                                            currentUser()?.last_name
-                                        }
+                                        when={currentUser()?.first_name && currentUser()?.last_name}
                                     >
-                                        {`${currentUser()!.first_name} ${
-                                            currentUser()!.last_name
-                                        }`}
+                                        {`${currentUser()!.first_name} ${currentUser()!.last_name}`}
                                     </Show>
                                 </Suspense>
                             </A>

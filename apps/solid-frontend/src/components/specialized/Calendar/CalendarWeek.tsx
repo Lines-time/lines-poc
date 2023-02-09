@@ -1,35 +1,32 @@
 import dayjs, { Dayjs } from "dayjs";
 import { ChevronLeft, ChevronRight } from "lucide-solid";
-import { Accessor, Component, createMemo, Show } from "solid-js";
+import { createMemo, Show } from "solid-js";
 import Button from "~/Button";
 import ForNumber from "~/ForNumber";
 
 import DayGrid from "./DayGrid";
 
+import type { Component } from "solid-js";
 import type { TCalendarEvent } from "../../../types";
 type TProps = {
-    now: Accessor<dayjs.Dayjs>;
+    now: dayjs.Dayjs;
     onUpdateNow?: (value: dayjs.Dayjs) => void;
     controls?: boolean;
-    interval?: Accessor<number>;
-    events?: Accessor<TCalendarEvent[]>;
+    interval?: number;
+    events?: TCalendarEvent[];
     onCreateEvent?: (start: Dayjs, end: Dayjs) => void;
     onStepMouseEnter?: (e: Event, interval: number) => boolean;
 };
 
 const CalendarWeek: Component<TProps> = (props) => {
-    const {
-        now,
-        onUpdateNow,
-        controls = true,
-        interval = () => 30,
-        events = () => [],
-    } = props;
+    const controls = createMemo(() => props.controls ?? true);
+    const interval = createMemo(() => props.interval ?? 30);
+    const events = createMemo(() => props.events ?? []);
     const steps = createMemo(() => 24 * (60 / interval()));
 
     const dayEvents = (day: number) => {
         return events().filter((e) => {
-            return now().isoWeekday(day).isBetween(e.start, e.end, "day", "[]");
+            return props.now.isoWeekday(day).isBetween(e.start, e.end, "day", "[]");
         });
     };
 
@@ -38,39 +35,36 @@ const CalendarWeek: Component<TProps> = (props) => {
             <div
                 class="flex flex-row items-center gap-2 w-full"
                 classList={{
-                    "justify-between": controls,
-                    "justify-center": !controls,
+                    "justify-between": controls(),
+                    "justify-center": !controls(),
                 }}
             >
                 {/* Controls to change the week */}
-                {controls && (
+                {controls() && (
                     <Button
                         class="btn-sm"
                         icon={ChevronLeft}
-                        onClick={() => onUpdateNow?.(now().subtract(1, "week"))}
+                        onClick={() => props.onUpdateNow?.(props.now.subtract(1, "week"))}
                     />
                 )}
                 <span class="flex items-center gap-2">
                     <span>
-                        {now().isoWeekday(1).format("dddd, LL")} -{" "}
-                        {now().isoWeekday(7).format("dddd, LL")}
+                        {props.now.isoWeekday(1).format("dddd, LL")} -{" "}
+                        {props.now.isoWeekday(7).format("dddd, LL")}
                     </span>
-                    {controls && now().isoWeek() !== dayjs().isoWeek() ? (
-                        <Button
-                            class="btn-sm"
-                            onClick={() => onUpdateNow?.(dayjs())}
-                        >
+                    {controls() && props.now.isoWeek() !== dayjs().isoWeek() ? (
+                        <Button class="btn-sm" onClick={() => props.onUpdateNow?.(dayjs())}>
                             Today
                         </Button>
                     ) : (
                         ""
                     )}
                 </span>
-                {controls && (
+                {controls() && (
                     <Button
                         class="btn-sm"
                         icon={ChevronRight}
-                        onClick={() => onUpdateNow?.(now().add(1, "week"))}
+                        onClick={() => props.onUpdateNow?.(props.now.add(1, "week"))}
                     />
                 )}
             </div>
@@ -83,15 +77,11 @@ const CalendarWeek: Component<TProps> = (props) => {
                         <div
                             class="flex flex-row items-center justify-center p-2 sticky top-0 z-10 bg-gradient-to-b from-base-300 to-transparent"
                             classList={{
-                                "text-primary": now()
-                                    .isoWeekday(day + 1)
-                                    .isToday(),
+                                "text-primary": props.now.isoWeekday(day + 1).isToday(),
                             }}
                         >
                             {/* Weekday names above the columns */}
-                            {now()
-                                .isoWeekday(day + 1)
-                                .format("ddd")}
+                            {props.now.isoWeekday(day + 1).format("ddd")}
                         </div>
                     )}
                 </ForNumber>
@@ -101,7 +91,7 @@ const CalendarWeek: Component<TProps> = (props) => {
                         {(step) => (
                             <div class="px-1 h-5 text-sm -translate-y-2.5">
                                 <Show when={(step * interval()) % 60 === 0}>
-                                    {now()
+                                    {props.now
                                         .hour(0)
                                         .minute(step * interval())
                                         .format("HH:mm")}
@@ -113,12 +103,10 @@ const CalendarWeek: Component<TProps> = (props) => {
                 <ForNumber each={7}>
                     {(day) => (
                         <DayGrid
-                            now={() => now().isoWeekday(day + 1)}
+                            now={props.now.isoWeekday(day + 1)}
                             onCreateDuration={props.onCreateEvent}
                             onStepMouseEnter={props.onStepMouseEnter}
-                            showCurrentTime={now()
-                                .isoWeekday(day + 1)
-                                .isToday()}
+                            showCurrentTime={props.now.isoWeekday(day + 1).isToday()}
                             steps={steps()}
                             events={dayEvents(day + 1)}
                             interval={interval()}

@@ -3,7 +3,6 @@ import { useSearchParams } from "@solidjs/router";
 import dayjs, { Dayjs } from "dayjs";
 import { Plus, X } from "lucide-solid";
 import {
-    Component,
     createEffect,
     createMemo,
     createResource,
@@ -25,6 +24,7 @@ import settingsStore from "../../store/settingsStore";
 import workUnitStore from "../../store/workUnitStore";
 import { parseTimeFromStep } from "../../utils/utils";
 
+import type { Component } from "solid-js";
 import type { TWorkUnit } from "lines-types";
 const Day: Component = () => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -34,9 +34,7 @@ const Day: Component = () => {
     const [presetStart, setPresetStart] = createSignal<Dayjs | undefined>();
     const [presetEnd, setPresetEnd] = createSignal<Dayjs | undefined>();
     const [settings] = createResource(async () => await settingsStore.get());
-    const trackingInterval = createMemo(
-        () => settings()?.tracking_increment ?? 30,
-    );
+    const trackingInterval = createMemo(() => settings()?.tracking_increment ?? 30);
 
     const updateSearchParamsDay = () => {
         if (searchParams.d === undefined) {
@@ -80,9 +78,7 @@ const Day: Component = () => {
     });
 
     const [workUnits, workUnitsResource] = createResource(async () => {
-        const result = await workUnitStore.getForDayAndUser(
-            dayjs(searchParams.d).toDate(),
-        );
+        const result = await workUnitStore.getForDayAndUser(dayjs(searchParams.d).toDate());
         result?.sort((a, b) => dayjs(a?.start).diff(dayjs(b?.start)));
         return result;
     });
@@ -100,9 +96,7 @@ const Day: Component = () => {
                 }
             }
         } else if (searchParams.edit) {
-            const _wu = workUnits.latest?.find(
-                (wu) => wu && wu.id === searchParams.edit,
-            );
+            const _wu = workUnits.latest?.find((wu) => wu && wu.id === searchParams.edit);
             if (_wu)
                 return {
                     id: _wu.id,
@@ -151,15 +145,13 @@ const Day: Component = () => {
     return (
         <div class="grid grid-cols-3 overflow-auto">
             <div class="p-6 grid col-span-2 grid-cols-2 gap-x-2 grid-rows-[min-content_1fr] w-full">
-                <h2 class="text-xl font-bold col-span-3">
-                    {dayjs().format("dddd, DD.MM.YYYY")}
-                </h2>
+                <h2 class="text-xl font-bold col-span-3">{dayjs().format("dddd, DD.MM.YYYY")}</h2>
                 <div class="pt-2">
                     <CalendarDay
-                        now={now}
+                        now={now()}
                         controls={false}
-                        interval={trackingInterval}
-                        events={events}
+                        interval={trackingInterval()}
+                        events={events()}
                         onCreateEvent={(start, end) => {
                             setPresetStart(start);
                             setPresetEnd(end);
@@ -237,15 +229,9 @@ const Day: Component = () => {
                     <div class="">
                         <div class="flex flex-row p-2 pl-3 justify-between">
                             <h2 class="font-bold text-xl">
-                                {searchParams.edit === "new"
-                                    ? "Create new"
-                                    : "Edit"}
+                                {searchParams.edit === "new" ? "Create new" : "Edit"}
                             </h2>
-                            <Button
-                                class="btn-sm"
-                                icon={X}
-                                onClick={() => closeEdit()}
-                            />
+                            <Button class="btn-sm" icon={X} onClick={() => closeEdit()} />
                         </div>
                         <div class="p-2">
                             <WorkUnitForm

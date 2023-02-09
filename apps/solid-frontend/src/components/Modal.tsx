@@ -1,9 +1,10 @@
 import { X } from "lucide-solid";
-import { ParentComponent, Show } from "solid-js";
+import { Show } from "solid-js";
 import { Portal } from "solid-js/web";
 
 import Button from "./Button";
 
+import type { ParentComponent } from "solid-js";
 interface IProps {
     open: boolean;
     title: string;

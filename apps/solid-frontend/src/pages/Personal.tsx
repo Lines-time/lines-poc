@@ -1,10 +1,11 @@
-import { Component, createResource, For, Suspense } from "solid-js";
+import { createResource, For, Suspense } from "solid-js";
 import Loading from "~/Loading";
 import Navbar from "~/Navbar";
 import WorkTimeTarget from "~/specialized/WorkTimeTarget";
 
 import authStore from "../store/authStore";
 
+import type { Component } from "solid-js";
 const Personal: Component = () => {
     const [currentUser] = createResource(async () => await authStore.currentUser);
 

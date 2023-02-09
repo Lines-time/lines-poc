@@ -2,15 +2,7 @@ import { weekProgress } from "@/Track";
 import { useSearchParams } from "@solidjs/router";
 import dayjs, { Dayjs } from "dayjs";
 import { X } from "lucide-solid";
-import {
-    Component,
-    createMemo,
-    createResource,
-    createSignal,
-    onCleanup,
-    onMount,
-    Show,
-} from "solid-js";
+import { createMemo, createResource, createSignal, onCleanup, onMount, Show } from "solid-js";
 import Button from "~/Button";
 import WorkUnitForm from "~/modals/WorkUnitForm";
 import CalendarWeek from "~/specialized/Calendar/CalendarWeek";
@@ -20,6 +12,7 @@ import settingsStore from "../../store/settingsStore";
 import workUnitStore from "../../store/workUnitStore";
 import { parseTimeFromStep } from "../../utils/utils";
 
+import type { Component } from "solid-js";
 import type { TWorkUnit } from "lines-types";
 const Week: Component = () => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -29,9 +22,7 @@ const Week: Component = () => {
     const [presetStart, setPresetStart] = createSignal<Dayjs | undefined>();
     const [presetEnd, setPresetEnd] = createSignal<Dayjs | undefined>();
     const [settings] = createResource(async () => await settingsStore.get());
-    const trackingInterval = createMemo(
-        () => settings()?.tracking_increment ?? 30,
-    );
+    const trackingInterval = createMemo(() => settings()?.tracking_increment ?? 30);
 
     const [workUnits, workUnitsResource] = createResource(
         async () =>
@@ -85,17 +76,12 @@ const Week: Component = () => {
             if (units) {
                 const lastUnit = units[units.length - 1];
                 return {
-                    start:
-                        presetStart()?.toString() ??
-                        lastUnit?.end ??
-                        dayjs().toString(),
+                    start: presetStart()?.toString() ?? lastUnit?.end ?? dayjs().toString(),
                     end: presetEnd()?.toString() ?? dayjs().toString(),
                 };
             }
         } else if (searchParams.edit) {
-            const _wu = workUnits()?.find(
-                (wu) => wu && wu.id === searchParams.edit,
-            );
+            const _wu = workUnits()?.find((wu) => wu && wu.id === searchParams.edit);
             if (_wu)
                 return {
                     id: _wu.id,
@@ -134,10 +120,10 @@ const Week: Component = () => {
     return (
         <div class="overflow-auto relative">
             <CalendarWeek
-                now={now}
+                now={now()}
                 controls={false}
-                interval={trackingInterval}
-                events={events}
+                interval={trackingInterval()}
+                events={events()}
                 onCreateEvent={(start, end) => {
                     setPresetStart(start);
                     setPresetEnd(end);
@@ -188,15 +174,9 @@ const Week: Component = () => {
                     <div class="">
                         <div class="flex flex-row p-2 pl-3 justify-between">
                             <h2 class="font-bold text-xl">
-                                {searchParams.edit === "new"
-                                    ? "Create new"
-                                    : "Edit"}
+                                {searchParams.edit === "new" ? "Create new" : "Edit"}
                             </h2>
-                            <Button
-                                class="btn-sm"
-                                icon={X}
-                                onClick={() => closeEdit()}
-                            />
+                            <Button class="btn-sm" icon={X} onClick={() => closeEdit()} />
                         </div>
                         <div class="p-2">
                             <WorkUnitForm

@@ -1,4 +1,4 @@
-import { Component, createResource, createSignal, Show, Suspense } from "solid-js";
+import { createResource, createSignal, Show, Suspense } from "solid-js";
 import Button from "~/Button";
 import FormControl from "~/FormControl";
 import Loading from "~/Loading";
@@ -6,25 +6,19 @@ import Navbar from "~/Navbar";
 
 import authStore from "../store/authStore";
 
+import type { Component } from "solid-js";
 import type { TUser } from "lines-types";
 
 const Settings: Component = () => {
-    const [currentUser] = createResource(
-        async () => await authStore.currentUser,
-    );
-    const [user, userResource] = createResource(
-        async () => await authStore.currentUser,
-    );
+    const [currentUser] = createResource(async () => await authStore.currentUser);
+    const [user, userResource] = createResource(async () => await authStore.currentUser);
     const [mutatedUser, setMutatedUser] = createSignal<Partial<TUser>>({});
     const saveSettings = async (e: Event) => {
         e.preventDefault();
         await authStore.update(mutatedUser());
         setMutatedUser({});
     };
-    function updateProperty<T extends keyof TUser>(
-        property: T,
-        value: TUser[T],
-    ) {
+    function updateProperty<T extends keyof TUser>(property: T, value: TUser[T]) {
         setMutatedUser((u) => ({
             ...u,
             [property]: value,
@@ -45,9 +39,7 @@ const Settings: Component = () => {
                             <h2 class="text-2xl font-bold">
                                 {`${currentUser.latest?.first_name} ${currentUser.latest?.last_name}`}
                             </h2>
-                            <Show
-                                when={Object.keys(mutatedUser()).length !== 0}
-                            >
+                            <Show when={Object.keys(mutatedUser()).length !== 0}>
                                 <Button submit primary class="btn-sm">
                                     Save
                                 </Button>
@@ -59,10 +51,7 @@ const Settings: Component = () => {
                                 class="toggle"
                                 checked={user()?.use_project_colors ?? false}
                                 onInput={(e) =>
-                                    updateProperty(
-                                        "use_project_colors",
-                                        e.currentTarget.checked,
-                                    )
+                                    updateProperty("use_project_colors", e.currentTarget.checked)
                                 }
                             />
                         </FormControl>
@@ -81,10 +70,7 @@ const Settings: Component = () => {
                                 onInput={(e) =>
                                     updateProperty(
                                         "theme",
-                                        e.currentTarget.value as
-                                            | "light"
-                                            | "dark"
-                                            | "auto",
+                                        e.currentTarget.value as "light" | "dark" | "auto",
                                     )
                                 }
                             >

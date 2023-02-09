@@ -1,9 +1,11 @@
 import dayjs from "dayjs";
-import { Component, createMemo, createResource, Suspense } from "solid-js";
+import { createMemo, createResource, Suspense } from "solid-js";
 
 import categoryStore from "../../store/categoryStore";
 import projectStore from "../../store/projectStore";
 import Loading from "../Loading";
+
+import type { Component } from "solid-js";
 
 import type { TWorkUnit } from "lines-types";
 type TProps = {
@@ -13,17 +15,12 @@ type TProps = {
 };
 
 const WorkUnit: Component<TProps> = (props) => {
-    const { unit } = props;
-    const [project] = createResource(
-        async () => await projectStore.getById(unit.project)
-    );
-    const [category] = createResource(
-        async () => await categoryStore.getById(unit.category)
-    );
-    const start = createMemo(() => dayjs(unit?.start));
-    const end = createMemo(() => dayjs(unit?.end));
+    const [project] = createResource(async () => await projectStore.getById(props.unit.project));
+    const [category] = createResource(async () => await categoryStore.getById(props.unit.category));
+    const start = createMemo(() => dayjs(props.unit?.start));
+    const end = createMemo(() => dayjs(props.unit?.end));
     const duration = createMemo(() =>
-        dayjs().hour(0).minute(0).second(0).millisecond(end().diff(start()))
+        dayjs().hour(0).minute(0).second(0).millisecond(end().diff(start())),
     );
     return (
         <div
@@ -48,7 +45,7 @@ const WorkUnit: Component<TProps> = (props) => {
                         {` - ${category.latest?.name}`}
                     </span>
                 </Suspense>
-                <p>{unit?.description}</p>
+                <p>{props.unit?.description}</p>
             </div>
         </div>
     );

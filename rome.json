@@ -11,8 +11,9 @@
         "ignore": ["dist"]
     },
     "formatter": {
-        "enabled": false,
+        "indentSize": 4,
         "indentStyle": "space",
-        "indentSize": 4
+        "lineWidth": 100,
+        "formatWithErrors": true
     }
 }

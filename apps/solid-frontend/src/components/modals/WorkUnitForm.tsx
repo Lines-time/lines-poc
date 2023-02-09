@@ -1,7 +1,6 @@
 import dayjs from "dayjs";
 import {
     batch,
-    Component,
     createEffect,
     createMemo,
     createResource,
@@ -22,6 +21,7 @@ import timeBudgetStore from "../../store/timeBudgetStore";
 import workUnitStore from "../../store/workUnitStore";
 import { formatDuration } from "../../utils/utils";
 
+import type { Component } from "solid-js";
 import type { TWorkUnit } from "lines-types";
 type TProps = {
     onClose: () => void;
@@ -37,15 +37,9 @@ const WorkUnitForm: Component<TProps> = (props) => {
         props.presetData?.category ?? null,
     );
     const [settings] = createResource(async () => await settingsStore.get());
-    const [description, setDescription] = createSignal(
-        props.presetData?.description ?? "",
-    );
-    const [start, setStart] = createSignal(
-        dayjs(props.presetData?.start ?? undefined).toDate(),
-    );
-    const [end, setEnd] = createSignal(
-        dayjs(props.presetData?.end ?? undefined).toDate(),
-    );
+    const [description, setDescription] = createSignal(props.presetData?.description ?? "");
+    const [start, setStart] = createSignal(dayjs(props.presetData?.start ?? undefined).toDate());
+    const [end, setEnd] = createSignal(dayjs(props.presetData?.end ?? undefined).toDate());
     const [loading, setLoading] = createSignal(false);
     const [projects] = createResource(async () => await projectStore.getAll());
     const [categories] = createResource(projectId, async () => {
@@ -68,10 +62,7 @@ const WorkUnitForm: Component<TProps> = (props) => {
         dayjs.duration(
             projectWorkUnits()
                 ?.filter((wu) => wu.id !== props.presetData?.id)
-                .reduce(
-                    (total, wu) => total + dayjs(wu.end).diff(wu.start),
-                    0,
-                ) ?? 0,
+                .reduce((total, wu) => total + dayjs(wu.end).diff(wu.start), 0) ?? 0,
         ),
     );
     const projectBudgetTotal = createMemo(() =>
@@ -174,19 +165,13 @@ const WorkUnitForm: Component<TProps> = (props) => {
                         <select
                             class="select select-bordered bg-base-300"
                             value={projectId() ?? "null"}
-                            onChange={(e) =>
-                                setProjectId(e.currentTarget.value)
-                            }
+                            onChange={(e) => setProjectId(e.currentTarget.value)}
                         >
                             <option value="null" disabled>
                                 Select one
                             </option>
                             <For each={projects()}>
-                                {(project) => (
-                                    <option value={project?.id}>
-                                        {project?.title}
-                                    </option>
-                                )}
+                                {(project) => <option value={project?.id}>{project?.title}</option>}
                             </For>
                         </select>
                     </Suspense>
@@ -195,24 +180,16 @@ const WorkUnitForm: Component<TProps> = (props) => {
                     <Suspense fallback={<Loading />}>
                         <select
                             class="select select-bordered bg-base-300"
-                            value={
-                                categories() ? categoryId() ?? "null" : "null"
-                            }
+                            value={categories() ? categoryId() ?? "null" : "null"}
                             disabled={!projectId()}
-                            onChange={(e) =>
-                                setCategoryId(e.currentTarget.value)
-                            }
+                            onChange={(e) => setCategoryId(e.currentTarget.value)}
                         >
                             <option value="null" disabled>
-                                {!projectId()
-                                    ? "Select project first"
-                                    : "Select one"}
+                                {!projectId() ? "Select project first" : "Select one"}
                             </option>
                             <For each={categories()}>
                                 {(category) => (
-                                    <option value={category?.id}>
-                                        {category?.name}
-                                    </option>
+                                    <option value={category?.id}>{category?.name}</option>
                                 )}
                             </For>
                         </select>
@@ -224,17 +201,14 @@ const WorkUnitForm: Component<TProps> = (props) => {
                 <span
                     classList={{
                         "text-error":
-                            projectBudgetUsed().asMilliseconds() +
-                                duration().asMilliseconds() >
+                            projectBudgetUsed().asMilliseconds() + duration().asMilliseconds() >
                             projectBudgetTotal().asMilliseconds(),
                         "text-success":
-                            projectBudgetUsed().asMilliseconds() +
-                                duration().asMilliseconds() <=
+                            projectBudgetUsed().asMilliseconds() + duration().asMilliseconds() <=
                             projectBudgetTotal().asMilliseconds(),
                     }}
                 >
-                    {formatDuration(projectBudgetUsed())}h +{" "}
-                    {duration().format("H:mm[h]")}/
+                    {formatDuration(projectBudgetUsed())}h + {duration().format("H:mm[h]")}/
                     {formatDuration(projectBudgetTotal())}h
                 </span>
             </p>
@@ -258,12 +232,7 @@ const WorkUnitForm: Component<TProps> = (props) => {
                     }}
                     data-tip="You must select a project and service"
                 >
-                    <Button
-                        primary
-                        submit
-                        loading={loading()}
-                        disabled={() => categoryId() === null}
-                    >
+                    <Button primary submit loading={loading()} disabled={categoryId() === null}>
                         Save
                     </Button>
                 </span>

@@ -1,20 +1,19 @@
-import { Accessor, Component, ComponentProps, createMemo, For, JSX } from "solid-js";
+import { createMemo, For } from "solid-js";
 import ForNumber from "~/ForNumber";
 
+import type { Component, JSX, ComponentProps } from "solid-js";
 import type dayjs from "dayjs";
 type TGridProps = Omit<ComponentProps<typeof For<number, JSX.Element>>, "each"> & {
-    now: Accessor<dayjs.Dayjs>;
+    now: dayjs.Dayjs;
 };
 
 const Grid: Component<TGridProps> = (props) => {
-    const { now } = props;
-
     const weekAmount = createMemo(
         () =>
-            now()
-                .date(now().daysInMonth())
+            props.now
+                .date(props.now.daysInMonth())
                 .isoWeekday(1)
-                .diff(now().date(1).isoWeekday(1), "week") + 1
+                .diff(props.now.date(1).isoWeekday(1), "week") + 1,
     );
 
     return (
@@ -26,18 +25,18 @@ const Grid: Component<TGridProps> = (props) => {
             }}
         >
             {/* Fill the days before the first of this month with the days from the previous month */}
-            <ForNumber each={now().date(1).isoWeekday() - 1}>
+            <ForNumber each={props.now.date(1).isoWeekday() - 1}>
                 {(day) => (
                     <div class="opacity-50">
-                        {now().subtract(1, "month").daysInMonth() +
-                            (day + 1 - now().date(0).isoWeekday())}
+                        {props.now.subtract(1, "month").daysInMonth() +
+                            (day + 1 - props.now.date(0).isoWeekday())}
                     </div>
                 )}
             </ForNumber>
             {/* Days of this month */}
-            <ForNumber each={now().daysInMonth()}>{props.children}</ForNumber>
+            <ForNumber each={props.now.daysInMonth()}>{props.children}</ForNumber>
             {/* Fill the rest of the days with days from the next month */}
-            <ForNumber each={7 - now().date(now().daysInMonth()).isoWeekday()}>
+            <ForNumber each={7 - props.now.date(props.now.daysInMonth()).isoWeekday()}>
                 {(day) => <div class="opacity-50">{day + 1}</div>}
             </ForNumber>
         </div>

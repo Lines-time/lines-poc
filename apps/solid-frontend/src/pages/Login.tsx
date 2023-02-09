@@ -1,9 +1,10 @@
-import { Component, createSignal } from "solid-js";
+import { createSignal } from "solid-js";
 import Button from "~/Button";
 import TextInput from "~/TextInput";
 
 import authStore from "../store/authStore";
 
+import type { Component } from "solid-js";
 const Login: Component = () => {
     const [email, setEmail] = createSignal("");
     const [password, setPassword] = createSignal("");

@@ -1,5 +1,7 @@
 import dayjs from "dayjs";
-import { Component, createMemo } from "solid-js";
+import { createMemo } from "solid-js";
+
+import type { Component } from "solid-js";
 
 import type { TCalendarEvent } from "../../../types";
 

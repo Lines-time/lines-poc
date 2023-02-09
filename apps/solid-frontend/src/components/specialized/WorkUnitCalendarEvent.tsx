@@ -1,10 +1,12 @@
 import dayjs from "dayjs";
 import { GripHorizontal } from "lucide-solid";
-import { Component, createMemo, createResource, Show } from "solid-js";
+import { createMemo, createResource, Show } from "solid-js";
 
 import authStore from "../../store/authStore";
 import categoryStore from "../../store/categoryStore";
 import projectStore from "../../store/projectStore";
+
+import type { Component } from "solid-js";
 
 import type { TWorkUnit } from "lines-types";
 type TProps = {
@@ -35,9 +37,7 @@ const WorkUnitCalendarEvent: Component<TProps> = (props) => {
                 "select-none": !pointerEvents(),
             }}
             style={{
-                "background-color": me()?.use_project_colors
-                    ? project.latest?.color
-                    : undefined,
+                "background-color": me()?.use_project_colors ? project.latest?.color : undefined,
                 "border-color": "rgba(0, 0, 0, 0.2)",
                 color: "rgba(0, 0, 0, 0.8)",
             }}

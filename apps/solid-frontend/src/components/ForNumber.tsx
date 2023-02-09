@@ -1,4 +1,6 @@
-import { Component, ComponentProps, createMemo, For, JSX } from "solid-js";
+import { createMemo, For } from "solid-js";
+
+import type { JSX, Component, ComponentProps } from "solid-js";
 
 type TProps = Omit<ComponentProps<typeof For<number, JSX.Element>>, "each"> & {
     each: number;

@@ -1,15 +1,7 @@
 import { useSearchParams } from "@solidjs/router";
 import dayjs from "dayjs";
 import { Plus, X } from "lucide-solid";
-import {
-    Component,
-    createEffect,
-    createMemo,
-    createResource,
-    createSignal,
-    onMount,
-    Show,
-} from "solid-js";
+import { createEffect, createMemo, createResource, createSignal, onMount, Show } from "solid-js";
 import Button from "~/Button";
 import Dropdown from "~/Dropdown";
 import VacationModal from "~/modals/VacationModal";
@@ -22,11 +14,10 @@ import sickDayStore from "../store/sickDayStore";
 import vacationStore from "../store/vacationStore";
 import { parseTimeStringDuration } from "../utils/utils";
 
+import type { Component } from "solid-js";
 const Calendar: Component = () => {
     const [searchParams, setSearchParams] = useSearchParams();
-    const [now, setNow] = createSignal(
-        searchParams.d ? dayjs(searchParams.d) : dayjs(),
-    );
+    const [now, setNow] = createSignal(searchParams.d ? dayjs(searchParams.d) : dayjs());
     const vacationModalOpen = createMemo(() => searchParams.vacation === "new");
     const start = createMemo(() => now().date(1));
     const end = createMemo(() => now().date(now().daysInMonth()));
@@ -50,34 +41,19 @@ const Calendar: Component = () => {
     const [targetTime] = createResource(
         () => start(),
         async () =>
-            await dailyWorkTimeTargetStore.getForDateRange(
-                start().toDate(),
-                end().toDate(),
-            ),
+            await dailyWorkTimeTargetStore.getForDateRange(start().toDate(), end().toDate()),
     );
     const [freeDays] = createResource(
         () => now(),
-        async () =>
-            await freeDayStore.getForDateRange(
-                start().toDate(),
-                end().toDate(),
-            ),
+        async () => await freeDayStore.getForDateRange(start().toDate(), end().toDate()),
     );
     const [vacations, vacationsResource] = createResource(
         () => now(),
-        async () =>
-            await vacationStore.getForDateRangeAndUser(
-                start().toDate(),
-                end().toDate(),
-            ),
+        async () => await vacationStore.getForDateRangeAndUser(start().toDate(), end().toDate()),
     );
     const [sickDays, sickDaysResource] = createResource(
         () => now(),
-        async () =>
-            await sickDayStore.getForDateRangeAndUser(
-                start().toDate(),
-                end().toDate(),
-            ),
+        async () => await sickDayStore.getForDateRangeAndUser(start().toDate(), end().toDate()),
     );
 
     const cancelVacationRequest = async (vacationId: string) => {
@@ -91,20 +67,10 @@ const Calendar: Component = () => {
                 ?.filter((tt) => {
                     return !(
                         vacations()?.some((v) =>
-                            dayjs(tt!.date).isBetween(
-                                v!.start,
-                                v!.end,
-                                "day",
-                                "[]",
-                            ),
+                            dayjs(tt!.date).isBetween(v!.start, v!.end, "day", "[]"),
                         ) ||
                         sickDays()?.some((sd) =>
-                            dayjs(tt!.date).isBetween(
-                                sd!.start_date,
-                                sd!.end_date,
-                                "day",
-                                "[]",
-                            ),
+                            dayjs(tt!.date).isBetween(sd!.start_date, sd!.end_date, "day", "[]"),
                         )
                     );
                 })
@@ -115,15 +81,10 @@ const Calendar: Component = () => {
                         <div>
                             {dayjs
                                 .duration(
-                                    parseTimeStringDuration(
-                                        tt?.duration,
-                                    ).asMilliseconds() *
+                                    parseTimeStringDuration(tt?.duration).asMilliseconds() *
                                         (1 -
                                             (freeDays()?.find((fd) =>
-                                                dayjs(tt?.date).isSame(
-                                                    fd?.date,
-                                                    "day",
-                                                ),
+                                                dayjs(tt?.date).isSame(fd?.date, "day"),
                                             )?.percentage ?? 0)),
                                 )
                                 .format("H:mm[h]")}
@@ -171,9 +132,7 @@ const Calendar: Component = () => {
                                     This vacation has not yet been approved
                                 </div>
                             ) : (
-                                <div class="text-success">
-                                    This vacation has been approved
-                                </div>
+                                <div class="text-success">This vacation has been approved</div>
                             )}
                             <p>Start: {dayjs(v.start).format("LL")}</p>
                             <p>End: {dayjs(v.end).format("LL")}</p>
@@ -220,7 +179,7 @@ const Calendar: Component = () => {
                 }
             />
             <div>
-                <CalendarMonth now={now} onUpdateNow={setNow} events={events} />
+                <CalendarMonth now={now()} onUpdateNow={setNow} events={events()} />
             </div>
             <VacationModal
                 open={vacationModalOpen()}

@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { Component, ComponentProps, createMemo, createSignal } from "solid-js";
+import { createMemo, createSignal } from "solid-js";
 import Button from "~/Button";
 import Datetime from "~/Datetime";
 import FormControl from "~/FormControl";
@@ -7,6 +7,7 @@ import Modal from "~/Modal";
 
 import vacationStore from "../../store/vacationStore";
 
+import type { Component, ComponentProps } from "solid-js";
 type TProps = Pick<ComponentProps<typeof Modal>, "open" | "onClose"> & {};
 
 const VacationModal: Component<TProps> = (props) => {
@@ -29,15 +30,15 @@ const VacationModal: Component<TProps> = (props) => {
     const selectStart = (value: Date) => {
         setStart(value);
         endRef?.focus();
-    }
+    };
 
     return (
         <Modal open={props.open} onClose={props.onClose} title="Vacation">
             <form onSubmit={save} class="w-full">
-                <FormControl label="Start" error={errorMessage}>
+                <FormControl label="Start" error={errorMessage()}>
                     <Datetime date value={start()} onChange={selectStart} />
                 </FormControl>
-                <FormControl label="End" error={errorMessage}>
+                <FormControl label="End" error={errorMessage()}>
                     <Datetime date value={end()} onChange={setEnd} ref={endRef} />
                 </FormControl>
                 <FormControl label="Description">
@@ -48,7 +49,7 @@ const VacationModal: Component<TProps> = (props) => {
                     />
                 </FormControl>
                 <div class="modal-action">
-                    <Button submit primary disabled={() => !isValidRange()}>
+                    <Button submit primary disabled={!isValidRange()}>
                         Submit
                     </Button>
                 </div>

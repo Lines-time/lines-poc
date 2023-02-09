@@ -1,19 +1,16 @@
 import { Outlet, useLocation } from "@solidjs/router";
 import dayjs from "dayjs";
-import { Component, createMemo } from "solid-js";
+import { createMemo } from "solid-js";
 import Navbar from "~/Navbar";
-import Tabs, { TTab } from "~/Tabs";
+import Tabs from "~/Tabs";
 
 import { createProgressData, formatDuration } from "../utils/utils";
 
-export const dayProgress = createProgressData(
-    dayjs().startOf("day"),
-    dayjs().endOf("day"),
-);
-export const weekProgress = createProgressData(
-    dayjs().startOf("week"),
-    dayjs().endOf("week"),
-);
+import type { Component } from "solid-js";
+import type { TTab } from "~/Tabs";
+
+export const dayProgress = createProgressData(dayjs().startOf("day"), dayjs().endOf("day"));
+export const weekProgress = createProgressData(dayjs().startOf("week"), dayjs().endOf("week"));
 
 const Track: Component = () => {
     const tabs: TTab[] = [
@@ -27,7 +24,7 @@ const Track: Component = () => {
         },
     ];
     const location = useLocation();
-    
+
     const progress = createMemo(() =>
         location.pathname === "/track/day" ? dayProgress : weekProgress,
     );
@@ -45,11 +42,7 @@ const Track: Component = () => {
                                     "text-error": !progress().targetReached(),
                                 }}
                             >
-                                {formatDuration(
-                                    dayjs.duration(
-                                        progress().workedTime() ?? 0,
-                                    ),
-                                )}
+                                {formatDuration(dayjs.duration(progress().workedTime() ?? 0))}
                                 h
                             </span>
                             <span class="font-normal opacity-60">

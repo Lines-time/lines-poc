@@ -1,9 +1,11 @@
 import dayjs from "dayjs";
-import { Component, createMemo, createResource } from "solid-js";
+import { createMemo, createResource } from "solid-js";
 
 import timeBudgetStore from "../../store/timeBudgetStore";
 import workUnitStore from "../../store/workUnitStore";
 import { formatDuration } from "../../utils/utils";
+
+import type { Component } from "solid-js";
 
 import type { TProject } from "lines-types";
 type TProps = {
@@ -12,16 +14,16 @@ type TProps = {
 
 const DashboardProjectItem: Component<TProps> = (props) => {
     const [timebudgets] = createResource(
-        async () => await timeBudgetStore.getForProject(props.project.id)
+        async () => await timeBudgetStore.getForProject(props.project.id),
     );
     const [projectWorkUnits] = createResource(
-        async () => await workUnitStore.getForProject(props.project.id)
+        async () => await workUnitStore.getForProject(props.project.id),
     );
 
     const projectBudgetUsed = createMemo(() =>
         dayjs.duration(
-            projectWorkUnits()?.reduce((total, wu) => total + dayjs(wu.end).diff(wu.start), 0) ?? 0
-        )
+            projectWorkUnits()?.reduce((total, wu) => total + dayjs(wu.end).diff(wu.start), 0) ?? 0,
+        ),
     );
     const projectBudgetTotal = createMemo(() =>
         dayjs.duration(
@@ -29,11 +31,14 @@ const DashboardProjectItem: Component<TProps> = (props) => {
                 (total, tb) =>
                     total +
                     dayjs
-                        .duration({ hours: tb.budget_hours, minutes: tb.budget_minutes })
+                        .duration({
+                            hours: tb.budget_hours,
+                            minutes: tb.budget_minutes,
+                        })
                         .asMilliseconds(),
-                0
-            ) ?? 0
-        )
+                0,
+            ) ?? 0,
+        ),
     );
 
     return (

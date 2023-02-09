@@ -1,4 +1,6 @@
-import { createMemo, createSignal, JSX, onCleanup, onMount, ParentComponent } from "solid-js";
+import { createMemo, createSignal, onCleanup, onMount } from "solid-js";
+
+import type { JSX, ParentComponent } from "solid-js";
 
 type TProps = {
     label: JSX.Element;
@@ -12,21 +14,17 @@ type TProps = {
 };
 
 const Dropdown: ParentComponent<TProps> = (props) => {
-    const {
-        label,
-        hover,
-        children,
-        labelClass = "btn",
-        autoLocation = true,
-        autoAlignment = true,
-    } = props;
+    const labelClass = createMemo(() => props.labelClass ?? "btn");
+    const autoLocation = createMemo(() => props.autoLocation ?? true);
+    const autoAlignment = createMemo(() => props.autoAlignment ?? true);
+
     let rootRef: HTMLDivElement | undefined;
     let dropdownRef: HTMLDivElement | undefined;
     const [location, setLocation] = createSignal(props.location ?? "bottom");
     const [alignment, setAlignment] = createSignal(props.alignment ?? "start");
 
     const updateAutoLocation = () => {
-        if (autoLocation && rootRef && dropdownRef) {
+        if (autoLocation() && rootRef && dropdownRef) {
             if (
                 window.innerHeight - rootRef.getBoundingClientRect().bottom <=
                     dropdownRef.clientHeight &&
@@ -38,7 +36,7 @@ const Dropdown: ParentComponent<TProps> = (props) => {
     };
 
     const updateAutoAlignment = () => {
-        if (autoAlignment && rootRef && dropdownRef) {
+        if (autoAlignment() && rootRef && dropdownRef) {
             if (
                 window.innerWidth - rootRef.getBoundingClientRect().left <=
                     dropdownRef.clientWidth &&
@@ -67,19 +65,19 @@ const Dropdown: ParentComponent<TProps> = (props) => {
         "dropdown-bottom": location() === "bottom",
         "dropdown-left": location() === "left",
         "dropdown-right": location() === "right",
-        "dropdown-hover": hover,
+        "dropdown-hover": props.hover,
     }));
     return (
         <div ref={rootRef} class={`dropdown ${props.class}`} classList={classes()}>
             <label tabindex="0" class={`${labelClass}`}>
-                {label}
+                {props.label}
             </label>
             <div
                 ref={dropdownRef}
                 tabIndex={0}
                 class="dropdown-content p-2 shadow bg-base-300 rounded-xl w-64 menu menu-compact"
             >
-                {children}
+                {props.children}
             </div>
         </div>
     );
